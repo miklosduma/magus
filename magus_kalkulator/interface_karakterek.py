@@ -1,7 +1,8 @@
-from tkinter import (Tk, Button, Frame, N, W, E, S, Entry,
-                     StringVar, OptionMenu, Label, mainloop, ttk, Canvas)
+from tkinter import (Button, Entry,
+                     StringVar, ttk)
 
 import tkMessageBox
+
 
 class KarakterPage(ttk.Frame):
     def __init__(self, master, karakterek, messages):
@@ -27,7 +28,6 @@ class CharacterAddButton(Button):
             tkMessageBox.showwarning('Nem ezeket a droidokat keresik!', msg)
         else:
             tkMessageBox.showinfo('Siker!', msg)
-
 
 
 class CharactersGetButton(Button):

@@ -1,4 +1,4 @@
-from tkinter import (Entry, StringVar, OptionMenu, ttk, END, DISABLED, NORMAL, Text)
+from tkinter import (Entry, StringVar, OptionMenu, Button, ttk)
 
 
 # Types of attacking weapons. Used when calculating the damage
@@ -29,8 +29,10 @@ class SebzesPage(ttk.Frame):
 
         # Variable for total damage. Can be entered into entry field
         self.sebzes = SebzesField(self)
+        self.sebzes_button = SebzesButton(self, 'Start')
 
         self.sebzes.grid(row=6, column=1)
+        self.sebzes_button.grid(row=7, column=1)
         self.weapon_menu.grid(row=4, column=1)
         self.dropdown.grid(row=2, column=1)
         self.messages.grid(column=0, columnspan=4)
@@ -180,3 +182,22 @@ class KarakterekMenu(OptionMenu):
         for value in new_choices:
             menu.add_command(label=value,
                              command=lambda v=value: self.variable.set(v))
+
+
+class SebzesButton(Button):
+    def __init__(self, master, text):
+        Button.__init__(self, master, text=text)
+        self.master = master
+        self.karakterek = self.master.karakterek
+        self.karakter_var = self.master.karakter_var
+        self.messages = self.master.messages
+        self.sebzes = self.master.sebzes
+        self.weapon_type = self.master.weapon_type
+        self.bind('<Button-1>', self.write_results)
+
+    def write_results(self, event):
+        attacked = self.karakter_var.get()
+        attacking_weapon = self.weapon_type.get()
+        damage = self.sebzes.get()
+        self.messages.write_message()
+
