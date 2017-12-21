@@ -149,10 +149,7 @@ class KarakterVar(StringVar):
         print(self.get_value())
         print(self.karakterek.get_karakter(
             self.get_value()).max_ep)
-        self.messages.config(state=NORMAL)
-        self.messages.delete(1.0, END)
-        self.messages.insert(END, 'Haha')
-        self.messages.config(state=DISABLED)
+        self.messages.print_message(self.get_value())
 
 
 class KarakterekMenu(OptionMenu):

@@ -1,4 +1,4 @@
-from tkinter import (Tk, mainloop, ttk, Text, END, DISABLED, Frame, N)
+from tkinter import (Tk, mainloop, ttk, Text, END, DISABLED, NORMAL, N)
 
 from karakterek import Karakterek
 from interface_sebzes import SebzesPage
@@ -72,6 +72,12 @@ class GuiMessage(Text):
     def __init__(self, master):
         Text.__init__(self, master, width=50, height=30, bg='azure')
         self.insert(END, TEXT_START)
+        self.config(state=DISABLED)
+
+    def print_message(self, text):
+        self.config(state=NORMAL)
+        self.delete(1.0, END)
+        self.insert(END, text)
         self.config(state=DISABLED)
 
 
