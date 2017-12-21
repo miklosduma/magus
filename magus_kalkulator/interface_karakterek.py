@@ -4,7 +4,7 @@ from tkinter import (Tk, Button, Frame, N, W, E, S, Entry,
 import tkMessageBox
 
 class KarakterPage(ttk.Frame):
-    def __init__(self, master, karakterek):
+    def __init__(self, master, karakterek, messages):
         self.karakterek = karakterek
         ttk.Frame.__init__(self, master, width=300, height=600)
         self.add_button = CharacterAddButton(self, 'Add', self.karakterek)

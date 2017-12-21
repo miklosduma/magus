@@ -1,21 +1,21 @@
-from tkinter import (Entry, StringVar, OptionMenu, ttk, Text, END, DISABLED, NORMAL)
+from tkinter import (Entry, StringVar, OptionMenu, ttk, END, DISABLED, NORMAL, Text)
 
 
 # Types of attacking weapons. Used when calculating the damage
 WEAPON_TYPES = ['Szur', 'Vag', 'Zuz', 'Harap', 'Karmol']
 TEXT_START = 'Udv kockak!'
 
+
 class SebzesPage(ttk.Frame):
     """
     Main tab for calculating damage and penalties.
     """
-    def __init__(self, master, karakterek):
+    def __init__(self, master, karakterek, messages):
         """
         Initializes damage tab.
         """
         ttk.Frame.__init__(self, master, width=300, height=600)
-
-        self.messages = GuiMessage(self)
+        self.messages = messages
 
         # Variable for character selection drop-down
         # SFE and Max_EP of character is used when calculating damage
@@ -35,6 +35,7 @@ class SebzesPage(ttk.Frame):
         self.weapon_menu.grid(row=4, column=1)
         self.dropdown.grid(row=2, column=1)
         self.messages.grid(column=0, columnspan=4)
+
 
 class SebzesField(Entry):
     """
@@ -151,7 +152,7 @@ class KarakterVar(StringVar):
             self.get_value()).max_ep)
         self.messages.config(state=NORMAL)
         self.messages.delete(1.0, END)
-        self.messages.insert(END, 'Foo')
+        self.messages.insert(END, 'Haha')
         self.messages.config(state=DISABLED)
 
 
@@ -183,10 +184,3 @@ class KarakterekMenu(OptionMenu):
         for value in new_choices:
             menu.add_command(label=value,
                              command=lambda v=value: self.variable.set(v))
-
-
-class GuiMessage(Text):
-    def __init__(self, master):
-        Text.__init__(self, master, width=50, height=30)
-        self.insert(END, TEXT_START)
-        self.config(state=DISABLED)

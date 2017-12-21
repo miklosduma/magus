@@ -12,6 +12,7 @@ WINDOW_TEXT = 'Magus kalkulator'
 
 CANVAS_X = WINDOW_WIDTH / 5
 CANVAS_Y = WINDOW_HEIGHT / 5
+TEXT_START = 'Foo'
 
 
 class MagusGUI:
@@ -39,8 +40,10 @@ class MagusGUI:
 
         # Create multiple tabs on main page, making characters
         # accessible to each
-        self.tabs = MyTabs(self.master, self.karakterek)
+        self.messages = GuiMessage(self.master)
+        self.tabs = MyTabs(self.master, self.karakterek, self.messages)
         self.tabs.grid(column=0, columnspan=4)
+        self.messages.grid(column=5,columnspan=2)
 
 
 class MyTabs(ttk.Notebook):
@@ -48,7 +51,7 @@ class MyTabs(ttk.Notebook):
     Base class for tabs frame. It can support
     one or more tabs added to it as separate pages.
     """
-    def __init__(self, master, karakterek):
+    def __init__(self, master, karakterek, messages):
         """
         Initialise tabs frame. It gets the characters
         object from the top level and hands them down to
@@ -56,12 +59,20 @@ class MyTabs(ttk.Notebook):
         """
         ttk.Notebook.__init__(self, master)
         self.karakterek = karakterek
+        self.messages = messages
 
         # Initialize tabs
-        self.karakter_page = KarakterPage(self, self.karakterek)
-        self.sebzes_page = SebzesPage(self, self.karakterek)
+        self.karakter_page = KarakterPage(self, self.karakterek, self.messages)
+        self.sebzes_page = SebzesPage(self, self.karakterek, self.messages)
         self.add(self.karakter_page, text='Karakterek')
         self.add(self.sebzes_page, text='Sebzes')
+
+
+class GuiMessage(Text):
+    def __init__(self, master):
+        Text.__init__(self, master, width=50, height=30)
+        self.insert(END, TEXT_START)
+        self.config(state=DISABLED)
 
 
 def fire_up_interface():
