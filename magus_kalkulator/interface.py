@@ -1,4 +1,4 @@
-from tkinter import (Tk, mainloop, ttk, Text, END, DISABLED, Frame)
+from tkinter import (Tk, mainloop, ttk, Text, END, DISABLED, Frame, N)
 
 from karakterek import Karakterek
 from interface_sebzes import SebzesPage
@@ -12,7 +12,7 @@ WINDOW_TEXT = 'Magus kalkulator'
 
 CANVAS_X = WINDOW_WIDTH / 5
 CANVAS_Y = WINDOW_HEIGHT / 5
-TEXT_START = 'Foo'
+TEXT_START = 'Udv kockak!'
 
 
 class MagusGUI:
@@ -42,7 +42,7 @@ class MagusGUI:
         # accessible to each
         self.messages = GuiMessage(self.master)
         self.tabs = MyTabs(self.master, self.karakterek, self.messages)
-        self.tabs.grid(column=0, columnspan=4)
+        self.tabs.grid(column=0, columnspan=4, row=0, rowspan=5, sticky=N)
         self.messages.grid(column=5,columnspan=2)
 
 
@@ -70,7 +70,7 @@ class MyTabs(ttk.Notebook):
 
 class GuiMessage(Text):
     def __init__(self, master):
-        Text.__init__(self, master, width=50, height=30)
+        Text.__init__(self, master, width=50, height=30, bg='azure')
         self.insert(END, TEXT_START)
         self.config(state=DISABLED)
 

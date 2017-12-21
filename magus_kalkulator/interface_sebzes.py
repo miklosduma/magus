@@ -3,7 +3,6 @@ from tkinter import (Entry, StringVar, OptionMenu, ttk, END, DISABLED, NORMAL, T
 
 # Types of attacking weapons. Used when calculating the damage
 WEAPON_TYPES = ['Szur', 'Vag', 'Zuz', 'Harap', 'Karmol']
-TEXT_START = 'Udv kockak!'
 
 
 class SebzesPage(ttk.Frame):
