@@ -1,4 +1,4 @@
-from magus.karakterek import Karakter, Karakterek
+from magus_kalkulator.karakterek import Karakter, Karakterek
 
 
 def test_new_karakter_no_fp():

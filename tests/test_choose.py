@@ -1,9 +1,9 @@
 import pytest
 
-from magus.choose import pick_penalty, calculate_seriousness, get_threshold
-from magus.torzs import TORZS_TABLA, TORZS_THRESHOLDS
-from magus.fej import FEJ_TABLA, FEJ_THRESHOLDS
-from magus.vegtag import VEGTAG_TABLA, VEGTAG_THRESHOLDS
+from magus_kalkulator.choose import pick_penalty, calculate_seriousness, get_threshold
+from magus_kalkulator.torzs import TORZS_TABLA, TORZS_THRESHOLDS
+from magus_kalkulator.fej import FEJ_TABLA, FEJ_THRESHOLDS
+from magus_kalkulator.vegtag import VEGTAG_TABLA, VEGTAG_THRESHOLDS
 
 test_data_penalty = [
     (TORZS_TABLA, 'Vag', 'Mellkas', 1, ['gyv', 'zh', 'gyf', 'k6']),

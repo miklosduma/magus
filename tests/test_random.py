@@ -1,6 +1,6 @@
 import pytest
 
-from magus.random_body import (add_n_times_to_list, build_main_table,
+from magus_kalkulator.random_body import (add_n_times_to_list, build_main_table,
                                get_sub_parts, pick_sub_parts)
 
 
