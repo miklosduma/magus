@@ -9,6 +9,8 @@ class KarakterPage(ttk.Frame):
         ttk.Frame.__init__(self, master, width=300, height=600)
         self.add_button = CharacterAddButton(self, 'Add', self.karakterek)
         self.get_button = CharactersGetButton(self, 'Get', self.karakterek)
+        self.add_button.grid(column=1, row=4)
+        self.get_button.grid(column=2, row=4)
         # self.ep_field = CharacterValueField(self)
 
 
@@ -16,7 +18,6 @@ class CharacterAddButton(Button):
     def __init__(self, master, text, karakterek):
         self.karakterek = karakterek
         Button.__init__(self, master, text=text)
-        self.grid(column=1, row=4)
         self.bind('<Button-1>', self.add_character)
 
     def add_character(self, event):
@@ -33,7 +34,6 @@ class CharactersGetButton(Button):
     def __init__(self, master, text, karakterek):
         self.karakterek = karakterek
         Button.__init__(self, master, text=text)
-        self.grid(column=2, row=4)
         self.bind('<Button-1>', self.get_characters)
 
     def get_characters(self, event):

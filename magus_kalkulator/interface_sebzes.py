@@ -15,10 +15,12 @@ class SebzesPage(ttk.Frame):
         """
         ttk.Frame.__init__(self, master, width=300, height=600)
 
+        self.messages = GuiMessage(self)
+
         # Variable for character selection drop-down
         # SFE and Max_EP of character is used when calculating damage
-        self.karakter_var = KarakterVar(self)
         self.karakterek = karakterek
+        self.karakter_var = KarakterVar(self, self.karakterek, self.messages)
         self.dropdown = KarakterekMenu(self, self.karakter_var,
                                        self.karakterek, *["1", "2", "3"])
 
@@ -28,8 +30,11 @@ class SebzesPage(ttk.Frame):
 
         # Variable for total damage. Can be entered into entry field
         self.sebzes = SebzesField(self)
-        self.messages = GuiMessage(self)
 
+        self.sebzes.grid(row=6, column=1)
+        self.weapon_menu.grid(row=4, column=1)
+        self.dropdown.grid(row=2, column=1)
+        self.messages.grid(column=0, columnspan=4)
 
 class SebzesField(Entry):
     """
@@ -46,7 +51,6 @@ class SebzesField(Entry):
 
         # Entry field
         Entry.__init__(self, master, textvariable=self.sebzes)
-        self.grid(row=6, column=1)
 
     def get_sebzes(self):
         """
@@ -73,7 +77,6 @@ class WeaponTypeMenu(OptionMenu):
         Initialise weapon drop-down.
         """
         OptionMenu.__init__(self, master, variable, *weapon_types)
-        self.grid(row=4, column=1)
 
 
 class WeaponString(StringVar):
@@ -115,13 +118,15 @@ class KarakterVar(StringVar):
     """
     Variable for selected character.
     """
-    def __init__(self, master):
+    def __init__(self, master, karakterek, messages):
         """
         Initialise variable.
         """
         StringVar.__init__(self, master)
         self.set_value('')
         self.master = master
+        self.karakterek = karakterek
+        self.messages = messages
         self.trace('w', self.print_on_change)
 
     def set_value(self, value):
@@ -142,12 +147,12 @@ class KarakterVar(StringVar):
         selected character.
         """
         print(self.get_value())
-        print(self.master.master.karakterek.get_karakter(
+        print(self.karakterek.get_karakter(
             self.get_value()).max_ep)
-        self.master.messages.config(state=NORMAL)
-        self.master.messages.delete(1.0, END)
-        self.master.messages.insert(END, 'Foo')
-        self.master.messages.config(state=DISABLED)
+        self.messages.config(state=NORMAL)
+        self.messages.delete(1.0, END)
+        self.messages.insert(END, 'Foo')
+        self.messages.config(state=DISABLED)
 
 
 class KarakterekMenu(OptionMenu):
@@ -162,7 +167,6 @@ class KarakterekMenu(OptionMenu):
         # Get already-added characters
         self.karakterek = karakterek
         OptionMenu.__init__(self, master, variable, *choices)
-        self.grid(row=2, column=1)
         self.variable = variable
 
         # Every time the drop-down is selected, update values for selection
@@ -184,6 +188,5 @@ class KarakterekMenu(OptionMenu):
 class GuiMessage(Text):
     def __init__(self, master):
         Text.__init__(self, master, width=50, height=30)
-        self.grid(column=0, columnspan=4)
         self.insert(END, TEXT_START)
         self.config(state=DISABLED)
