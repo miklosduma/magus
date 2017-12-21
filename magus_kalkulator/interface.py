@@ -72,13 +72,37 @@ class GuiMessage(Text):
     def __init__(self, master):
         Text.__init__(self, master, width=50, height=30, bg='azure')
         self.insert(END, TEXT_START)
-        self.config(state=DISABLED)
+        self._set_state(DISABLED)
 
-    def print_message(self, text):
-        self.config(state=NORMAL)
+    def _set_state(self, state):
+        """
+        Sets the state of the text box and saves the
+        state into the state attribute.
+        Possible states:
+            - NORMAL (editable)
+            - DISABLED (read-only)
+        """
+        self.config(state=state)
+        self.state = state
+
+    def delete_message(self):
+        """
+        Deletes the current content
+        of the text box.
+        """
+        if self.state == DISABLED:
+            self._set_state(NORMAL)
+
         self.delete(1.0, END)
+
+    def write_message(self, text):
+        """
+        Overrides the content of the text box
+        with the provided text.
+        """
+        self.delete_message()
         self.insert(END, text)
-        self.config(state=DISABLED)
+        self._set_state(DISABLED)
 
 
 def fire_up_interface():

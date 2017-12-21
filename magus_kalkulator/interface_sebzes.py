@@ -149,7 +149,7 @@ class KarakterVar(StringVar):
         print(self.get_value())
         print(self.karakterek.get_karakter(
             self.get_value()).max_ep)
-        self.messages.print_message(self.get_value())
+        self.messages.write_message(self.get_value())
 
 
 class KarakterekMenu(OptionMenu):
