@@ -1,4 +1,4 @@
-from tkinter import (Tk, mainloop, ttk)
+from tkinter import (Tk, mainloop, ttk, Text, END, DISABLED, Frame)
 
 from karakterek import Karakterek
 from interface_sebzes import SebzesPage
@@ -9,6 +9,9 @@ WINDOW_WIDTH = 960
 WINDOW_HEIGHT = 600
 WINDOW_DIMENSIONS = '960x600'
 WINDOW_TEXT = 'Magus kalkulator'
+
+CANVAS_X = WINDOW_WIDTH / 5
+CANVAS_Y = WINDOW_HEIGHT / 5
 
 
 class MagusGUI:
@@ -36,7 +39,8 @@ class MagusGUI:
 
         # Create multiple tabs on main page, making characters
         # accessible to each
-        self.tabs = MyTabs(master, self.karakterek)
+        self.tabs = MyTabs(self.master, self.karakterek)
+        self.tabs.grid(column=0, columnspan=4)
 
 
 class MyTabs(ttk.Notebook):
@@ -58,9 +62,6 @@ class MyTabs(ttk.Notebook):
         self.sebzes_page = SebzesPage(self, self.karakterek)
         self.add(self.karakter_page, text='Karakterek')
         self.add(self.sebzes_page, text='Sebzes')
-
-        # Place frame itself
-        self.grid()
 
 
 def fire_up_interface():

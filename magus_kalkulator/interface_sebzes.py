@@ -1,9 +1,9 @@
-from tkinter import (Entry, StringVar, OptionMenu, ttk)
+from tkinter import (Entry, StringVar, OptionMenu, ttk, Text, END, DISABLED, NORMAL)
 
 
 # Types of attacking weapons. Used when calculating the damage
 WEAPON_TYPES = ['Szur', 'Vag', 'Zuz', 'Harap', 'Karmol']
-
+TEXT_START = 'Udv kockak!'
 
 class SebzesPage(ttk.Frame):
     """
@@ -28,6 +28,7 @@ class SebzesPage(ttk.Frame):
 
         # Variable for total damage. Can be entered into entry field
         self.sebzes = SebzesField(self)
+        self.messages = GuiMessage(self)
 
 
 class SebzesField(Entry):
@@ -143,6 +144,11 @@ class KarakterVar(StringVar):
         print(self.get_value())
         print(self.master.master.karakterek.get_karakter(
             self.get_value()).max_ep)
+        self.master.messages.config(state=NORMAL)
+        self.master.messages.delete(1.0, END)
+        self.master.messages.insert(END, 'Foo')
+        self.master.messages.config(state=DISABLED)
+
 
 class KarakterekMenu(OptionMenu):
     """
@@ -173,3 +179,11 @@ class KarakterekMenu(OptionMenu):
         for value in new_choices:
             menu.add_command(label=value,
                              command=lambda v=value: self.variable.set(v))
+
+
+class GuiMessage(Text):
+    def __init__(self, master):
+        Text.__init__(self, master, width=50, height=30)
+        self.grid(column=0, columnspan=4)
+        self.insert(END, TEXT_START)
+        self.config(state=DISABLED)
