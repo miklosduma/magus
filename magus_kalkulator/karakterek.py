@@ -49,12 +49,12 @@ class Karakterek:
         # Check whether name already exists. If yes, do not overwrite.
         if any(existing_name == name for
                existing_name in self.get_all_karakters()):
-            print('Karakter mar letezik!')
-            return
+            return False, 'Karakter mar letezik!'
 
         # Create new character and add to characters map using name as key
         self.karakter = Karakter(name, ep, sfe, fp)
         self.karakterek[self.karakter.name] = self.karakter
+        return True, 'Karakter hozzaadva!'
 
     def get_karakter(self, name):
         """

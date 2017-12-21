@@ -60,7 +60,7 @@ class MyTabs(ttk.Notebook):
         self.add(self.sebzes_page, text='Sebzes')
 
         # Place frame itself
-        self.grid(column=0)
+        self.grid()
 
 
 def fire_up_interface():
