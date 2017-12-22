@@ -52,10 +52,32 @@ class CharacterAddButton(Button):
 
         return values
 
+    def validate_values(self, values):
+        [name, ep, fp, sfe] = values
+        missing = [x for x in values if not x]
+
+        if missing:
+            return False, 'Tolts ki minden mezot!'
+
+        try:
+            ep = int(ep)
+            fp = int(fp)
+            sfe = int(sfe)
+        except ValueError as error:
+            return False, 'Nem szam: {}'.format(error.message)
+
+        return True, [name, ep, fp, sfe]
+
     def add_character(self, event):
-        [name, ep, fp, sfe] = self.retrieve_values()
-        success, msg = self.karakterek.add_karakter(name, int(ep),
-                                                    int(sfe), fp=int(fp))
+        values = self.retrieve_values()
+        success, checked_values = self.validate_values(values)
+
+        if not success:
+            self.messages.write_message(checked_values)
+            return
+
+        [name, ep, fp, sfe] = checked_values
+        success, msg = self.karakterek.add_karakter(name, ep, sfe, fp=fp)
 
         if not success:
             msg = '{} mar hozza lett adva.'.format(name)
@@ -65,14 +87,26 @@ class CharacterAddButton(Button):
 
         self.messages.write_message(msg)
 
+
 class CharactersGetButton(Button):
     def __init__(self, master, text, karakterek):
+        self.master = master
         self.karakterek = karakterek
+        self.messages = self.master.messages
         Button.__init__(self, master, text=text)
         self.bind('<Button-1>', self.get_characters)
 
     def get_characters(self, event):
-        print(self.karakterek.get_all_karakters())
+        all_characters = self.karakterek.get_all_karakters()
+
+        if not all_characters:
+            msg = 'Meg nem adtal hozza karaktert.'
+
+        else:
+            msg = 'Eddig hozzaadott karakterek: \n{}'.format(
+                '\n'.join(all_characters))
+        
+        self.messages.write_message(msg)
 
 
 class CharacterValueField(Entry):
