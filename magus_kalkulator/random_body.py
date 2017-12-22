@@ -1,6 +1,5 @@
 import random
 
-
 BODY_PARTS = {
     'Jlab': [
         ('Jlab', 'Jcomb', 5),
@@ -108,4 +107,5 @@ def pick_sub_parts(main_part=None):
         body_part = random.choice(main_parts)
 
     sub_parts = get_sub_parts(body_part)
-    return random.choice(sub_parts)
+    pen_part, sfe_part = random.choice(sub_parts)
+    return body_part, pen_part, sfe_part

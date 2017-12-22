@@ -1,6 +1,7 @@
 import pytest
 
-from magus_kalkulator.choose import pick_penalty, calculate_seriousness, get_threshold
+from magus_kalkulator.choose import (pick_penalty, calculate_seriousness,
+                                     get_threshold, calculate_penalty)
 from magus_kalkulator.torzs import TORZS_TABLA, TORZS_THRESHOLDS
 from magus_kalkulator.fej import FEJ_TABLA, FEJ_THRESHOLDS
 from magus_kalkulator.vegtag import VEGTAG_TABLA, VEGTAG_THRESHOLDS
@@ -9,8 +10,8 @@ test_data_penalty = [
     (TORZS_TABLA, 'Vag', 'Mellkas', 1, ['gyv', 'zh', 'gyf', 'k6']),
     (FEJ_TABLA, 'Szur', 'Arc', 0, 'nincs hatrany'),
     (VEGTAG_TABLA, 'Zuz', 'Jkez', 4, 'maradando benulas'),
-    (VEGTAG_TABLA, 'Foo', 'Jkez', 4, 'Foo'),
-    (TORZS_TABLA, 'Vag', 'Mellkas', 5, 'list index out of range')
+    (VEGTAG_TABLA, 'Foo', 'Jkez', 4, ('key_error','Foo')),
+    (TORZS_TABLA, 'Vag', 'Mellkas', 5, ('index_error','list index out of range'))
 ]
 
 
@@ -61,4 +62,18 @@ def test_calculate_seriousness(damage, max_ep, thresholds, expected):
     Expects the correct penalties to be chosen.
     """
     result = calculate_seriousness(damage, max_ep, thresholds)
+    assert result == expected
+
+
+test_data_penalty = [
+    (3,13,'Szur', 'Jkez', 'Jkez',['mv', 'tb*', 'mf']),
+    (7,14,'Vag', 'Torzs', 'Mellkas',['mv', 'jh', 'mf']),
+    (11,15,'Zuz','Fej','Koponya', 'halal')
+]
+
+
+@pytest.mark.parametrize('damage,max_ep,wtype,mainpart,subpart,expected',
+                         test_data_penalty)
+def test_calculate_penalty(damage, max_ep, wtype, mainpart, subpart, expected):
+    result = calculate_penalty(damage, max_ep, wtype, mainpart, subpart)
     assert result == expected
