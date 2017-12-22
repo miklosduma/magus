@@ -1,4 +1,5 @@
 from tkinter import (Entry, StringVar, OptionMenu, Button, ttk)
+from sebzes import return_penalty
 
 
 # Types of attacking weapons. Used when calculating the damage
@@ -198,6 +199,9 @@ class SebzesButton(Button):
     def write_results(self, event):
         attacked = self.karakter_var.get()
         attacking_weapon = self.weapon_type.get()
-        damage = self.sebzes.get()
-        self.messages.write_message()
+        damage = int(self.sebzes.get())
+        max_ep = int(self.karakterek.get_karakter(attacked).max_ep)
+        sfe = int(self.karakterek.get_karakter(attacked).sfe)
+        penalty = return_penalty(sfe, damage, max_ep, attacking_weapon)
 
+        self.messages.write_message(penalty)
