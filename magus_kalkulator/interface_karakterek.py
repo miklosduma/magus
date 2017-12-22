@@ -1,4 +1,4 @@
-from tkinter import (Button, Entry,
+from tkinter import (Button, Entry, Label,
                      StringVar, ttk)
 
 import tkMessageBox
@@ -9,11 +9,31 @@ class KarakterPage(ttk.Frame):
         self.karakterek = karakterek
         self.messages = messages
         ttk.Frame.__init__(self, master, width=300, height=600)
+
         self.add_button = CharacterAddButton(self, 'Add', self.karakterek)
         self.get_button = CharactersGetButton(self, 'Get', self.karakterek)
-        self.add_button.grid(column=1, row=4)
-        self.get_button.grid(column=2, row=4)
-        # self.ep_field = CharacterValueField(self)
+
+        self.ep_label = Label(self, text='Max EP')
+        self.ep_field = CharacterValueField(self)
+
+        self.fp_field = CharacterValueField(self)
+        self.fp_label = Label(self, text='Max FP')
+
+        self.sfe_field = CharacterValueField(self)
+        self.sfe_label = Label(self, text='Max SFE')
+
+        self.name_field = CharacterValueField(self)
+        self.name_label = Label(self, text='Nev')
+
+        row = 0
+        column = 1
+        for element in [self.name_label, self.name_field, self.ep_label,
+                        self.ep_field, self.fp_label, self.fp_field,
+                        self.sfe_label, self.sfe_field, self.add_button,
+                        self.get_button]:
+
+            element.grid(column=column, row=row)
+            row += 1
 
 
 class CharacterAddButton(Button):
@@ -24,11 +44,21 @@ class CharacterAddButton(Button):
         Button.__init__(self, master, text=text)
         self.bind('<Button-1>', self.add_character)
 
+    def retrieve_values(self):
+        values = []
+        for field in [self.master.name_field, self.master.ep_field,
+                      self.master.fp_field, self.master.sfe_field]:
+            values.append(field.value.get())
+
+        return values
+
     def add_character(self, event):
-        success, msg = self.karakterek.add_karakter('Vimes', 14, 5)
+        [name, ep, fp, sfe] = self.retrieve_values()
+        success, msg = self.karakterek.add_karakter(name, int(ep),
+                                                    int(sfe), fp=int(fp))
 
         if not success:
-            msg = 'Nem ezeket a droidokat keresik!'
+            msg = '{} mar hozza lett adva.'.format(name)
 
         else:
             msg = 'Siker!'
@@ -57,7 +87,6 @@ class CharacterValueField(Entry):
 
         # Entry field
         Entry.__init__(self, master, textvariable=self.value)
-        self.grid(row=6, column=1)
 
     def print_on_change(self, *args):
         print(self.value.get())
