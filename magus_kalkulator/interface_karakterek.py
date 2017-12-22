@@ -1,13 +1,26 @@
 from tkinter import (Button, Entry, Label, W, E,
                      StringVar, VERTICAL, ttk)
 
-import tkMessageBox
+
+
+KARAKTER_PANEL_COLUMN = 0
+KARAKTER_PANEL_ROW = 0
+
+EP_FIELDS_COLUMN = 1
+SFE_FIELDS_COLUMN = 1
+
+EP_FRAME_TITLE = 'Eletero'
+EP_LABEL = 'Max EP'
+FP_LABEL = 'Max FP'
+NEV_LABEL = 'Nev'
 
 
 class KarakterPage(ttk.Frame):
-    def __init__(self, master, karakterek, messages):
-        self.karakterek = karakterek
-        self.messages = messages
+    def __init__(self, master, master_gui):
+        self.master = master
+        self.gui_top = master_gui
+        self.karakterek = master_gui.karakterek
+        self.messages = master_gui.messages
         ttk.Frame.__init__(self, master)
         self.panels = KarakterPanels(self)
         self.panels.grid(column=0, row=0)
@@ -16,6 +29,7 @@ class KarakterPage(ttk.Frame):
 class KarakterPanels(ttk.PanedWindow):
     def __init__(self, master, orient=VERTICAL):
         ttk.PanedWindow.__init__(self, master, orient=orient)
+        self.gui_top = master.gui_top
         self.karakterek = self.master.karakterek
         self.messages = self.master.messages
         self.fields_frame = FieldsFrame(self)
@@ -29,22 +43,21 @@ class KarakterPanels(ttk.PanedWindow):
 class FieldsFrame(ttk.LabelFrame):
     def __init__(self, master):
         self.master = master
-        ttk.LabelFrame.__init__(self, master, text='Eletero')
-        self.ep_label = Label(self, text='Max EP')
+        self.gui_top = master.gui_top
+        ttk.LabelFrame.__init__(self, master, text=EP_FRAME_TITLE)
+        self.ep_label = Label(self, text=EP_LABEL)
         self.ep_field = CharacterValueField(self)
 
         self.fp_field = CharacterValueField(self)
-        self.fp_label = Label(self, text='Max FP')
+        self.fp_label = Label(self, text=FP_LABEL)
 
         self.name_field = CharacterValueField(self)
-        self.name_label = Label(self, text='Nev')
+        self.name_label = Label(self, text=NEV_LABEL)
+        self.gui_top.organize_rows_to_left([self.name_label, self.name_field,
+                                            self.ep_label, self.ep_field,
+                                            self.fp_label, self.fp_field],
+                                           EP_FIELDS_COLUMN)
 
-        row = 0
-        column = 1
-        for element in [self.name_label, self.name_field, self.ep_label,
-                        self.ep_field, self.fp_label, self.fp_field]:
-            element.grid(column=column, row=row, sticky=W)
-            row += 1
 
 class SfeFrame(ttk.LabelFrame):
     def __init__(self, master):
@@ -52,11 +65,9 @@ class SfeFrame(ttk.LabelFrame):
         self.sfe_field = CharacterValueField(self)
         self.sfe_label = Label(self, text='Max SFE')
         self.master = master
-        row = 0
-        column = 1
-        for element in [self.sfe_label, self.sfe_field]:
-            element.grid(column=column, row=row, sticky=W)
-            row += 1
+        self.gui_top = master.gui_top
+        self.gui_top.organize_rows_to_left([self.sfe_label, self.sfe_field],
+                                           SFE_FIELDS_COLUMN)
 
 
 class ButtonsFrame(ttk.LabelFrame):
