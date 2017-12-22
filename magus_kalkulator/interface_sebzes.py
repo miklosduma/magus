@@ -142,17 +142,22 @@ class KarakterVar(StringVar):
         """
         Return latest value.
         """
-        return self.get()
+        character = self.get()
+
+        if character:
+            return True, character
+
+        return False, 'Valassz karaktert!'
 
     def print_on_change(self, *args):
         """
         Print latest value and max_ep of
         selected character.
         """
-        print(self.get_value())
+        print(self.get())
         print(self.karakterek.get_karakter(
-            self.get_value()).max_ep)
-        self.messages.write_message(self.get_value())
+            self.get()).max_ep)
+        self.messages.write_message(self.get())
 
 
 class KarakterekMenu(OptionMenu):
@@ -196,12 +201,28 @@ class SebzesButton(Button):
         self.weapon_type = self.master.weapon_type
         self.bind('<Button-1>', self.write_results)
 
-    def write_results(self, event):
-        attacked = self.karakter_var.get()
-        attacking_weapon = self.weapon_type.get()
-        damage = int(self.sebzes.get())
-        max_ep = int(self.karakterek.get_karakter(attacked).max_ep)
-        sfe = int(self.karakterek.get_karakter(attacked).sfe)
-        penalty = return_penalty(sfe, damage, max_ep, attacking_weapon)
+    def get_damage(self):
+        try:
+            return True, int(self.sebzes.get())
+        except ValueError:
+            return False, 'Add meg a sebzest fiam. Szamot, ha kerhetnem!'
 
+
+    def write_results(self, event):
+        attacking_weapon = self.weapon_type.get()
+        success, attacked = self.karakter_var.get_value()
+
+        if not success:
+            self.messages.write_message(attacked)
+            return
+
+        max_ep = self.karakterek.get_karakter(attacked).max_ep
+        sfe = self.karakterek.get_karakter(attacked).sfe
+        success, damage = self.get_damage()
+
+        if not success:
+            self.messages.write_message(damage)
+            return
+
+        penalty = return_penalty(sfe, damage, max_ep, attacking_weapon)
         self.messages.write_message(penalty)
