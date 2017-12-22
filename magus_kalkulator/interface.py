@@ -10,8 +10,6 @@ WINDOW_HEIGHT = 600
 WINDOW_DIMENSIONS = '960x600'
 WINDOW_TEXT = 'Magus kalkulator'
 
-CANVAS_X = WINDOW_WIDTH / 5
-CANVAS_Y = WINDOW_HEIGHT / 5
 TEXT_START = 'Udv kockak!'
 
 
@@ -43,7 +41,7 @@ class MagusGUI:
         self.messages = GuiMessage(self.master)
         self.tabs = MyTabs(self.master, self.karakterek, self.messages)
         self.tabs.grid(column=0, columnspan=4, row=0, rowspan=5, sticky=N)
-        self.messages.grid(column=5,columnspan=2)
+        self.messages.grid(column=4,columnspan=2)
 
 
 class MyTabs(ttk.Notebook):
@@ -70,7 +68,7 @@ class MyTabs(ttk.Notebook):
 
 class GuiMessage(Text):
     def __init__(self, master):
-        Text.__init__(self, master, width=50, height=30, bg='azure')
+        Text.__init__(self, master, bg='azure')
         self.insert(END, TEXT_START)
         self._set_state(DISABLED)
 

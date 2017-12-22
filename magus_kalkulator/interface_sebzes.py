@@ -14,7 +14,7 @@ class SebzesPage(ttk.Frame):
         """
         Initializes damage tab.
         """
-        ttk.Frame.__init__(self, master, width=300, height=600)
+        ttk.Frame.__init__(self, master)
         self.messages = messages
 
         # Variable for character selection drop-down

@@ -8,7 +8,7 @@ class KarakterPage(ttk.Frame):
     def __init__(self, master, karakterek, messages):
         self.karakterek = karakterek
         self.messages = messages
-        ttk.Frame.__init__(self, master, width=300, height=600)
+        ttk.Frame.__init__(self, master)
         self.panels = KarakterPanels(self)
         self.panels.grid(column=0, row=0)
 
@@ -29,8 +29,7 @@ class KarakterPanels(ttk.PanedWindow):
 class FieldsFrame(ttk.LabelFrame):
     def __init__(self, master):
         self.master = master
-        ttk.LabelFrame.__init__(self, master, height=100, width=100,
-                                text='Eletero')
+        ttk.LabelFrame.__init__(self, master, text='Eletero')
         self.ep_label = Label(self, text='Max EP')
         self.ep_field = CharacterValueField(self)
 
@@ -49,7 +48,7 @@ class FieldsFrame(ttk.LabelFrame):
 
 class SfeFrame(ttk.LabelFrame):
     def __init__(self, master):
-        ttk.LabelFrame.__init__(self, master, height=100, width=100, text='SFE')
+        ttk.LabelFrame.__init__(self, master, text='SFE')
         self.sfe_field = CharacterValueField(self)
         self.sfe_label = Label(self, text='Max SFE')
         self.master = master
@@ -62,7 +61,7 @@ class SfeFrame(ttk.LabelFrame):
 
 class ButtonsFrame(ttk.LabelFrame):
     def __init__(self, master):
-        ttk.LabelFrame.__init__(self, master, height=100, width=100, text='Buttons')
+        ttk.LabelFrame.__init__(self, master, text='Buttons')
         self.master = master
         self.messages = self.master.messages
         self.add_button = CharacterAddButton(self, 'Add', self.master.karakterek)
