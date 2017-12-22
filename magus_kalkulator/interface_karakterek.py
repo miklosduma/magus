@@ -1,4 +1,4 @@
-from tkinter import (Button, Entry, Label,
+from tkinter import (Button, Entry, Label, W, E,
                      StringVar, ttk)
 
 import tkMessageBox
@@ -29,11 +29,12 @@ class KarakterPage(ttk.Frame):
         column = 1
         for element in [self.name_label, self.name_field, self.ep_label,
                         self.ep_field, self.fp_label, self.fp_field,
-                        self.sfe_label, self.sfe_field, self.add_button,
-                        self.get_button]:
+                        self.sfe_label, self.sfe_field]:
 
-            element.grid(column=column, row=row)
+            element.grid(column=column, row=row, sticky=W)
             row += 1
+        self.add_button.grid(column=column, row=row, sticky=W)
+        self.get_button.grid(column=column, row=row, sticky=E)
 
 
 class CharacterAddButton(Button):
@@ -105,7 +106,7 @@ class CharactersGetButton(Button):
         else:
             msg = 'Eddig hozzaadott karakterek: \n{}'.format(
                 '\n'.join(all_characters))
-        
+
         self.messages.write_message(msg)
 
 
