@@ -7,6 +7,7 @@ import tkMessageBox
 class KarakterPage(ttk.Frame):
     def __init__(self, master, karakterek, messages):
         self.karakterek = karakterek
+        self.messages = messages
         ttk.Frame.__init__(self, master, width=300, height=600)
         self.add_button = CharacterAddButton(self, 'Add', self.karakterek)
         self.get_button = CharactersGetButton(self, 'Get', self.karakterek)
@@ -17,7 +18,9 @@ class KarakterPage(ttk.Frame):
 
 class CharacterAddButton(Button):
     def __init__(self, master, text, karakterek):
+        self.master = master
         self.karakterek = karakterek
+        self.messages = self.master.messages
         Button.__init__(self, master, text=text)
         self.bind('<Button-1>', self.add_character)
 
@@ -25,10 +28,12 @@ class CharacterAddButton(Button):
         success, msg = self.karakterek.add_karakter('Vimes', 14, 5)
 
         if not success:
-            tkMessageBox.showwarning('Nem ezeket a droidokat keresik!', msg)
-        else:
-            tkMessageBox.showinfo('Siker!', msg)
+            msg = 'Nem ezeket a droidokat keresik!'
 
+        else:
+            msg = 'Siker!'
+
+        self.messages.write_message(msg)
 
 class CharactersGetButton(Button):
     def __init__(self, master, text, karakterek):
