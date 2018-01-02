@@ -14,6 +14,20 @@ EP_LABEL = 'Max EP'
 FP_LABEL = 'Max FP'
 NEV_LABEL = 'Nev'
 
+SFE_FRAME_TITLE = 'SFE'
+SFE_LABEL = 'Max SFE'
+
+BUTTONS_FRAME_TITLE = 'Buttons'
+ADD_BUTTON = 'Add'
+GET_BUTTON = 'Get'
+
+SUCCESS = 'Siker!'
+EMPTY_FIELD = 'Tolts ki minden mezot!'
+NOT_NUMBER = 'Nem szam: {}'
+ALREADY_ADDED = '{} mar hozza lett adva.'
+NO_CHARACTERS = 'Meg nem adtal hozza karaktert.'
+CHARACTERS_ADDED = 'Eddig hozzaadott karakterek: \n{}'
+
 
 class KarakterPage(ttk.Frame):
     def __init__(self, master, master_gui):
@@ -61,9 +75,9 @@ class FieldsFrame(ttk.LabelFrame):
 
 class SfeFrame(ttk.LabelFrame):
     def __init__(self, master):
-        ttk.LabelFrame.__init__(self, master, text='SFE')
+        ttk.LabelFrame.__init__(self, master, text=SFE_FRAME_TITLE)
         self.sfe_field = CharacterValueField(self)
-        self.sfe_label = Label(self, text='Max SFE')
+        self.sfe_label = Label(self, text=SFE_LABEL)
         self.master = master
         self.gui_top = master.gui_top
         self.gui_top.organize_rows_to_left([self.sfe_label, self.sfe_field],
@@ -72,11 +86,13 @@ class SfeFrame(ttk.LabelFrame):
 
 class ButtonsFrame(ttk.LabelFrame):
     def __init__(self, master):
-        ttk.LabelFrame.__init__(self, master, text='Buttons')
+        ttk.LabelFrame.__init__(self, master, text=BUTTONS_FRAME_TITLE)
         self.master = master
         self.messages = self.master.messages
-        self.add_button = CharacterAddButton(self, 'Add', self.master.karakterek)
-        self.get_button = CharactersGetButton(self, 'Get', self.master.karakterek)
+        self.add_button = CharacterAddButton(self, ADD_BUTTON,
+                                             self.master.karakterek)
+        self.get_button = CharactersGetButton(self, GET_BUTTON,
+                                              self.master.karakterek)
         self.add_button.grid(column=0, row=0, sticky=W)
         self.get_button.grid(column=1, row=0, sticky=E)
 
@@ -104,14 +120,14 @@ class CharacterAddButton(Button):
         missing = [x for x in values if not x]
 
         if missing:
-            return False, 'Tolts ki minden mezot!'
+            return False, EMPTY_FIELD
 
         try:
             ep = int(ep)
             fp = int(fp)
             sfe = int(sfe)
         except ValueError as error:
-            return False, 'Nem szam: {}'.format(error.message)
+            return False, NOT_NUMBER.format(error.message)
 
         return True, [name, ep, fp, sfe]
 
@@ -127,10 +143,10 @@ class CharacterAddButton(Button):
         success, msg = self.karakterek.add_karakter(name, ep, sfe, fp=fp)
 
         if not success:
-            msg = '{} mar hozza lett adva.'.format(name)
+            msg = ALREADY_ADDED.format(name)
 
         else:
-            msg = 'Siker!'
+            msg = SUCCESS
 
         self.messages.write_message(msg)
 
@@ -147,10 +163,10 @@ class CharactersGetButton(Button):
         all_characters = self.karakterek.get_all_karakters()
 
         if not all_characters:
-            msg = 'Meg nem adtal hozza karaktert.'
+            msg = NO_CHARACTERS
 
         else:
-            msg = 'Eddig hozzaadott karakterek: \n{}'.format(
+            msg = CHARACTERS_ADDED.format(
                 '\n'.join(all_characters))
 
         self.messages.write_message(msg)
