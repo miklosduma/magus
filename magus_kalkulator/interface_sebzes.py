@@ -1,4 +1,4 @@
-from tkinter import (Entry, StringVar, OptionMenu, Button, ttk)
+from tkinter import (Entry, StringVar, OptionMenu, Button, ttk, Label)
 from sebzes import return_penalty
 from validate import validate_values
 
@@ -6,8 +6,9 @@ from validate import validate_values
 DAMAGE_PAGE_COLUMN = 0
 
 DAMAGE_BUTTON_TEXT = 'Start'
-
-NO_CHARACTER = 'Valassz karaktert!'
+SELECT_CHARACTER = 'Megtamadott'
+SELECT_WEAPON = 'Tamado fegyver'
+DAMAGE_TEXT = 'Sebzes'
 
 # Types of attacking weapons. Used when calculating the damage
 WEAPON_TYPES = ['Szur', 'Vag', 'Zuz', 'Harap', 'Karmol']
@@ -53,21 +54,26 @@ class SebzesPage(ttk.Frame):
         # SFE and Max_EP of character is used when calculating damage
         self.karakterek = master_gui.karakterek
         self.karakter_var = KarakterVar(self, self.karakterek, self.messages)
+
+        self.karakter_label = Label(self, text=SELECT_CHARACTER)
         self.dropdown = KarakterekMenu(self, self.karakter_var,
                                        self.karakterek, *[''])
 
         # Variable for type of attacking weapon. Can be selected from drop-down
+        self.weapon_label = Label(self, text=SELECT_WEAPON)
         self.weapon_type = WeaponString(self, WEAPON_TYPES)
         self.weapon_menu = WeaponTypeMenu(self, self.weapon_type, *WEAPON_TYPES)
 
         # Variable for total damage. Can be entered into entry field
+        self.sebzes_label = Label(self, text=DAMAGE_TEXT)
         self.sebzes = SebzesField(self)
         self.sebzes_button = SebzesButton(self, DAMAGE_BUTTON_TEXT)
 
         # Place elements on grid
-        self.gui_top.organize_rows_to_left([self.dropdown, self.weapon_menu,
-                                            self.sebzes, self.sebzes_button],
-                                           DAMAGE_PAGE_COLUMN)
+        self.gui_top.organize_rows_to_left([self.karakter_label, self.dropdown,
+                                            self.weapon_label, self.weapon_menu,
+                                            self.sebzes_label, self.sebzes,
+                                            self.sebzes_button], DAMAGE_PAGE_COLUMN)
 
 
 class SebzesField(Entry):
