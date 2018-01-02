@@ -1,7 +1,6 @@
+import re
 from tkinter import (Button, Entry, Label, W, E,
                      StringVar, VERTICAL, ttk)
-
-
 
 KARAKTER_PANEL_COLUMN = 0
 KARAKTER_PANEL_ROW = 0
@@ -27,6 +26,8 @@ NOT_NUMBER = 'Nem szam: {}'
 ALREADY_ADDED = '{} mar hozza lett adva.'
 NO_CHARACTERS = 'Meg nem adtal hozza karaktert.'
 CHARACTERS_ADDED = 'Eddig hozzaadott karakterek: \n{}'
+
+MATCH_SINGLE_QUOTES = r'\'[^\']+\''
 
 
 class KarakterPage(ttk.Frame):
@@ -127,7 +128,8 @@ class CharacterAddButton(Button):
             fp = int(fp)
             sfe = int(sfe)
         except ValueError as error:
-            return False, NOT_NUMBER.format(error.message)
+            value = re.findall(MATCH_SINGLE_QUOTES, error.message)[0]
+            return False, NOT_NUMBER.format(value)
 
         return True, [name, ep, fp, sfe]
 
