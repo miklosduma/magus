@@ -26,12 +26,42 @@ NOT_NUMBER = 'Nem szam: {}'
 ALREADY_ADDED = '{} mar hozza lett adva.'
 NO_CHARACTERS = 'Meg nem adtal hozza karaktert.'
 CHARACTERS_ADDED = 'Eddig hozzaadott karakterek: \n{}'
+NEGATIVE_NUMBER = 'Adj meg pozitiv szamot e helyett: {}'
 
 MATCH_SINGLE_QUOTES = r'\'[^\']+\''
 
 
 def get_value_from_error(msg):
     return re.findall(MATCH_SINGLE_QUOTES, msg)[0]
+
+
+def find_negative(*numbers):
+    for n in numbers:
+        if n < 0:
+            return n
+
+
+def validate_values(values):
+    [name, ep, fp, sfe] = values
+    missing = [x for x in values if not x]
+
+    if missing:
+        return False, EMPTY_FIELD
+
+    try:
+        ep = int(ep)
+        fp = int(fp)
+        sfe = int(sfe)
+    except ValueError as error:
+        value = get_value_from_error(error.message)
+        return False, NOT_NUMBER.format(value)
+
+    negative_number = find_negative(ep, fp, sfe)
+
+    if negative_number:
+        return False, NEGATIVE_NUMBER.format(negative_number)
+
+    return True, [name, ep, fp, sfe]
 
 
 class KarakterPage(ttk.Frame):
@@ -120,26 +150,9 @@ class CharacterAddButton(Button):
 
         return values
 
-    def validate_values(self, values):
-        [name, ep, fp, sfe] = values
-        missing = [x for x in values if not x]
-
-        if missing:
-            return False, EMPTY_FIELD
-
-        try:
-            ep = int(ep)
-            fp = int(fp)
-            sfe = int(sfe)
-        except ValueError as error:
-            value = get_value_from_error(error.message)
-            return False, NOT_NUMBER.format(value)
-
-        return True, [name, ep, fp, sfe]
-
     def add_character(self, event):
         values = self.retrieve_values()
-        success, checked_values = self.validate_values(values)
+        success, checked_values = validate_values(values)
 
         if not success:
             self.messages.write_message(checked_values)
