@@ -15,6 +15,10 @@ KEY_TEXT_DICT = {
 
 
 def format_damage_msg(penalty_dict):
+    """
+    Formats message returned on
+    penalty calculation.
+    """
     msg = ''
 
     for key, value in sorted(penalty_dict.items()):
@@ -43,7 +47,7 @@ class SebzesPage(ttk.Frame):
         self.karakterek = master_gui.karakterek
         self.karakter_var = KarakterVar(self, self.karakterek, self.messages)
         self.dropdown = KarakterekMenu(self, self.karakter_var,
-                                       self.karakterek, *["1", "2", "3"])
+                                       self.karakterek, *[''])
 
         # Variable for type of attacking weapon. Can be selected from drop-down
         self.weapon_type = WeaponString(self, WEAPON_TYPES)
