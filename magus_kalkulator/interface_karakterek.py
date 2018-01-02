@@ -6,8 +6,10 @@ from validate import validate_values
 KARAKTER_PANEL_COLUMN = 0
 KARAKTER_PANEL_ROW = 0
 
-EP_FIELDS_COLUMN = 1
-SFE_FIELDS_COLUMN = 1
+NAME_COLUMN = 0
+EP_FIELDS_COLUMN = 0
+FP_FIELDS_COLUMN = EP_FIELDS_COLUMN + 1
+SFE_FIELDS_COLUMN = EP_FIELDS_COLUMN
 
 EP_FRAME_TITLE = 'Eletero'
 EP_LABEL = 'Max EP'
@@ -44,12 +46,25 @@ class KarakterPanels(ttk.PanedWindow):
         self.gui_top = master.gui_top
         self.karakterek = self.master.karakterek
         self.messages = self.master.messages
+        self.name_frame = NameFrame(self)
         self.fields_frame = FieldsFrame(self)
         self.sfe_frame = SfeFrame(self)
         self.buttons_frame = ButtonsFrame(self)
+        self.add(self.name_frame)
         self.add(self.fields_frame)
         self.add(self.sfe_frame)
         self.add(self.buttons_frame)
+
+
+class NameFrame(ttk.LabelFrame):
+    def __init__(self, master):
+        self.master = master
+        self.gui_top = master.gui_top
+        ttk.LabelFrame.__init__(self, master, text=NEV_LABEL)
+
+        self.name_field = CharacterValueField(self)
+        self.gui_top.organize_rows_to_left([self.name_field],
+                                           NAME_COLUMN)
 
 
 class FieldsFrame(ttk.LabelFrame):
@@ -63,12 +78,10 @@ class FieldsFrame(ttk.LabelFrame):
         self.fp_field = CharacterValueField(self)
         self.fp_label = Label(self, text=FP_LABEL)
 
-        self.name_field = CharacterValueField(self)
-        self.name_label = Label(self, text=NEV_LABEL)
-        self.gui_top.organize_rows_to_left([self.name_label, self.name_field,
-                                            self.ep_label, self.ep_field,
-                                            self.fp_label, self.fp_field],
+        self.gui_top.organize_rows_to_left([self.ep_label, self.ep_field],
                                            EP_FIELDS_COLUMN)
+        self.gui_top.organize_rows_to_left([self.fp_label, self.fp_field],
+                                           FP_FIELDS_COLUMN)
 
 
 class SfeFrame(ttk.LabelFrame):
@@ -98,6 +111,7 @@ class ButtonsFrame(ttk.LabelFrame):
 class CharacterAddButton(Button):
     def __init__(self, master, text, karakterek):
         self.master = master
+        self.name = self.master.master.name_frame
         self.fields = self.master.master.fields_frame
         self.sfe = self.master.master.sfe_frame
         self.karakterek = karakterek
@@ -107,7 +121,7 @@ class CharacterAddButton(Button):
 
     def retrieve_values(self):
         values = []
-        for field in [self.fields.name_field, self.fields.ep_field,
+        for field in [self.name.name_field, self.fields.ep_field,
                       self.fields.fp_field, self.sfe.sfe_field]:
             values.append(field.value.get())
 
