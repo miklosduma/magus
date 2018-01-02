@@ -6,6 +6,26 @@ from validate import validate_values
 # Types of attacking weapons. Used when calculating the damage
 WEAPON_TYPES = ['Szur', 'Vag', 'Zuz', 'Harap', 'Karmol']
 
+KEY_TEXT_DICT = {
+    'ep_loss': 'EP veszteseg',
+    'fp_loss': 'FP veszteseg',
+    'hit_target': 'Talalati hely',
+    'penalty': 'Hatrany'
+}
+
+
+def format_damage_msg(penalty_dict):
+    msg = ''
+
+    for key, value in sorted(penalty_dict.items()):
+
+        if isinstance(value, list):
+            value = ', '.join(value)
+
+        msg += '{}: {}\n'.format(KEY_TEXT_DICT[key], value)
+
+    return msg.strip()
+
 
 class SebzesPage(ttk.Frame):
     """
@@ -226,4 +246,5 @@ class SebzesButton(Button):
         [max_ep, sfe, damage] = checked_values
 
         penalty = return_penalty(sfe, damage, max_ep, attacking_weapon)
-        self.messages.write_message(penalty)
+        msg = format_damage_msg(penalty)
+        self.messages.write_message(msg)
