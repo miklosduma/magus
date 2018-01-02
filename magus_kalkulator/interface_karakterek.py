@@ -30,6 +30,10 @@ CHARACTERS_ADDED = 'Eddig hozzaadott karakterek: \n{}'
 MATCH_SINGLE_QUOTES = r'\'[^\']+\''
 
 
+def get_value_from_error(msg):
+    return re.findall(MATCH_SINGLE_QUOTES, msg)[0]
+
+
 class KarakterPage(ttk.Frame):
     def __init__(self, master, master_gui):
         self.master = master
@@ -128,7 +132,7 @@ class CharacterAddButton(Button):
             fp = int(fp)
             sfe = int(sfe)
         except ValueError as error:
-            value = re.findall(MATCH_SINGLE_QUOTES, error.message)[0]
+            value = get_value_from_error(error.message)
             return False, NOT_NUMBER.format(value)
 
         return True, [name, ep, fp, sfe]
