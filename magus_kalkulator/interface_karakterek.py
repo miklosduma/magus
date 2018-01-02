@@ -1,6 +1,7 @@
-import re
 from tkinter import (Button, Entry, Label, W, E,
                      StringVar, VERTICAL, ttk)
+
+from validate import validate_values
 
 KARAKTER_PANEL_COLUMN = 0
 KARAKTER_PANEL_ROW = 0
@@ -21,47 +22,9 @@ ADD_BUTTON = 'Add'
 GET_BUTTON = 'Get'
 
 SUCCESS = 'Siker!'
-EMPTY_FIELD = 'Tolts ki minden mezot!'
-NOT_NUMBER = 'Nem szam: {}'
 ALREADY_ADDED = '{} mar hozza lett adva.'
 NO_CHARACTERS = 'Meg nem adtal hozza karaktert.'
 CHARACTERS_ADDED = 'Eddig hozzaadott karakterek: \n{}'
-NEGATIVE_NUMBER = 'Adj meg pozitiv szamot e helyett: {}'
-
-MATCH_SINGLE_QUOTES = r'\'[^\']+\''
-
-
-def get_value_from_error(msg):
-    return re.findall(MATCH_SINGLE_QUOTES, msg)[0]
-
-
-def find_negative(*numbers):
-    for n in numbers:
-        if n < 0:
-            return n
-
-
-def validate_values(values):
-    [name, ep, fp, sfe] = values
-    missing = [x for x in values if not x]
-
-    if missing:
-        return False, EMPTY_FIELD
-
-    try:
-        ep = int(ep)
-        fp = int(fp)
-        sfe = int(sfe)
-    except ValueError as error:
-        value = get_value_from_error(error.message)
-        return False, NOT_NUMBER.format(value)
-
-    negative_number = find_negative(ep, fp, sfe)
-
-    if negative_number:
-        return False, NEGATIVE_NUMBER.format(negative_number)
-
-    return True, [name, ep, fp, sfe]
 
 
 class KarakterPage(ttk.Frame):
@@ -152,7 +115,7 @@ class CharacterAddButton(Button):
 
     def add_character(self, event):
         values = self.retrieve_values()
-        success, checked_values = validate_values(values)
+        success, checked_values = validate_values(values, integers=[1,2,3])
 
         if not success:
             self.messages.write_message(checked_values)

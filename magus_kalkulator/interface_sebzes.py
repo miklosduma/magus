@@ -1,5 +1,6 @@
 from tkinter import (Entry, StringVar, OptionMenu, Button, ttk)
 from sebzes import return_penalty
+from validate import validate_values
 
 
 # Types of attacking weapons. Used when calculating the damage
@@ -202,11 +203,7 @@ class SebzesButton(Button):
         self.bind('<Button-1>', self.write_results)
 
     def get_damage(self):
-        try:
-            return True, int(self.sebzes.get())
-        except ValueError:
-            return False, 'Add meg a sebzest fiam. Szamot, ha kerhetnem!'
-
+        return self.sebzes.get()
 
     def write_results(self, event):
         attacking_weapon = self.weapon_type.get()
@@ -218,11 +215,16 @@ class SebzesButton(Button):
 
         max_ep = self.karakterek.get_karakter(attacked).max_ep
         sfe = self.karakterek.get_karakter(attacked).sfe
-        success, damage = self.get_damage()
+
+        damage = self.get_damage()
+        success, checked_values = validate_values([max_ep, sfe, damage], integers=[0,1,2])
 
         if not success:
-            self.messages.write_message(damage)
+            self.messages.write_message(checked_values)
             return
+
+        print(checked_values)
+        [max_ep, sfe, damage] = checked_values
 
         penalty = return_penalty(sfe, damage, max_ep, attacking_weapon)
         self.messages.write_message(penalty)
