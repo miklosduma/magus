@@ -17,6 +17,9 @@ def calculate_damage(sfe, damage, tulutes=False):
     """
     damage -= sfe
 
+    if damage <= 0:
+        return 0, 0
+
     if tulutes:
         ep_damage = damage
         fp_damage = damage * 2
@@ -36,8 +39,8 @@ def return_penalty(sfe, damage, max_ep, wtype, tulutes=False):
     ep_loss, fp_loss = calculate_damage(sfe, damage, tulutes=tulutes)
     result = calculate_penalty(ep_loss, max_ep, wtype, main_part, penalty_part)
     return {
-        'ep_loss' : ep_loss,
-        'fp_loss' : fp_loss,
+        'ep_loss': ep_loss,
+        'fp_loss': fp_loss,
         'hit_target': [main_part, penalty_part, sfe_part],
         'penalty': result
     }

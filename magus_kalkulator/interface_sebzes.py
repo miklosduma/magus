@@ -223,7 +223,6 @@ class SebzesButton(Button):
             self.messages.write_message(checked_values)
             return
 
-        print(checked_values)
         [max_ep, sfe, damage] = checked_values
 
         penalty = return_penalty(sfe, damage, max_ep, attacking_weapon)
