@@ -3,6 +3,8 @@ from sebzes import return_penalty
 from validate import validate_values
 
 
+DAMAGE_PAGE_COLUMN = 0
+
 DAMAGE_BUTTON_TEXT = 'Start'
 
 NO_CHARACTER = 'Valassz karaktert!'
@@ -45,6 +47,7 @@ class SebzesPage(ttk.Frame):
         """
         ttk.Frame.__init__(self, master)
         self.messages = master_gui.messages
+        self.gui_top = master_gui
 
         # Variable for character selection drop-down
         # SFE and Max_EP of character is used when calculating damage
@@ -61,11 +64,10 @@ class SebzesPage(ttk.Frame):
         self.sebzes = SebzesField(self)
         self.sebzes_button = SebzesButton(self, DAMAGE_BUTTON_TEXT)
 
-        self.sebzes.grid(row=6, column=1)
-        self.sebzes_button.grid(row=7, column=1)
-        self.weapon_menu.grid(row=4, column=1)
-        self.dropdown.grid(row=2, column=1)
-        self.messages.grid(column=0, columnspan=4)
+        # Place elements on grid
+        self.gui_top.organize_rows_to_left([self.dropdown, self.weapon_menu,
+                                            self.sebzes, self.sebzes_button],
+                                           DAMAGE_PAGE_COLUMN)
 
 
 class SebzesField(Entry):

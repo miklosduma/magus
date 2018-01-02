@@ -23,7 +23,9 @@ TABS_ROW = 0
 TABS_ROW_SPAN = 5
 
 MESSAGES_COLUMN = 4
-MESSAGES_COLUMNSPAN = 2
+MESSAGES_COLUMNSPAN = TABS_COLUMN_SPAN
+MESSAGES_ROW = TABS_ROW
+MESSAGES_ROWSPAN = TABS_ROW_SPAN
 
 START_INDEX = 1.0
 
@@ -57,7 +59,9 @@ class MagusGUI:
         self.tabs = MyTabs(self.master, self)
         self.tabs.grid(column=TABS_COLUMN, columnspan=TABS_COLUMN_SPAN,
                        row=TABS_ROW, rowspan=TABS_ROW_SPAN, sticky=N)
-        self.messages.grid(column=MESSAGES_COLUMN, columnspan=MESSAGES_COLUMNSPAN)
+        self.messages.grid(column=MESSAGES_COLUMN,
+                           columnspan=MESSAGES_COLUMNSPAN, sticky=N,
+                           row=MESSAGES_ROW, rowspan=MESSAGES_ROWSPAN)
 
     def organize_rows_to_left(self, list_of_elements, column, start_row=0):
         """
