@@ -10,6 +10,8 @@ SELECT_CHARACTER = 'Megtamadott'
 SELECT_WEAPON = 'Tamado fegyver'
 DAMAGE_TEXT = 'Sebzes'
 
+NO_CHARACTER = 'Valassz karaktert!'
+
 # Types of attacking weapons. Used when calculating the damage
 WEAPON_TYPES = ['Szur', 'Vag', 'Zuz', 'Harap', 'Karmol']
 

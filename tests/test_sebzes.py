@@ -4,7 +4,9 @@ from magus_kalkulator.sebzes import calculate_damage, return_penalty
 
 test_data_calculate = [
     (7, 13, True, (6, 12)),
-    (3, 21, False, (3, 18))
+    (3, 21, False, (3, 18)),
+    (3, 2, False, (0, 0)),
+    (3, 3, True, (0, 0))
 ]
 
 
