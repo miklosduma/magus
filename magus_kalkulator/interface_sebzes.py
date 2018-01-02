@@ -3,6 +3,10 @@ from sebzes import return_penalty
 from validate import validate_values
 
 
+DAMAGE_BUTTON_TEXT = 'Start'
+
+NO_CHARACTER = 'Valassz karaktert!'
+
 # Types of attacking weapons. Used when calculating the damage
 WEAPON_TYPES = ['Szur', 'Vag', 'Zuz', 'Harap', 'Karmol']
 
@@ -55,7 +59,7 @@ class SebzesPage(ttk.Frame):
 
         # Variable for total damage. Can be entered into entry field
         self.sebzes = SebzesField(self)
-        self.sebzes_button = SebzesButton(self, 'Start')
+        self.sebzes_button = SebzesButton(self, DAMAGE_BUTTON_TEXT)
 
         self.sebzes.grid(row=6, column=1)
         self.sebzes_button.grid(row=7, column=1)
@@ -172,7 +176,7 @@ class KarakterVar(StringVar):
         if character:
             return True, character
 
-        return False, 'Valassz karaktert!'
+        return False, NO_CHARACTER
 
     def print_on_change(self, *args):
         """
@@ -241,7 +245,8 @@ class SebzesButton(Button):
         sfe = self.karakterek.get_karakter(attacked).sfe
 
         damage = self.get_damage()
-        success, checked_values = validate_values([max_ep, sfe, damage], integers=[0,1,2])
+        success, checked_values = validate_values([max_ep, sfe, damage],
+                                                  integers=[0,1,2])
 
         if not success:
             self.messages.write_message(checked_values)
