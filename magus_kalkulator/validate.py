@@ -46,7 +46,7 @@ def validate_values(values, integers=None):
     """
 
     # Strip all values (at this stage they all must be strings)
-    values = [x.strip() for x in values]
+    values = [x.strip() if isinstance(x, str) else x for x in values]
 
     # Find emtpy fields
     missing = [x for x in values if not x]
