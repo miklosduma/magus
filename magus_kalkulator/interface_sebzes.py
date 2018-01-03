@@ -1,4 +1,5 @@
-from tkinter import (Entry, StringVar, OptionMenu, Button, ttk, Label)
+from tkinter import (Entry, StringVar, IntVar ,OptionMenu, Button, ttk,
+                     Label, Checkbutton)
 from sebzes import return_penalty
 from validate import validate_values
 
@@ -9,6 +10,7 @@ DAMAGE_BUTTON_TEXT = 'Start'
 SELECT_CHARACTER = 'Megtamadott'
 SELECT_WEAPON = 'Tamado fegyver'
 DAMAGE_TEXT = 'Sebzes'
+TULUTES_TEXT = 'Tulutes'
 
 NO_CHARACTER = 'Valassz karaktert!'
 
@@ -69,12 +71,14 @@ class SebzesPage(ttk.Frame):
         # Variable for total damage. Can be entered into entry field
         self.sebzes_label = Label(self, text=DAMAGE_TEXT)
         self.sebzes = SebzesField(self)
+        self.tulutes_box = TulutesBox(self)
         self.sebzes_button = SebzesButton(self, DAMAGE_BUTTON_TEXT)
 
         # Place elements on grid
         self.gui_top.organize_rows_to_left([self.karakter_label, self.dropdown,
                                             self.weapon_label, self.weapon_menu,
                                             self.sebzes_label, self.sebzes,
+                                            self.tulutes_box,
                                             self.sebzes_button], DAMAGE_PAGE_COLUMN)
 
 
@@ -236,6 +240,7 @@ class SebzesButton(Button):
         self.karakterek = self.master.karakterek
         self.karakter_var = self.master.karakter_var
         self.messages = self.master.messages
+        self.tulutes = self.master.tulutes_box
         self.sebzes = self.master.sebzes
         self.weapon_type = self.master.weapon_type
         self.bind('<Button-1>', self.write_results)
@@ -263,7 +268,28 @@ class SebzesButton(Button):
             return
 
         [max_ep, sfe, damage] = checked_values
+        tulutes = self.tulutes.get_tulutes()
 
-        penalty = return_penalty(sfe, damage, max_ep, attacking_weapon)
+        penalty = return_penalty(sfe, damage, max_ep, attacking_weapon,
+                                 tulutes=tulutes)
         msg = format_damage_msg(penalty)
         self.messages.write_message(msg)
+
+
+class TulutesBox(Checkbutton):
+    def __init__(self, master):
+        self.tick = IntVar()
+        self.tick.set(0)
+        Checkbutton.__init__(self, master, text=TULUTES_TEXT,
+                             variable=self.tick, command=self.print_on_change)
+
+    def print_on_change(self, *args):
+        self.state = self.tick.get()
+
+        if self.state:
+            print('Selected')
+        else:
+            print('Unselected')
+
+    def get_tulutes(self):
+        return self.tick.get()
