@@ -11,11 +11,14 @@ SELECT_CHARACTER = 'Megtamadott'
 SELECT_WEAPON = 'Tamado fegyver'
 DAMAGE_TEXT = 'Sebzes'
 TULUTES_TEXT = 'Tulutes'
+ATUTES_TEXT = 'Atutes'
 
 NO_CHARACTER = 'Valassz karaktert!'
 
 # Types of attacking weapons. Used when calculating the damage
 WEAPON_TYPES = ['Szur', 'Vag', 'Zuz', 'Harap', 'Karmol']
+
+ATUTES_VALUES = [0, 1, 2, 3, 4, 5]
 
 KEY_TEXT_DICT = {
     'ep_loss': 'EP veszteseg',
@@ -72,14 +75,18 @@ class SebzesPage(ttk.Frame):
         self.sebzes_label = Label(self, text=DAMAGE_TEXT)
         self.sebzes = SebzesField(self)
         self.tulutes_box = TulutesBox(self)
+        self.atutes_label = Label(self, text=ATUTES_TEXT)
+        self.atutes_menu = AtutesMenu(self, *ATUTES_VALUES)
         self.sebzes_button = SebzesButton(self, DAMAGE_BUTTON_TEXT)
 
         # Place elements on grid
         self.gui_top.organize_rows_to_left([self.karakter_label, self.dropdown,
                                             self.weapon_label, self.weapon_menu,
                                             self.sebzes_label, self.sebzes,
-                                            self.tulutes_box,
+                                            self.atutes_label, self.atutes_menu,
                                             self.sebzes_button], DAMAGE_PAGE_COLUMN)
+        self.sebzes_row = self.sebzes.grid_info()['row']
+        self.tulutes_box.grid(column=DAMAGE_PAGE_COLUMN+1, row=self.sebzes_row)
 
 
 class SebzesField(Entry):
@@ -241,6 +248,7 @@ class SebzesButton(Button):
         self.karakter_var = self.master.karakter_var
         self.messages = self.master.messages
         self.tulutes = self.master.tulutes_box
+        self.atutes = self.master.atutes_menu
         self.sebzes = self.master.sebzes
         self.weapon_type = self.master.weapon_type
         self.bind('<Button-1>', self.write_results)
@@ -269,8 +277,9 @@ class SebzesButton(Button):
 
         [max_ep, sfe, damage] = checked_values
         tulutes = self.tulutes.get_tulutes()
+        atutes = self.atutes.get_atutes()
 
-        penalty = return_penalty(sfe, damage, max_ep, attacking_weapon,
+        penalty = return_penalty(sfe, damage, atutes, max_ep, attacking_weapon,
                                  tulutes=tulutes)
         msg = format_damage_msg(penalty)
         self.messages.write_message(msg)
@@ -293,3 +302,17 @@ class TulutesBox(Checkbutton):
 
     def get_tulutes(self):
         return self.tick.get()
+
+
+class AtutesMenu(OptionMenu):
+    def __init__(self, master, *options):
+        self.atutes = IntVar()
+        self.atutes.trace('w', callback=self.print_on_change)
+        self.atutes.set(options[0])
+        OptionMenu.__init__(self, master, self.atutes, *options)
+
+    def print_on_change(self, *args):
+        print(self.get_atutes())
+
+    def get_atutes(self):
+        return self.atutes.get()

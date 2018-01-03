@@ -44,7 +44,6 @@ def validate_values(values, integers=None):
     Specify the index of all integer fields in
     the integers key argument.
     """
-
     # Find emtpy fields
     missing = [x for x in values if not x]
 
