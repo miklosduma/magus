@@ -3,6 +3,8 @@ from tkinter import (Button, Entry, Label, W, E,
 
 from validate import validate_values
 
+FIELD_WIDTH = 10
+
 KARAKTER_PANEL_COLUMN = 0
 KARAKTER_PANEL_ROW = 0
 
@@ -88,11 +90,12 @@ class SfeFrame(ttk.LabelFrame):
     def __init__(self, master):
         ttk.LabelFrame.__init__(self, master, text=SFE_FRAME_TITLE)
         self.sfe_field = CharacterValueField(self)
-        self.sfe_label = Label(self, text=SFE_LABEL)
         self.master = master
         self.gui_top = master.gui_top
-        self.gui_top.organize_rows_to_left([self.sfe_label, self.sfe_field],
+        self.gui_top.organize_rows_to_left([self.sfe_field],
                                            SFE_FIELDS_COLUMN)
+        self.fej_sfe = SfePartFrame(self, 'Fej SFE',['homlok', 'koponya'])
+        self.fej_sfe.grid(row=3, columnspan=3)
 
 
 class ButtonsFrame(ttk.LabelFrame):
@@ -128,6 +131,7 @@ class CharacterAddButton(Button):
         return values
 
     def add_character(self, event):
+        self.sfe.fej_sfe.add_sfe()
         values = self.retrieve_values()
         success, checked_values = validate_values(values, integers=[1,2,3])
 
@@ -158,6 +162,8 @@ class CharactersGetButton(Button):
     def get_characters(self, event):
         all_characters = self.karakterek.get_all_karakters()
 
+        self.master.master.sfe_frame.fej_sfe.get_part_sfe()
+
         if not all_characters:
             msg = NO_CHARACTERS
 
@@ -169,7 +175,7 @@ class CharactersGetButton(Button):
 
 
 class CharacterValueField(Entry):
-    def __init__(self, master):
+    def __init__(self, master, width=FIELD_WIDTH):
         """
         Initialise input field.
         """
@@ -179,7 +185,46 @@ class CharacterValueField(Entry):
         self.value.trace('w', self.print_on_change)
 
         # Entry field
-        Entry.__init__(self, master, textvariable=self.value)
+        Entry.__init__(self, master, textvariable=self.value,
+                       width=width)
 
     def print_on_change(self, *args):
         print(self.value.get())
+
+
+class SfePartFrame(ttk.LabelFrame):
+    def __init__(self, master, text, fields):
+        ttk.LabelFrame.__init__(self, master, text=text)
+        self.sfe_field = CharacterValueField(self)
+        self.master = master
+        self.fields = {}
+        self.place_sfe_fields(fields)
+
+    def place_sfe_fields(self, fields):
+        column = 0
+        row = 0
+        for field in fields:
+            sfe_field = CharacterValueField(self, width=1)
+            label = Label(self,text=field)
+            sep = Label(self,text='/')
+            label.grid(row=row, column=column)
+            column += 1
+            sfe_field.grid(row=row,column=column, sticky=W)
+            column +=1
+            sep.grid(row=row, column=column)
+            self.fields[field] = sfe_field
+            if column >= 3:
+                column = 0
+                row += 1
+            else:
+                column += 1
+
+    def get_part_sfe(self):
+        for key in self.fields.keys():
+            print(key)
+            print(self.fields[key])
+
+    def add_sfe(self):
+        for key, value in self.fields.items():
+            if value.get():
+                self.fields[key] = value.get()
