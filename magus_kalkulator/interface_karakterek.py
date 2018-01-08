@@ -1,4 +1,4 @@
-from tkinter import (Button, Entry, Label, W, E,
+from tkinter import (Button, Entry, Label, W, E, N,
                      StringVar, VERTICAL, ttk)
 
 from validate import validate_values
@@ -96,16 +96,16 @@ class SfeFrame(ttk.LabelFrame):
         self.gui_top.organize_rows_to_left([self.sfe_field],
                                            SFE_FIELDS_COLUMN)
         self.fej_sfe = SfePartFrame(self, 'Fej SFE',['Homlok', 'Koponya', 'Arc'])
-        self.fej_sfe.grid(row=3, columnspan=5, sticky=W)
+        self.fej_sfe.grid(row=3, columnspan=5, sticky=(N,W))
 
         self.torzs_sfe = SfePartFrame(self, 'Torzs SFE', ['Mellkas', 'Has', 'Vallak'])
-        self.torzs_sfe.grid(row=3, column=5, columnspan=5)
+        self.torzs_sfe.grid(row=3, column=5, columnspan=5,sticky=(N,W))
 
         self.kar_sfe = SfePartFrame(self, 'Kar SFE', ['Felkar', 'Alkar', 'Kezfej'], limb=True)
-        self.kar_sfe.grid(row=4, columnspan=5, sticky=W)
+        self.kar_sfe.grid(row=4, columnspan=5, sticky=(N,W))
 
         self.lab_sfe = SfePartFrame(self, 'Lab SFE', ['Comb', 'Terd', 'Labszar', 'Labfej'], limb=True)
-        self.lab_sfe.grid(row=4, column =5, columnspan=5, sticky=E)
+        self.lab_sfe.grid(row=4, column =5, columnspan=5, sticky=(N,W))
 
 
 class ButtonsFrame(ttk.LabelFrame):
@@ -173,6 +173,7 @@ class CharactersGetButton(Button):
         all_characters = self.karakterek.get_all_karakters()
 
         self.master.master.sfe_frame.fej_sfe.get_part_sfe()
+        self.master.master.sfe_frame.lab_sfe.get_part_sfe()
 
         if not all_characters:
             msg = NO_CHARACTERS
@@ -206,12 +207,18 @@ class SfePartFrame(ttk.LabelFrame):
     def __init__(self, master, text, fields, limb=False):
         ttk.LabelFrame.__init__(self, master, text=text)
         self.is_limb = limb
-        self.sfe_field = CharacterValueField(self, width=1)
+        self.sfe_field = CharacterValueField(self, width=2)
         Label(self, text='Total').grid(row=0, column=0, sticky=W)
         self.sfe_field.grid(row=0, column=1, sticky=E)
         self.master = master
         self.fields = {}
         self.place_sfe_fields(fields)
+        self.sfe_field.value.trace('w', self.follow_total)
+
+    def follow_total(self, *_args):
+        for value in self.fields.values():
+            total = self.sfe_field.value.get()
+            value.value.set(total)
 
     def place_sfe_fields(self, fields):
         column = 0
@@ -225,8 +232,8 @@ class SfePartFrame(ttk.LabelFrame):
         for field in fields:
 
             if self.is_limb:
-                jobb_field = 'Jobb {}'.format(field)
-                bal_field = 'Bal {}'.format(field)
+                jobb_field = 'J{}'.format(field.lower())
+                bal_field = 'B{}'.format(field.lower())
                 sfe_fields = [jobb_field, bal_field]
             else:
                 sfe_fields = [field]
@@ -235,7 +242,7 @@ class SfePartFrame(ttk.LabelFrame):
             label.grid(row=row, column=column, sticky=W)
 
             for sfe_field in sfe_fields:
-                sfe_field_value = CharacterValueField(self, width=1)
+                sfe_field_value = CharacterValueField(self, width=2)
 
                 if sfe_fields.index(sfe_field) == 0:
                     direction = W
@@ -247,11 +254,10 @@ class SfePartFrame(ttk.LabelFrame):
 
             row += 1
 
-
     def get_part_sfe(self):
         for key in self.fields.keys():
             print(key)
-            print(self.fields[key])
+            print(self.fields[key].value.get())
 
     def add_sfe(self):
         for key, value in self.fields.items():
