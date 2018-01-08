@@ -5,9 +5,9 @@ from interface_sebzes import SebzesPage
 from interface_karakterek import KarakterPage
 
 
-WINDOW_WIDTH = 960
-WINDOW_HEIGHT = 600
-WINDOW_DIMENSIONS = '960x600'
+WINDOW_WIDTH = 800
+WINDOW_HEIGHT = 800
+WINDOW_DIMENSIONS = '800x800'
 WINDOW_TEXT = 'Magus kalkulator'
 
 TEXT_START = 'Udv kockak!'

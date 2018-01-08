@@ -95,16 +95,17 @@ class SfeFrame(ttk.LabelFrame):
         self.gui_top = master.gui_top
         self.gui_top.organize_rows_to_left([self.sfe_field],
                                            SFE_FIELDS_COLUMN)
-        self.fej_sfe = SfePartFrame(self, 'Fej SFE',['Homlok', 'Koponya', 'Arc'])
+        self.fej_sfe = SfePartFrame(self, 'Fej SFE',['Arc', 'Nyak', 'Koponya'])
         self.fej_sfe.grid(row=3, columnspan=5, sticky=(N,W))
 
-        self.torzs_sfe = SfePartFrame(self, 'Torzs SFE', ['Mellkas', 'Has', 'Vallak'])
+        self.torzs_sfe = SfePartFrame(self, 'Torzs SFE', ['Mellkas', 'Has', 'Agyek'])
         self.torzs_sfe.grid(row=3, column=5, columnspan=5,sticky=(N,W))
 
-        self.kar_sfe = SfePartFrame(self, 'Kar SFE', ['Felkar', 'Alkar', 'Kezfej'], limb=True)
+        self.kar_sfe = SfePartFrame(self, 'Kar SFE', ['Vall', 'Felkar', 'Konyok', 'Alkar', 'Csuklo', 'Kezfej'],
+                                    limb=True)
         self.kar_sfe.grid(row=4, columnspan=5, sticky=(N,W))
 
-        self.lab_sfe = SfePartFrame(self, 'Lab SFE', ['Comb', 'Terd', 'Labszar', 'Labfej'], limb=True)
+        self.lab_sfe = SfePartFrame(self, 'Lab SFE', ['Comb', 'Terd', 'Labszar', 'Boka', 'Labfej'], limb=True)
         self.lab_sfe.grid(row=4, column =5, columnspan=5, sticky=(N,W))
 
 
