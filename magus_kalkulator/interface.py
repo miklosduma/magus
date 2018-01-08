@@ -1,4 +1,4 @@
-from tkinter import (Tk, mainloop, ttk, Text, END, DISABLED, NORMAL, N, W)
+from tkinter import (Tk, mainloop, ttk, Text, END, DISABLED, NORMAL, N, W, NE)
 
 from karakterek import Karakterek
 from interface_sebzes import SebzesPage
@@ -18,12 +18,12 @@ SEBZES_PAGE_TITLE = 'Sebzes'
 MESSAGE_BOX_COLOUR = 'azure'
 
 TABS_COLUMN = 0
-TABS_COLUMN_SPAN = 4
+TABS_COLUMN_SPAN = 10
 TABS_ROW = 0
 TABS_ROW_SPAN = 5
 
-MESSAGES_COLUMN = 4
-MESSAGES_COLUMNSPAN = TABS_COLUMN_SPAN
+MESSAGES_COLUMN = 11
+MESSAGES_COLUMNSPAN = TABS_COLUMN_SPAN - 1
 MESSAGES_ROW = TABS_ROW
 MESSAGES_ROWSPAN = TABS_ROW_SPAN
 
@@ -60,7 +60,7 @@ class MagusGUI:
         self.tabs.grid(column=TABS_COLUMN, columnspan=TABS_COLUMN_SPAN,
                        row=TABS_ROW, rowspan=TABS_ROW_SPAN, sticky=N)
         self.messages.grid(column=MESSAGES_COLUMN,
-                           columnspan=MESSAGES_COLUMNSPAN, sticky=N,
+                           columnspan=MESSAGES_COLUMNSPAN, sticky=NE,
                            row=MESSAGES_ROW, rowspan=MESSAGES_ROWSPAN)
 
     def organize_rows_to_left(self, list_of_elements, column, start_row=0):
@@ -88,14 +88,14 @@ class MyTabs(ttk.Notebook):
         object from the top level and hands them down to
         the slave pages.
         """
-        ttk.Notebook.__init__(self, master)
+        ttk.Notebook.__init__(self, master, width=WINDOW_WIDTH/2)
         self.karakterek = master_gui.karakterek
         self.messages = master_gui.messages
         self.master = master
 
         # Initialize tabs
-        self.karakter_page = KarakterPage(self, master_gui)
-        self.sebzes_page = SebzesPage(self, master_gui)
+        self.karakter_page = KarakterPage(self, master_gui, WINDOW_WIDTH/2)
+        self.sebzes_page = SebzesPage(self, master_gui, WINDOW_WIDTH/2)
         self.add(self.karakter_page, text=KARAKTER_PAGE_TITLE)
         self.add(self.sebzes_page, text=SEBZES_PAGE_TITLE)
 

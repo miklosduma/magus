@@ -3,6 +3,7 @@ from tkinter import (Button, Entry, Label, W, E,
 
 from validate import validate_values
 
+
 FIELD_WIDTH = 10
 
 KARAKTER_PANEL_COLUMN = 0
@@ -32,19 +33,19 @@ CHARACTERS_ADDED = 'Eddig hozzaadott karakterek: \n{}'
 
 
 class KarakterPage(ttk.Frame):
-    def __init__(self, master, master_gui):
+    def __init__(self, master, master_gui, width):
         self.master = master
         self.gui_top = master_gui
         self.karakterek = master_gui.karakterek
         self.messages = master_gui.messages
-        ttk.Frame.__init__(self, master)
-        self.panels = KarakterPanels(self)
-        self.panels.grid(column=0, row=0)
+        ttk.Frame.__init__(self, master, width=width)
+        self.panels = KarakterPanels(self, width)
+        self.panels.grid(column=0, row=0, columnspan=8)
 
 
 class KarakterPanels(ttk.PanedWindow):
-    def __init__(self, master, orient=VERTICAL):
-        ttk.PanedWindow.__init__(self, master, orient=orient)
+    def __init__(self, master, width, orient=VERTICAL):
+        ttk.PanedWindow.__init__(self, master, width=width, orient=orient)
         self.gui_top = master.gui_top
         self.karakterek = self.master.karakterek
         self.messages = self.master.messages
@@ -94,8 +95,17 @@ class SfeFrame(ttk.LabelFrame):
         self.gui_top = master.gui_top
         self.gui_top.organize_rows_to_left([self.sfe_field],
                                            SFE_FIELDS_COLUMN)
-        self.fej_sfe = SfePartFrame(self, 'Fej SFE',['homlok', 'koponya'])
-        self.fej_sfe.grid(row=3, columnspan=3)
+        self.fej_sfe = SfePartFrame(self, 'Fej SFE',['Homlok', 'Koponya', 'Arc'])
+        self.fej_sfe.grid(row=3, columnspan=5, sticky=W)
+
+        self.torzs_sfe = SfePartFrame(self, 'Torzs SFE', ['Mellkas', 'Has', 'Vallak'])
+        self.torzs_sfe.grid(row=3, column=5, columnspan=5)
+
+        self.kar_sfe = SfePartFrame(self, 'Kar SFE', ['Felkar', 'Alkar', 'Kezfej'], limb=True)
+        self.kar_sfe.grid(row=4, columnspan=5, sticky=W)
+
+        self.lab_sfe = SfePartFrame(self, 'Lab SFE', ['Comb', 'Terd', 'Labszar', 'Labfej'], limb=True)
+        self.lab_sfe.grid(row=4, column =5, columnspan=5, sticky=E)
 
 
 class ButtonsFrame(ttk.LabelFrame):
@@ -193,31 +203,50 @@ class CharacterValueField(Entry):
 
 
 class SfePartFrame(ttk.LabelFrame):
-    def __init__(self, master, text, fields):
+    def __init__(self, master, text, fields, limb=False):
         ttk.LabelFrame.__init__(self, master, text=text)
-        self.sfe_field = CharacterValueField(self)
+        self.is_limb = limb
+        self.sfe_field = CharacterValueField(self, width=1)
+        Label(self, text='Total').grid(row=0, column=0, sticky=W)
+        self.sfe_field.grid(row=0, column=1, sticky=E)
         self.master = master
         self.fields = {}
         self.place_sfe_fields(fields)
 
     def place_sfe_fields(self, fields):
         column = 0
-        row = 0
+        row = 1
+
+        if self.is_limb:
+            jobb_bal = Label(self, text='Jobb/Bal')
+            jobb_bal.grid(row=row, column=column + 1)
+            row += 1
+
         for field in fields:
-            sfe_field = CharacterValueField(self, width=1)
-            label = Label(self,text=field)
-            sep = Label(self,text='/')
-            label.grid(row=row, column=column)
-            column += 1
-            sfe_field.grid(row=row,column=column, sticky=W)
-            column +=1
-            sep.grid(row=row, column=column)
-            self.fields[field] = sfe_field
-            if column >= 3:
-                column = 0
-                row += 1
+
+            if self.is_limb:
+                jobb_field = 'Jobb {}'.format(field)
+                bal_field = 'Bal {}'.format(field)
+                sfe_fields = [jobb_field, bal_field]
             else:
-                column += 1
+                sfe_fields = [field]
+
+            label = Label(self, text=field)
+            label.grid(row=row, column=column, sticky=W)
+
+            for sfe_field in sfe_fields:
+                sfe_field_value = CharacterValueField(self, width=1)
+
+                if sfe_fields.index(sfe_field) == 0:
+                    direction = W
+                else:
+                    direction = E
+
+                sfe_field_value.grid(row=row,column=column+1, sticky=direction)
+                self.fields[sfe_field] = sfe_field_value
+
+            row += 1
+
 
     def get_part_sfe(self):
         for key in self.fields.keys():

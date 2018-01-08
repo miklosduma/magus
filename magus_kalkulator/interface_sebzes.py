@@ -49,11 +49,11 @@ class SebzesPage(ttk.Frame):
     """
     Main tab for calculating damage and penalties.
     """
-    def __init__(self, master, master_gui):
+    def __init__(self, master, master_gui, width):
         """
         Initializes damage tab.
         """
-        ttk.Frame.__init__(self, master)
+        ttk.Frame.__init__(self, master, width=width)
         self.messages = master_gui.messages
         self.gui_top = master_gui
 
