@@ -32,6 +32,24 @@ NO_CHARACTERS = 'Meg nem adtal hozza karaktert.'
 CHARACTERS_ADDED = 'Eddig hozzaadott karakterek: \n{}'
 
 
+def collect_field_values(root, values=[]):
+
+    children = root.winfo_children()
+
+    if not children:
+        return values
+
+    for child in children:
+
+        if 'get' in dir(child):
+            values.append(child.get())
+
+        if child.winfo_children():
+            collect_field_values(child, values=values)
+
+    return values
+
+
 class KarakterPage(ttk.Frame):
     def __init__(self, master, master_gui, width):
         self.master = master
@@ -90,11 +108,13 @@ class FieldsFrame(ttk.LabelFrame):
 class SfeFrame(ttk.LabelFrame):
     def __init__(self, master):
         ttk.LabelFrame.__init__(self, master, text=SFE_FRAME_TITLE)
-        self.sfe_field = CharacterValueField(self)
+        self.sfe_label = Label(self, text='Mindenhol')
+        self.sfe_field = CharacterValueField(self, width=2)
+        self.sfe = {}
         self.master = master
-        self.gui_top = master.gui_top
-        self.gui_top.organize_rows_to_left([self.sfe_field],
-                                           SFE_FIELDS_COLUMN)
+        self.sfe_label.grid(row=0)
+        self.sfe_field.grid(row=0, column=1)
+
         self.fej_sfe = SfePartFrame(self, 'Fej SFE',['Arc', 'Nyak', 'Koponya'])
         self.fej_sfe.grid(row=3, columnspan=5, sticky=(N,W))
 
@@ -127,24 +147,16 @@ class CharacterAddButton(Button):
         self.master = master
         self.name = self.master.master.name_frame
         self.fields = self.master.master.fields_frame
-        self.sfe = self.master.master.sfe_frame
         self.karakterek = karakterek
         self.messages = self.master.messages
         Button.__init__(self, master, text=text)
         self.bind('<Button-1>', self.add_character)
 
-    def retrieve_values(self):
-        values = []
-        for field in [self.name.name_field, self.fields.ep_field,
-                      self.fields.fp_field, self.sfe.sfe_field]:
-            values.append(field.value.get())
-
-        return values
-
     def add_character(self, event):
-        self.sfe.fej_sfe.add_sfe()
-        values = self.retrieve_values()
-        success, checked_values = validate_values(values, integers=[1,2,3])
+        char_sfe = self.master.master.sfe_frame.sfe
+        sfe_values = [self.master.master.sfe_frame.sfe[x].get() for x in self.master.master.sfe_frame.sfe.keys()]
+        print(sfe_values)
+        success, checked_values = validate_values(sfe_values, integers=[1,2,3])
 
         if not success:
             self.messages.write_message(checked_values)
@@ -208,18 +220,28 @@ class SfePartFrame(ttk.LabelFrame):
     def __init__(self, master, text, fields, limb=False):
         ttk.LabelFrame.__init__(self, master, text=text)
         self.is_limb = limb
+        self.keys = fields
+        self.master = master
+        self.total_sfe = self.master.sfe_field.value
         self.sfe_field = CharacterValueField(self, width=2)
         Label(self, text='Total').grid(row=0, column=0, sticky=W)
-        self.sfe_field.grid(row=0, column=1, sticky=E)
+        self.sfe_field.grid(row=0, column=1, sticky=W)
         self.master = master
-        self.fields = {}
+        self.fields = self.master.sfe
+        self.local_fields = []
         self.place_sfe_fields(fields)
+        self.total_sfe.trace('w', self.follow_master)
         self.sfe_field.value.trace('w', self.follow_total)
 
+    def follow_master(self, *_args):
+        self.sfe_field.value.set(self.total_sfe.get())
+
     def follow_total(self, *_args):
-        for value in self.fields.values():
-            total = self.sfe_field.value.get()
-            value.value.set(total)
+        for key, value in self.fields.items():
+
+            if key in self.local_fields:
+                total = self.sfe_field.value.get()
+                value.value.set(total)
 
     def place_sfe_fields(self, fields):
         column = 0
@@ -252,15 +274,20 @@ class SfePartFrame(ttk.LabelFrame):
 
                 sfe_field_value.grid(row=row,column=column+1, sticky=direction)
                 self.fields[sfe_field] = sfe_field_value
+                self.local_fields.append(sfe_field)
 
             row += 1
 
     def get_part_sfe(self):
+        values = []
+
         for key in self.fields.keys():
-            print(key)
-            print(self.fields[key].value.get())
+            values.append(self.fields[key].value.get())
+        return values
 
     def add_sfe(self):
         for key, value in self.fields.items():
-            if value.get():
+            if 'get' not in dir(value):
+                print(dir(value))
+            elif value.get():
                 self.fields[key] = value.get()
