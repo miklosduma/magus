@@ -59,6 +59,10 @@ def validate_values(values, integers=None):
         return True, values
 
     # Find integer values and validate them
+
+    if integers == 'all':
+        integers = range(0,len(values))
+
     try:
         values = [int(x) if values.index(x) in integers else x for x in values]
 

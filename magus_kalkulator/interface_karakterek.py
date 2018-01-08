@@ -145,7 +145,7 @@ class ButtonsFrame(ttk.LabelFrame):
 class CharacterAddButton(Button):
     def __init__(self, master, text, karakterek):
         self.master = master
-        self.name = self.master.master.name_frame
+        self.name = self.master.master.name_frame.name_field
         self.fields = self.master.master.fields_frame
         self.karakterek = karakterek
         self.messages = self.master.messages
@@ -153,23 +153,39 @@ class CharacterAddButton(Button):
         self.bind('<Button-1>', self.add_character)
 
     def add_character(self, event):
-        char_sfe = self.master.master.sfe_frame.sfe
-        sfe_values = [self.master.master.sfe_frame.sfe[x].get() for x in self.master.master.sfe_frame.sfe.keys()]
-        print(sfe_values)
-        success, checked_values = validate_values(sfe_values, integers=[1,2,3])
+        sfe_map = self.master.master.sfe_frame.sfe
+
+        sfe_values = [sfe_map[x].get() for x in sfe_map.keys()]
+        success, checked_sfe_values = validate_values(sfe_values, integers='all')
+
+        if not success:
+            self.messages.write_message(checked_sfe_values)
+            return
+
+        new_sfe_map = {}
+        for key, value in sfe_map.items():
+            new_sfe_map[key] = int(sfe_map[key].value.get())
+
+        name = self.name.value.get()
+        ep = self.fields.ep_field.value.get()
+        fp = self.fields.fp_field.value.get()
+
+        success, checked_values = validate_values([name, ep, fp], integers=[1,2])
 
         if not success:
             self.messages.write_message(checked_values)
             return
 
-        [name, ep, fp, sfe] = checked_values
-        success, msg = self.karakterek.add_karakter(name, ep, sfe, fp=fp)
+        [name, ep, fp] = checked_values
+        success, msg = self.karakterek.add_karakter(name, ep, new_sfe_map, fp=fp)
 
         if not success:
             msg = ALREADY_ADDED.format(name)
 
         else:
             msg = SUCCESS
+            new_char = self.karakterek.get_karakter(name)
+            print(new_char.max_ep, new_char.max_fp, new_char.sfe)
 
         self.messages.write_message(msg)
 
