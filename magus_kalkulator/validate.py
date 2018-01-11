@@ -23,57 +23,45 @@ def is_negative(number):
     return number < 0
 
 
-def check_numbers(numbers):
-    """
-    Validates integer field values.
-    Returns an error if the field value:
-        - is not integer
-        - is negative
-    """
-    for number in numbers:
-        # Negative field value
-        if is_negative(number):
-            return False, NEGATIVE_NUMBER.format(number)
-
-    return True, numbers
+def strip_if_string(value):
+    try:
+        return value.strip()
+    except AttributeError as error:
+        print(error)
+        return value
 
 
-def validate_values(values, integers=None):
-    """
-    Validates the value of input fields.
-    Specify the index of all integer fields in
-    the integers key argument.
-    """
+def is_empty(value):
+    value = strip_if_string(value)
 
-    # Strip all values (at this stage they all must be strings)
-    values = [x.strip() if isinstance(x, str) else x for x in values]
+    if value is None:
+        return True
 
-    # Find emtpy fields
-    missing = [x for x in values if not x]
+    elif value == '':
+        return True
 
-    if missing:
+    else:
+        return False
+
+
+def validate_integer(n):
+    if is_empty(n):
         return False, EMPTY_FIELD
 
-    # If no integers are found, validation succeeds
-    if not integers:
-        return True, values
-
-    # Find integer values and validate them
-
-    if integers == 'all':
-        integers = range(0,len(values))
-
     try:
-        values = [int(x) if values.index(x) in integers else x for x in values]
+        n = int(n)
+
+        if is_negative(n):
+            return False, NEGATIVE_NUMBER.format(n)
+        return True, n
 
     except ValueError as error:
         value = get_value_from_error(error.message)
         return False, NOT_NUMBER.format(value)
 
-    success, result = check_numbers(values)
 
-    if success:
-        return True, result
+def validate_string(s):
+    if is_empty(s):
+        return False, EMPTY_FIELD
 
-    # Return error message if validation fails
-    return False, result
+    return True, s

@@ -1,7 +1,7 @@
 from tkinter import (Button, Entry, Label, W, E, N,
                      StringVar, VERTICAL, ttk)
 
-from validate import validate_values
+from validate import validate_integer, validate_string
 
 
 FIELD_WIDTH = 10
@@ -83,7 +83,7 @@ class NameFrame(ttk.LabelFrame):
         self.gui_top = master.gui_top
         ttk.LabelFrame.__init__(self, master, text=NEV_LABEL)
 
-        self.name_field = CharacterValueField(self)
+        self.name_field = CharacterValueField(self, validate_string)
         self.gui_top.organize_rows_to_left([self.name_field],
                                            NAME_COLUMN)
 
@@ -94,9 +94,9 @@ class FieldsFrame(ttk.LabelFrame):
         self.gui_top = master.gui_top
         ttk.LabelFrame.__init__(self, master, text=EP_FRAME_TITLE)
         self.ep_label = Label(self, text=EP_LABEL)
-        self.ep_field = CharacterValueField(self)
+        self.ep_field = CharacterValueField(self, validate_integer)
 
-        self.fp_field = CharacterValueField(self)
+        self.fp_field = CharacterValueField(self, validate_integer)
         self.fp_label = Label(self, text=FP_LABEL)
 
         self.gui_top.organize_rows_to_left([self.ep_label, self.ep_field],
@@ -109,7 +109,7 @@ class SfeFrame(ttk.LabelFrame):
     def __init__(self, master):
         ttk.LabelFrame.__init__(self, master, text=SFE_FRAME_TITLE)
         self.sfe_label = Label(self, text='Mindenhol')
-        self.sfe_field = CharacterValueField(self, width=2)
+        self.sfe_field = CharacterValueField(self, validate_integer, width=2)
         self.sfe = {}
         self.master = master
         self.sfe_label.grid(row=0)
@@ -155,28 +155,32 @@ class CharacterAddButton(Button):
     def add_character(self, event):
         sfe_map = self.master.master.sfe_frame.sfe
 
-        sfe_values = [sfe_map[x].get() for x in sfe_map.keys()]
-        success, checked_sfe_values = validate_values(sfe_values, integers='all')
-
-        if not success:
-            self.messages.write_message(checked_sfe_values)
-            return
-
         new_sfe_map = {}
-        for key, value in sfe_map.items():
-            new_sfe_map[key] = int(sfe_map[key].value.get())
+        for key, sfe_field in sfe_map.items():
+            success, value = sfe_field.validate()
 
-        name = self.name.value.get()
-        ep = self.fields.ep_field.value.get()
-        fp = self.fields.fp_field.value.get()
+            if not success:
+                self.messages.write_message(value)
+                return
+            else:
+                new_sfe_map[key] = value
 
-        success, checked_values = validate_values([name, ep, fp], integers=[1,2])
+        name_field = self.name
+        ep_field = self.fields.ep_field
+        fp_field = self.fields.fp_field
 
-        if not success:
-            self.messages.write_message(checked_values)
-            return
+        values = []
+        for field in [name_field, ep_field, fp_field]:
+            success, value = field.validate()
 
-        [name, ep, fp] = checked_values
+            if not success:
+                self.messages.write_message(value)
+                return
+            else:
+                values.append(value)
+
+        [name, ep, fp] = values
+
         success, msg = self.karakterek.add_karakter(name, ep, new_sfe_map, fp=fp)
 
         if not success:
@@ -215,7 +219,7 @@ class CharactersGetButton(Button):
 
 
 class CharacterValueField(Entry):
-    def __init__(self, master, width=FIELD_WIDTH):
+    def __init__(self, master, validate_fun, width=FIELD_WIDTH):
         """
         Initialise input field.
         """
@@ -223,6 +227,7 @@ class CharacterValueField(Entry):
         self.value = StringVar(master)
         self.value.set('')
         self.value.trace('w', self.print_on_change)
+        self.validator = validate_fun
 
         # Entry field
         Entry.__init__(self, master, textvariable=self.value,
@@ -230,6 +235,9 @@ class CharacterValueField(Entry):
 
     def print_on_change(self, *args):
         print(self.value.get())
+
+    def validate(self):
+        return self.validator(self.value.get())
 
 
 class SfePartFrame(ttk.LabelFrame):
@@ -239,7 +247,7 @@ class SfePartFrame(ttk.LabelFrame):
         self.keys = fields
         self.master = master
         self.total_sfe = self.master.sfe_field.value
-        self.sfe_field = CharacterValueField(self, width=2)
+        self.sfe_field = CharacterValueField(self, validate_integer, width=2)
         Label(self, text='Total').grid(row=0, column=0, sticky=W)
         self.sfe_field.grid(row=0, column=1, sticky=W)
         self.master = master
@@ -281,7 +289,7 @@ class SfePartFrame(ttk.LabelFrame):
             label.grid(row=row, column=column, sticky=W)
 
             for sfe_field in sfe_fields:
-                sfe_field_value = CharacterValueField(self, width=2)
+                sfe_field_value = CharacterValueField(self, validate_integer, width=2)
 
                 if sfe_fields.index(sfe_field) == 0:
                     direction = W

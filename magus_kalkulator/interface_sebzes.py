@@ -1,7 +1,7 @@
 from tkinter import (Entry, StringVar, IntVar ,OptionMenu, Button, ttk,
                      Label, Checkbutton)
 from sebzes import return_penalty
-from validate import validate_values
+from validate import validate_integer
 
 
 DAMAGE_PAGE_COLUMN = 0
@@ -118,6 +118,7 @@ class SebzesField(Entry):
         input field.
         """
         print(self.get_sebzes())
+
 
 
 class WeaponTypeMenu(OptionMenu):
@@ -268,14 +269,12 @@ class SebzesButton(Button):
         sfe = self.karakterek.get_karakter(attacked).sfe
 
         damage = self.get_damage()
-        success, checked_values = validate_values([max_ep, sfe, damage],
-                                                  integers=[0,1,2])
+        success, damage = validate_integer(damage)
 
         if not success:
-            self.messages.write_message(checked_values)
+            self.messages.write_message(damage)
             return
 
-        [max_ep, sfe, damage] = checked_values
         tulutes = self.tulutes.get_tulutes()
         atutes = self.atutes.get_atutes()
 
