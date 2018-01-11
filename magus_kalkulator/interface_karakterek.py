@@ -234,10 +234,19 @@ class CharacterValueField(Entry):
                        width=width)
 
     def print_on_change(self, *args):
+        color = self.cget('bg')
+
+        if color == 'red':
+            self.config(bg='systemWindowBody')
+
         print(self.value.get())
 
     def validate(self):
-        return self.validator(self.value.get())
+        success, value = self.validator(self.value.get())
+
+        if not success:
+            self.config(bg='red')
+        return success, value
 
 
 class SfePartFrame(ttk.LabelFrame):
