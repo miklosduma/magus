@@ -51,6 +51,7 @@ def collect_field_values(root, values=[]):
 
 
 class KarakterPage(ttk.Frame):
+
     def __init__(self, master, master_gui, width):
         self.master = master
         self.gui_top = master_gui
@@ -62,6 +63,7 @@ class KarakterPage(ttk.Frame):
 
 
 class KarakterPanels(ttk.PanedWindow):
+
     def __init__(self, master, width, orient=VERTICAL):
         ttk.PanedWindow.__init__(self, master, width=width, orient=orient)
         self.gui_top = master.gui_top
@@ -78,6 +80,7 @@ class KarakterPanels(ttk.PanedWindow):
 
 
 class NameFrame(ttk.LabelFrame):
+
     def __init__(self, master):
         self.master = master
         self.gui_top = master.gui_top
@@ -89,6 +92,7 @@ class NameFrame(ttk.LabelFrame):
 
 
 class FieldsFrame(ttk.LabelFrame):
+
     def __init__(self, master):
         self.master = master
         self.gui_top = master.gui_top
@@ -106,6 +110,7 @@ class FieldsFrame(ttk.LabelFrame):
 
 
 class SfeFrame(ttk.LabelFrame):
+
     def __init__(self, master):
         ttk.LabelFrame.__init__(self, master, text=SFE_FRAME_TITLE)
         self.sfe_label = Label(self, text='Mindenhol')
@@ -115,21 +120,25 @@ class SfeFrame(ttk.LabelFrame):
         self.sfe_label.grid(row=0)
         self.sfe_field.grid(row=0, column=1)
 
-        self.fej_sfe = SfePartFrame(self, 'Fej SFE',['Arc', 'Nyak', 'Koponya'])
-        self.fej_sfe.grid(row=3, columnspan=5, sticky=(N,W))
+        self.fej_sfe = SfePartFrame(
+            self, 'Fej SFE', ['Arc', 'Nyak', 'Koponya'])
+        self.fej_sfe.grid(row=3, columnspan=5, sticky=(N, W))
 
-        self.torzs_sfe = SfePartFrame(self, 'Torzs SFE', ['Mellkas', 'Has', 'Agyek'])
-        self.torzs_sfe.grid(row=3, column=5, columnspan=5,sticky=(N,W))
+        self.torzs_sfe = SfePartFrame(
+            self, 'Torzs SFE', ['Mellkas', 'Has', 'Agyek'])
+        self.torzs_sfe.grid(row=3, column=5, columnspan=5, sticky=(N, W))
 
         self.kar_sfe = SfePartFrame(self, 'Kar SFE', ['Vall', 'Felkar', 'Konyok', 'Alkar', 'Csuklo', 'Kezfej'],
                                     limb=True)
-        self.kar_sfe.grid(row=4, columnspan=5, sticky=(N,W))
+        self.kar_sfe.grid(row=4, columnspan=5, sticky=(N, W))
 
-        self.lab_sfe = SfePartFrame(self, 'Lab SFE', ['Comb', 'Terd', 'Labszar', 'Boka', 'Labfej'], limb=True)
-        self.lab_sfe.grid(row=4, column =5, columnspan=5, sticky=(N,W))
+        self.lab_sfe = SfePartFrame(
+            self, 'Lab SFE', ['Comb', 'Terd', 'Labszar', 'Boka', 'Labfej'], limb=True)
+        self.lab_sfe.grid(row=4, column=5, columnspan=5, sticky=(N, W))
 
 
 class ButtonsFrame(ttk.LabelFrame):
+
     def __init__(self, master):
         ttk.LabelFrame.__init__(self, master, text=BUTTONS_FRAME_TITLE)
         self.master = master
@@ -143,6 +152,7 @@ class ButtonsFrame(ttk.LabelFrame):
 
 
 class CharacterAddButton(Button):
+
     def __init__(self, master, text, karakterek):
         self.master = master
         self.name = self.master.master.name_frame.name_field
@@ -181,7 +191,8 @@ class CharacterAddButton(Button):
 
         [name, ep, fp] = values
 
-        success, msg = self.karakterek.add_karakter(name, ep, new_sfe_map, fp=fp)
+        success, msg = self.karakterek.add_karakter(
+            name, ep, new_sfe_map, fp=fp)
 
         if not success:
             msg = ALREADY_ADDED.format(name)
@@ -195,6 +206,7 @@ class CharacterAddButton(Button):
 
 
 class CharactersGetButton(Button):
+
     def __init__(self, master, text, karakterek):
         self.master = master
         self.karakterek = karakterek
@@ -219,6 +231,7 @@ class CharactersGetButton(Button):
 
 
 class CharacterValueField(Entry):
+
     def __init__(self, master, validate_fun, width=FIELD_WIDTH):
         """
         Initialise input field.
@@ -237,7 +250,7 @@ class CharacterValueField(Entry):
         color = self.cget('bg')
 
         if color == 'red':
-            self.config(bg='systemWindowBody')
+            self.config(bg='white')
 
         print(self.value.get())
 
@@ -250,6 +263,7 @@ class CharacterValueField(Entry):
 
 
 class SfePartFrame(ttk.LabelFrame):
+
     def __init__(self, master, text, fields, limb=False):
         ttk.LabelFrame.__init__(self, master, text=text)
         self.is_limb = limb
@@ -298,14 +312,16 @@ class SfePartFrame(ttk.LabelFrame):
             label.grid(row=row, column=column, sticky=W)
 
             for sfe_field in sfe_fields:
-                sfe_field_value = CharacterValueField(self, validate_integer, width=2)
+                sfe_field_value = CharacterValueField(
+                    self, validate_integer, width=2)
 
                 if sfe_fields.index(sfe_field) == 0:
                     direction = W
                 else:
                     direction = E
 
-                sfe_field_value.grid(row=row,column=column+1, sticky=direction)
+                sfe_field_value.grid(
+                    row=row, column=column + 1, sticky=direction)
                 self.fields[sfe_field] = sfe_field_value
                 self.local_fields.append(sfe_field)
 
