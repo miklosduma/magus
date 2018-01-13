@@ -172,6 +172,13 @@ class CharacterAddButton(Button):
             if not success:
                 self.messages.write_message(value)
                 return
+
+            # Kulcscsontok mellkas pancelt hasznaljak
+            elif key == 'Mellkas':
+                new_sfe_map['Jkulcs'] = value
+                new_sfe_map['Bkulcs'] = value
+                new_sfe_map['Mellkas'] = value
+
             else:
                 new_sfe_map[key] = value
 

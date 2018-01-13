@@ -40,8 +40,12 @@ def return_penalty(sfe, damage, atutes, max_ep, wtype, tulutes=False):
     """
     Gets the penalty associated with a damage.
     """
-    # SFE calculation to be added later
     main_part, penalty_part, sfe_part = pick_sub_parts()
+    try:
+        sfe = sfe[sfe_part]
+    except KeyError:
+        sfe = sfe[penalty_part]
+
     ep_loss, fp_loss = calculate_damage(sfe, damage, atutes, tulutes=tulutes)
     result = calculate_penalty(ep_loss, max_ep, wtype, main_part, penalty_part)
     return {
