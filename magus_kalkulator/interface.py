@@ -135,17 +135,3 @@ class GuiMessage(Text):
         self.delete_message()
         self.insert(END, text)
         self._set_state(DISABLED)
-
-
-def fire_up_interface():
-    """
-    Starts the GUI when called from
-    the command-line.
-    """
-    root = Tk()
-    MagusGUI(root)
-    mainloop()
-
-
-if __name__ == "__main__" :
-    fire_up_interface()
