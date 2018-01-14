@@ -1,4 +1,4 @@
-from tkinter import (Tk, mainloop, ttk, Text, END, DISABLED, NORMAL, N, W, NE)
+from tkinter import (ttk, Text, END, DISABLED, NORMAL, N, NE)
 
 from karakterek import Karakterek
 from interface_sebzes import SebzesPage
@@ -9,6 +9,8 @@ WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 800
 WINDOW_DIMENSIONS = '800x800'
 WINDOW_TEXT = 'Magus kalkulator'
+
+TAB_PANEL_WIDTH = int(WINDOW_WIDTH/2)
 
 TEXT_START = 'Udv kockak!'
 
@@ -75,14 +77,14 @@ class MyTabs(ttk.Notebook):
         object from the top level and hands them down to
         the slave pages.
         """
-        ttk.Notebook.__init__(self, master, width=int(WINDOW_WIDTH/2))
+        ttk.Notebook.__init__(self, master, width=TAB_PANEL_WIDTH)
         self.karakterek = master_gui.karakterek
         self.messages = master_gui.messages
         self.master = master
 
         # Initialize tabs
-        self.karakter_page = KarakterPage(self, master_gui, int(WINDOW_WIDTH/2))
-        self.sebzes_page = SebzesPage(self, master_gui, int(WINDOW_WIDTH/2))
+        self.karakter_page = KarakterPage(self, master_gui, TAB_PANEL_WIDTH)
+        self.sebzes_page = SebzesPage(self, master_gui, TAB_PANEL_WIDTH)
         self.add(self.karakter_page, text=KARAKTER_PAGE_TITLE)
         self.add(self.sebzes_page, text=SEBZES_PAGE_TITLE)
 
