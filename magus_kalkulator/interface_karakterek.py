@@ -69,7 +69,6 @@ class KarakterPage(ttk.Frame):
     """
     def __init__(self, master, master_gui, width):
         self.master = master
-        self.gui_top = master_gui
         self.karakterek = master_gui.karakterek
         self.messages = master_gui.messages
         ttk.Frame.__init__(self, master, width=width)
@@ -83,7 +82,6 @@ class KarakterPanels(ttk.PanedWindow):
     """
     def __init__(self, master, width, orient=VERTICAL):
         ttk.PanedWindow.__init__(self, master, width=width, orient=orient)
-        self.gui_top = master.gui_top
         self.karakterek = self.master.karakterek
         self.messages = self.master.messages
         self.name_frame = NameFrame(self)
@@ -103,7 +101,6 @@ class NameFrame(ttk.LabelFrame):
     """
     def __init__(self, master):
         self.master = master
-        self.gui_top = master.gui_top
         ttk.LabelFrame.__init__(self, master, text=NEV_LABEL)
 
         self.name_field = CharacterValueField(self, validate_string)
@@ -118,7 +115,6 @@ class FieldsFrame(ttk.LabelFrame):
     """
     def __init__(self, master):
         self.master = master
-        self.gui_top = master.gui_top
         ttk.LabelFrame.__init__(self, master, text=EP_FRAME_TITLE)
         self.ep_label = Label(self, text=EP_LABEL)
         self.ep_field = CharacterValueField(self, validate_integer)

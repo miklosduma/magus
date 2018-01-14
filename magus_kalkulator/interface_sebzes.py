@@ -56,7 +56,6 @@ class SebzesPage(ttk.Frame):
         """
         ttk.Frame.__init__(self, master, width=width)
         self.messages = master_gui.messages
-        self.gui_top = master_gui
 
         # Variable for character selection drop-down
         # SFE and Max_EP of character is used when calculating damage
