@@ -150,6 +150,19 @@ class SfeFrame(ttk.LabelFrame):
             self, SFE_LAB_LABEL, SFE_LAB_PARTS, limb=True)
         self.lab_sfe.grid(row=4, column=5, columnspan=5, sticky=(N, W))
 
+    def retrieve_sfe_map(self):
+        return_map = {}
+        for key, value in self.sfe.items():
+            success, value = value.validate()
+
+            if not success:
+                return False, value
+
+            else:
+                return_map[key] = value
+
+        return True, return_map
+
 
 class ButtonsFrame(ttk.LabelFrame):
     """
@@ -188,29 +201,6 @@ class CharacterAddButton(Button):
         message if validation fails or character already
         exists.
         """
-
-        # Get sfe fields from sfe frame
-        sfe_map = self.master.master.sfe_frame.sfe
-
-        # Build sfe map from fields. If any field fails
-        # validation the character is not added
-        new_sfe_map = {}
-        for key, sfe_field in sfe_map.items():
-            success, value = sfe_field.validate()
-
-            # Handle validation failures
-            if not success:
-                self.messages.write_message(value)
-                return
-
-            # Add field's current value to sfe map
-            else:
-                new_sfe_map[key] = value
-
-        # Kulcscsontok mellkas pancelt hasznaljak
-        new_sfe_map = copy_value_to_keys(new_sfe_map,
-                                         'Mellkas', 'Jkulcs', 'Bkulcs')
-
         # Get name, ep and fp fields
         name_field = self.name
         ep_field = self.fields.ep_field
@@ -228,6 +218,18 @@ class CharacterAddButton(Button):
                 values.append(value)
 
         [name, ep, fp] = values
+
+        # Get sfe fields from sfe frame
+        sfe_frame = self.master.master.sfe_frame
+        success, sfe_map = sfe_frame.retrieve_sfe_map()
+
+        if not success:
+            self.messages.write_message(sfe_map)
+            return
+
+        # Kulcscsontok mellkas pancelt hasznaljak
+        new_sfe_map = copy_value_to_keys(sfe_map,
+                                         'Mellkas', 'Jkulcs', 'Bkulcs')
 
         # Add new character. Addition fails if character already exists.
         success, msg = self.karakterek.add_karakter(
