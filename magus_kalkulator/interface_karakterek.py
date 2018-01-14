@@ -50,6 +50,21 @@ def collect_field_values(root, values=[]):
     return values
 
 
+def copy_value_to_keys(my_map, key, *new_keys):
+    """
+    Takes a map and inserts all specified new keys. The value
+    of the new keys matches the value that corresponds to 'key'.
+
+    Returns the new map.
+    """
+    value = my_map[key]
+
+    for new_key in new_keys:
+        my_map[new_key] = value
+
+    return my_map
+
+
 class KarakterPage(ttk.Frame):
 
     def __init__(self, master, master_gui, width):
@@ -173,14 +188,12 @@ class CharacterAddButton(Button):
                 self.messages.write_message(value)
                 return
 
-            # Kulcscsontok mellkas pancelt hasznaljak
-            elif key == 'Mellkas':
-                new_sfe_map['Jkulcs'] = value
-                new_sfe_map['Bkulcs'] = value
-                new_sfe_map['Mellkas'] = value
-
             else:
                 new_sfe_map[key] = value
+
+        # Kulcscsontok mellkas pancelt hasznaljak
+        new_sfe_map = copy_value_to_keys(new_sfe_map,
+                                         'Mellkas', 'Jkulcs', 'Bkulcs')
 
         name_field = self.name
         ep_field = self.fields.ep_field
