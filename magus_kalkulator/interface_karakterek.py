@@ -3,11 +3,6 @@ from tkinter import (Button, Label, W, E, N, VERTICAL, ttk)
 from validate import validate_integer, validate_string
 from interface_elements import CharacterValueField, organize_rows_to_left
 
-
-FIELD_WIDTH = 10
-FIELD_COLOR = 'white'
-FIELD_COLOR_ERROR = 'red'
-
 KARAKTER_PANEL_COLUMN = 0
 KARAKTER_PANEL_ROW = 0
 
