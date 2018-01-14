@@ -32,24 +32,6 @@ NO_CHARACTERS = 'Meg nem adtal hozza karaktert.'
 CHARACTERS_ADDED = 'Eddig hozzaadott karakterek: \n{}'
 
 
-def collect_field_values(root, values=[]):
-
-    children = root.winfo_children()
-
-    if not children:
-        return values
-
-    for child in children:
-
-        if 'get' in dir(child):
-            values.append(child.get())
-
-        if child.winfo_children():
-            collect_field_values(child, values=values)
-
-    return values
-
-
 def copy_value_to_keys(my_map, key, *new_keys):
     """
     Takes a map and inserts all specified new keys. The value
