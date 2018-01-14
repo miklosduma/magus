@@ -99,8 +99,7 @@ class NameFrame(ttk.LabelFrame):
         ttk.LabelFrame.__init__(self, master, text=NEV_LABEL)
 
         self.name_field = CharacterValueField(self, validate_string)
-        organize_rows_to_left([self.name_field],
-                                           NAME_COLUMN)
+        organize_rows_to_left([self.name_field], NAME_COLUMN)
 
 
 class FieldsFrame(ttk.LabelFrame):
@@ -117,10 +116,8 @@ class FieldsFrame(ttk.LabelFrame):
         self.fp_field = CharacterValueField(self, validate_integer)
         self.fp_label = Label(self, text=FP_LABEL)
 
-        organize_rows_to_left([self.ep_label, self.ep_field],
-                                           EP_FIELDS_COLUMN)
-        organize_rows_to_left([self.fp_label, self.fp_field],
-                                           FP_FIELDS_COLUMN)
+        organize_rows_to_left([self.ep_label, self.ep_field], EP_FIELDS_COLUMN)
+        organize_rows_to_left([self.fp_label, self.fp_field], FP_FIELDS_COLUMN)
 
 
 class SfeFrame(ttk.LabelFrame):
@@ -183,7 +180,7 @@ class CharacterAddButton(Button):
         Button.__init__(self, master, text=text)
         self.bind('<Button-1>', self.add_character)
 
-    def add_character(self, event):
+    def add_character(self, _event):
         """
         Function executed on clicking Add button.
 
@@ -258,7 +255,7 @@ class CharactersGetButton(Button):
         Button.__init__(self, master, text=text)
         self.bind('<Button-1>', self.get_characters)
 
-    def get_characters(self, event):
+    def get_characters(self, _event):
         """
         Function executed on clicking Get button.
         Lists all characters already added.
