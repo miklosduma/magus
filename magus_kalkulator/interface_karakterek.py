@@ -278,7 +278,6 @@ class SfePartFrame(ttk.LabelFrame):
     """
     def __init__(self, master, text, fields, limb=False):
         ttk.LabelFrame.__init__(self, master, text=text)
-        self.is_limb = limb
         self.keys = fields
         self.master = master
         self.total_sfe = self.master.sfe_field.value
@@ -288,11 +287,16 @@ class SfePartFrame(ttk.LabelFrame):
         self.master = master
         self.fields = self.master.sfe
         self.local_fields = []
-        self.place_sfe_fields(fields)
-        self.total_sfe.trace('w', self.follow_master)
-        self.sfe_field.value.trace('w', self.follow_total)
 
-    def follow_master(self, *_args):
+        if limb:
+            self._place_sfe_fields_limb(fields)
+        else:
+            self._place_sfe_fields(fields)
+
+        self.total_sfe.trace('w', self._follow_master)
+        self.sfe_field.value.trace('w', self._follow_total)
+
+    def _follow_master(self, *_args):
         """
         Each child frame has a shortcut value that all
         sub parts follow. E.g. setting Mindenhol in Lab frame
@@ -300,7 +304,7 @@ class SfePartFrame(ttk.LabelFrame):
         """
         self.sfe_field.value.set(self.total_sfe.get())
 
-    def follow_total(self, *_args):
+    def _follow_total(self, *_args):
         """
         There is a master shortcut value that all other
         fields follow. Setting the value of it changes
@@ -312,7 +316,7 @@ class SfePartFrame(ttk.LabelFrame):
                 total = self.sfe_field.value.get()
                 value.value.set(total)
 
-    def place_sfe_fields(self, fields):
+    def _place_sfe_fields(self, fields):
         """
         Function to place multiple connected fields assigning
         each a label.
@@ -320,23 +324,42 @@ class SfePartFrame(ttk.LabelFrame):
         column = 0
         row = 1
 
+        for field in fields:
+
+            label = Label(self, text=field)
+            label.grid(row=row, column=column, sticky=W)
+
+            sfe_field_value = CharacterValueField(
+                    self, validate_integer, width=2)
+
+            sfe_field_value.grid(
+                    row=row, column=column + 1, sticky=W)
+            self.fields[field] = sfe_field_value
+            self.local_fields.append(field)
+
+            row += 1
+
+    def _place_sfe_fields_limb(self, fields):
+        """
+        Function to place multiple connected fields assigning
+        each a label. Each field value gets a left and right value.
+        """
+        column = 0
+        row = 1
+
         # If field is a limb sfe (e.g. Labszar or Boka)
         # Jobb and Bal label will be added
-        if self.is_limb:
-            jobb_bal = Label(self, text='Jobb/Bal')
-            jobb_bal.grid(row=row, column=column + 1)
-            row += 1
+        jobb_bal = Label(self, text='Jobb/Bal')
+        jobb_bal.grid(row=row, column=column + 1)
+        row += 1
 
         for field in fields:
 
             # If field is a limb sfe (e.g. Labszar or Boka)
             # it will be added twice both as Jlabszar and Blabszar
-            if self.is_limb:
-                jobb_field = 'J{}'.format(field.lower())
-                bal_field = 'B{}'.format(field.lower())
-                sfe_fields = [jobb_field, bal_field]
-            else:
-                sfe_fields = [field]
+            jobb_field = 'J{}'.format(field.lower())
+            bal_field = 'B{}'.format(field.lower())
+            sfe_fields = [jobb_field, bal_field]
 
             label = Label(self, text=field)
             label.grid(row=row, column=column, sticky=W)
