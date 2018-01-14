@@ -2,6 +2,7 @@ from tkinter import (Entry, StringVar, IntVar ,OptionMenu, Button, ttk,
                      Label, Checkbutton)
 from sebzes import return_penalty
 from validate import validate_integer
+from interface_elements import CharacterValueField, organize_rows_to_left
 
 
 DAMAGE_PAGE_COLUMN = 0
@@ -80,7 +81,7 @@ class SebzesPage(ttk.Frame):
         self.sebzes_button = SebzesButton(self, DAMAGE_BUTTON_TEXT)
 
         # Place elements on grid
-        self.gui_top.organize_rows_to_left([self.karakter_label, self.dropdown,
+        organize_rows_to_left([self.karakter_label, self.dropdown,
                                             self.weapon_label, self.weapon_menu,
                                             self.sebzes_label, self.sebzes,
                                             self.atutes_label, self.atutes_menu,
@@ -118,7 +119,6 @@ class SebzesField(Entry):
         input field.
         """
         print(self.get_sebzes())
-
 
 
 class WeaponTypeMenu(OptionMenu):

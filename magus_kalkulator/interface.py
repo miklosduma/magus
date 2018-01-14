@@ -63,19 +63,6 @@ class MagusGUI:
                            columnspan=MESSAGES_COLUMNSPAN, sticky=NE,
                            row=MESSAGES_ROW, rowspan=MESSAGES_ROWSPAN)
 
-    def organize_rows_to_left(self, list_of_elements, column, start_row=0):
-        """
-        Places all elements in the list under each other
-        in the specified column.
-
-        They are all left-aligned.
-        """
-        for element in list_of_elements:
-            element.grid(column=column, row=start_row, sticky=W)
-            start_row += 1
-
-        return start_row
-
 
 class MyTabs(ttk.Notebook):
     """
@@ -88,14 +75,14 @@ class MyTabs(ttk.Notebook):
         object from the top level and hands them down to
         the slave pages.
         """
-        ttk.Notebook.__init__(self, master, width=WINDOW_WIDTH/2)
+        ttk.Notebook.__init__(self, master, width=int(WINDOW_WIDTH/2))
         self.karakterek = master_gui.karakterek
         self.messages = master_gui.messages
         self.master = master
 
         # Initialize tabs
-        self.karakter_page = KarakterPage(self, master_gui, WINDOW_WIDTH/2)
-        self.sebzes_page = SebzesPage(self, master_gui, WINDOW_WIDTH/2)
+        self.karakter_page = KarakterPage(self, master_gui, int(WINDOW_WIDTH/2))
+        self.sebzes_page = SebzesPage(self, master_gui, int(WINDOW_WIDTH/2))
         self.add(self.karakter_page, text=KARAKTER_PAGE_TITLE)
         self.add(self.sebzes_page, text=SEBZES_PAGE_TITLE)
 

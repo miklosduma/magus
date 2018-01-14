@@ -1,7 +1,7 @@
-from tkinter import (Button, Entry, Label, W, E, N,
-                     StringVar, VERTICAL, ttk)
+from tkinter import (Button, Label, W, E, N, VERTICAL, ttk)
 
 from validate import validate_integer, validate_string
+from interface_elements import CharacterValueField, organize_rows_to_left
 
 
 FIELD_WIDTH = 10
@@ -107,7 +107,7 @@ class NameFrame(ttk.LabelFrame):
         ttk.LabelFrame.__init__(self, master, text=NEV_LABEL)
 
         self.name_field = CharacterValueField(self, validate_string)
-        self.gui_top.organize_rows_to_left([self.name_field],
+        organize_rows_to_left([self.name_field],
                                            NAME_COLUMN)
 
 
@@ -126,9 +126,9 @@ class FieldsFrame(ttk.LabelFrame):
         self.fp_field = CharacterValueField(self, validate_integer)
         self.fp_label = Label(self, text=FP_LABEL)
 
-        self.gui_top.organize_rows_to_left([self.ep_label, self.ep_field],
+        organize_rows_to_left([self.ep_label, self.ep_field],
                                            EP_FIELDS_COLUMN)
-        self.gui_top.organize_rows_to_left([self.fp_label, self.fp_field],
+        organize_rows_to_left([self.fp_label, self.fp_field],
                                            FP_FIELDS_COLUMN)
 
 
@@ -282,56 +282,6 @@ class CharactersGetButton(Button):
                 '\n'.join(all_characters))
 
         self.messages.write_message(msg)
-
-
-class CharacterValueField(Entry):
-    """
-    Basic field type used to store character values.
-    """
-    def __init__(self, master, validate_fun, width=FIELD_WIDTH):
-        """
-        Initialise input field.
-         - validate_fun:
-            A function used to validate the field's input value.
-        """
-        # Varible for entered value
-        self.value = StringVar(master)
-        self.value.set('')
-        self.value.trace('w', self.follow_changes)
-        self.validator = validate_fun
-
-        # Entry field
-        Entry.__init__(self, master, textvariable=self.value,
-                       width=width)
-
-    def follow_changes(self, *args):
-        """
-        Traces changes to the input value
-        of the field.
-        """
-        # Get current background color of field.
-        color = self.cget('bg')
-
-        # It turns red on validation failures.
-        # Any subsequent change must turn the color back
-        # to the default color.
-        if color == FIELD_COLOR_ERROR:
-            self.config(bg=FIELD_COLOR)
-
-        print(self.value.get())
-
-    def validate(self):
-        """
-        Calls assigned validator function on the
-        value of the field.
-
-        If validation fails, turns the field to red.
-        """
-        success, value = self.validator(self.value.get())
-
-        if not success:
-            self.config(bg=FIELD_COLOR_ERROR)
-        return success, value
 
 
 class SfePartFrame(ttk.LabelFrame):
