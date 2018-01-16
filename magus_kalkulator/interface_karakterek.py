@@ -303,8 +303,6 @@ class SfePartFrame(ttk.LabelFrame):
         # Dict attribute holding validated sfe values
         self.sfe_map = self.master.sfe
 
-        self.local_fields = []
-
         if limb:
             self._place_sfe_fields_limb(body_parts)
         else:
@@ -315,18 +313,28 @@ class SfePartFrame(ttk.LabelFrame):
         Each child frame has a shortcut value that all
         sub parts follow. E.g. setting Mindenhol in Lab frame
         will change both JLabszar and BBoka to the same value.
+
+        The frame shortcut values however follow a master shortcut value.
+        Thus, setting the master value at the top level changes all
+        sub-level master values, which in turn change individual sfe values.
         """
-        self.sfe_field.value.set(self.master_sfe.get())
+        master_value = self.master_sfe.get()
+        self.sfe_field.value.set(master_value)
 
     def _follow_total(self, *_args):
         """
-        There is a master shortcut value that all other
-        fields follow. Setting the value of it changes
-        all other sfe field values.
+        There is a master shortcut value per body part frame
+        that all body parts belonging to that frame follow.
         """
         for key, value in self.sfe_map.items():
 
-            if key in self.local_fields:
+            # Only body parts that belong to this frame should follow
+            if key in self.keys:
+                total = self.sfe_field.value.get()
+                value.value.set(total)
+
+            # Match also body parts transformed to start with J/B (right/left)
+            elif any(key.lower().endswith(x.lower()) for x in self.keys):
                 total = self.sfe_field.value.get()
                 value.value.set(total)
 
@@ -340,17 +348,21 @@ class SfePartFrame(ttk.LabelFrame):
 
         for field in fields:
 
+            # Place label, it takes its name from the field
             label = Label(self, text=field)
             label.grid(row=row, column=column, sticky=W)
 
-            sfe_field_value = CharacterValueField(
+            # Place field next to label
+            sfe_field = CharacterValueField(
                     self, validate_integer, width=2)
-
-            sfe_field_value.grid(
+            sfe_field.grid(
                     row=row, column=column + 1, sticky=W)
-            self.sfe_map[field] = sfe_field_value
-            self.local_fields.append(field)
 
+            # Add sfe field to sfe map. Sfe field stores the value
+            # of the entry field
+            self.sfe_map[field] = sfe_field
+
+            # Next label/field will go into next row
             row += 1
 
     def _place_sfe_fields_limb(self, fields):
@@ -361,23 +373,26 @@ class SfePartFrame(ttk.LabelFrame):
         column = 0
         row = 1
 
-        # If field is a limb sfe (e.g. Labszar or Boka)
-        # Jobb and Bal label will be added
+        # Jobb and Bal label added one level higher than fields to the right
         jobb_bal = Label(self, text='Jobb/Bal')
         jobb_bal.grid(row=row, column=column + 1)
+
+        # Place everything below Jobb/Bal label
         row += 1
 
         for field in fields:
 
-            # If field is a limb sfe (e.g. Labszar or Boka)
-            # it will be added twice both as Jlabszar and Blabszar
+            # Each limb sfe (e.g. Labszar or Boka) is added twice
+            # e.g. both as Jlabszar and Blabszar
             jobb_field = 'J{}'.format(field.lower())
             bal_field = 'B{}'.format(field.lower())
             sfe_fields = [jobb_field, bal_field]
 
+            # Add only one label though
             label = Label(self, text=field)
             label.grid(row=row, column=column, sticky=W)
 
+            # Place right and left limb field
             for sfe_field in sfe_fields:
                 sfe_field_value = CharacterValueField(
                     self, validate_integer, width=2)
@@ -391,7 +406,10 @@ class SfePartFrame(ttk.LabelFrame):
 
                 sfe_field_value.grid(
                     row=row, column=column + 1, sticky=direction)
-                self.sfe_map[sfe_field] = sfe_field_value
-                self.local_fields.append(sfe_field)
 
+                # Add sfe field to sfe map. Sfe field stores the value
+                # of the entry field
+                self.sfe_map[sfe_field] = sfe_field_value
+
+            # Next label/field will go into next row
             row += 1
