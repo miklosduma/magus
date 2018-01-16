@@ -73,7 +73,7 @@ class SebzesPage(ttk.Frame):
 
         # Variable for total damage. Can be entered into entry field
         self.sebzes_label = Label(self, text=DAMAGE_TEXT)
-        self.sebzes = SebzesField(self)
+        self.sebzes = CharacterValueField(self, validate_integer)
         self.tulutes_box = TulutesBox(self)
         self.atutes_label = Label(self, text=ATUTES_TEXT)
         self.atutes_menu = AtutesMenu(self, *ATUTES_VALUES)
@@ -87,37 +87,6 @@ class SebzesPage(ttk.Frame):
                                             self.sebzes_button], DAMAGE_PAGE_COLUMN)
         self.sebzes_row = self.sebzes.grid_info()['row']
         self.tulutes_box.grid(column=DAMAGE_PAGE_COLUMN+1, row=self.sebzes_row)
-
-
-class SebzesField(Entry):
-    """
-    Input field for damage.
-    """
-    def __init__(self, master):
-        """
-        Initialise input field.
-        """
-        # Varible for entered damage
-        self.sebzes = StringVar(master)
-        self.sebzes.set('')
-        self.sebzes.trace('w', self.print_on_change)
-
-        # Entry field
-        Entry.__init__(self, master, textvariable=self.sebzes)
-
-    def get_sebzes(self):
-        """
-        Returns latest value of
-        entry field.
-        """
-        return self.sebzes.get()
-
-    def print_on_change(self, *args):
-        """
-        Prints changes to value of
-        input field.
-        """
-        print(self.get_sebzes())
 
 
 class WeaponTypeMenu(OptionMenu):
@@ -254,7 +223,12 @@ class SebzesButton(Button):
         self.bind('<Button-1>', self.write_results)
 
     def get_damage(self):
-        return self.sebzes.get()
+        try:
+            damage = self.sebzes.validate()
+            return damage
+
+        except FieldValidationError:
+            raise
 
     def write_results(self, event):
         attacking_weapon = self.weapon_type.get()
@@ -267,9 +241,8 @@ class SebzesButton(Button):
         max_ep = self.karakterek.get_karakter(attacked).max_ep
         sfe = self.karakterek.get_karakter(attacked).sfe
 
-        damage = self.get_damage()
         try:
-            damage = validate_integer(damage)
+            damage = self.get_damage()
         except FieldValidationError as error:
             self.messages.write_message(error.message)
             return
