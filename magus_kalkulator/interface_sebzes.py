@@ -1,4 +1,4 @@
-from tkinter import (Entry, StringVar, IntVar ,OptionMenu, Button, ttk,
+from tkinter import (StringVar, IntVar, OptionMenu, Button, ttk,
                      Label, Checkbutton)
 from sebzes import return_penalty
 from validate import validate_integer, FieldValidationError
@@ -81,10 +81,10 @@ class SebzesPage(ttk.Frame):
 
         # Place elements on grid
         organize_rows_to_left([self.karakter_label, self.dropdown,
-                                            self.weapon_label, self.weapon_menu,
-                                            self.sebzes_label, self.sebzes,
-                                            self.atutes_label, self.atutes_menu,
-                                            self.sebzes_button], DAMAGE_PAGE_COLUMN)
+                               self.weapon_label, self.weapon_menu,
+                               self.sebzes_label, self.sebzes,
+                               self.atutes_label, self.atutes_menu,
+                               self.sebzes_button], DAMAGE_PAGE_COLUMN)
         self.sebzes_row = self.sebzes.grid_info()['row']
         self.tulutes_box.grid(column=DAMAGE_PAGE_COLUMN+1, row=self.sebzes_row)
 
@@ -129,7 +129,7 @@ class WeaponString(StringVar):
         """
         return self.get()
 
-    def print_on_change(self, *args):
+    def print_on_change(self, *_args):
         """
         Prints value on changes.
         """
@@ -168,7 +168,7 @@ class KarakterVar(StringVar):
 
         return False, NO_CHARACTER
 
-    def print_on_change(self, *args):
+    def print_on_change(self, *_args):
         """
         Print latest value and max_ep of
         selected character.
@@ -196,7 +196,7 @@ class KarakterekMenu(OptionMenu):
         # Every time the drop-down is selected, update values for selection
         self.bind('<Button-1>', self._update)
 
-    def _update(self, event):
+    def _update(self, _event):
         """
         When clicking the drop-down, get the name of
         all characters currently in memory.
@@ -230,7 +230,7 @@ class SebzesButton(Button):
         except FieldValidationError:
             raise
 
-    def write_results(self, event):
+    def write_results(self, _event):
         attacking_weapon = self.weapon_type.get()
         success, attacked = self.karakter_var.get_value()
 
@@ -260,10 +260,11 @@ class TulutesBox(Checkbutton):
     def __init__(self, master):
         self.tick = IntVar()
         self.tick.set(0)
+        self.state = self.tick.get()
         Checkbutton.__init__(self, master, text=TULUTES_TEXT,
                              variable=self.tick, command=self.print_on_change)
 
-    def print_on_change(self, *args):
+    def print_on_change(self, *_args):
         self.state = self.tick.get()
 
         if self.state:
@@ -282,7 +283,7 @@ class AtutesMenu(OptionMenu):
         self.atutes.set(options[0])
         OptionMenu.__init__(self, master, self.atutes, *options)
 
-    def print_on_change(self, *args):
+    def print_on_change(self, *_args):
         print(self.get_atutes())
 
     def get_atutes(self):
