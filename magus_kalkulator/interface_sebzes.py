@@ -1,7 +1,7 @@
 from tkinter import (Entry, StringVar, IntVar ,OptionMenu, Button, ttk,
                      Label, Checkbutton)
 from sebzes import return_penalty
-from validate import validate_integer
+from validate import validate_integer, FieldValidationError
 from interface_elements import CharacterValueField, organize_rows_to_left
 
 
@@ -268,10 +268,10 @@ class SebzesButton(Button):
         sfe = self.karakterek.get_karakter(attacked).sfe
 
         damage = self.get_damage()
-        success, damage = validate_integer(damage)
-
-        if not success:
-            self.messages.write_message(damage)
+        try:
+            damage = validate_integer(damage)
+        except FieldValidationError as error:
+            self.messages.write_message(error.message)
             return
 
         tulutes = self.tulutes.get_tulutes()
