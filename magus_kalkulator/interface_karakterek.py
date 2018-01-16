@@ -11,6 +11,8 @@ EP_FIELDS_COLUMN = 0
 FP_FIELDS_COLUMN = EP_FIELDS_COLUMN + 1
 SFE_FIELDS_COLUMN = EP_FIELDS_COLUMN
 
+PART_SFE_COLUMN_SPAN = 5
+
 EP_FRAME_TITLE = 'Eletero'
 EP_LABEL = 'Max EP'
 FP_LABEL = 'Max FP'
@@ -113,8 +115,8 @@ class EpFpFrame(ttk.LabelFrame):
         self.ep_label = Label(self, text=EP_LABEL)
         self.ep_field = CharacterValueField(self, validate_integer)
 
-        self.fp_field = CharacterValueField(self, validate_integer)
         self.fp_label = Label(self, text=FP_LABEL)
+        self.fp_field = CharacterValueField(self, validate_integer)
 
         organize_rows_to_left([self.ep_label, self.ep_field], EP_FIELDS_COLUMN)
         organize_rows_to_left([self.fp_label, self.fp_field], FP_FIELDS_COLUMN)
@@ -127,34 +129,54 @@ class SfeFrame(ttk.LabelFrame):
     """
     def __init__(self, master):
         ttk.LabelFrame.__init__(self, master, text=SFE_FRAME_TITLE)
+        self.master = master
+        self.sfe = {}
+
         self.sfe_label = Label(self, text=SFE_SHORTCUT_LABEL)
         self.sfe_field = CharacterValueField(self, validate_integer, width=2)
-        self.sfe = {}
-        self.master = master
-        self.sfe_label.grid(row=0)
-        self.sfe_field.grid(row=0, column=1)
+
+        self.sfe_label.grid(row=0, column=SFE_FIELDS_COLUMN)
+        self.sfe_field.grid(row=0, column=SFE_FIELDS_COLUMN + 1)
 
         self.fej_sfe = SfePartFrame(
             self, SFE_FEJ_LABEL, SFE_FEJ_PARTS)
-        self.fej_sfe.grid(row=3, columnspan=5, sticky=(N, W))
-
         self.torzs_sfe = SfePartFrame(
             self, SFE_TORZS_LABEL, SFE_TORZS_PARTS)
-        self.torzs_sfe.grid(row=3, column=5, columnspan=5, sticky=(N, W))
-
         self.kar_sfe = SfePartFrame(self, SFE_KAR_LABEL, SFE_KAR_PARTS,
                                     limb=True)
-        self.kar_sfe.grid(row=4, columnspan=5, sticky=(N, W))
-
         self.lab_sfe = SfePartFrame(
             self, SFE_LAB_LABEL, SFE_LAB_PARTS, limb=True)
-        self.lab_sfe.grid(row=4, column=5, columnspan=5, sticky=(N, W))
+
+        self.fej_sfe.grid(row=1,
+                          column=SFE_FIELDS_COLUMN,
+                          columnspan=PART_SFE_COLUMN_SPAN,
+                          sticky=(N, W))
+        self.torzs_sfe.grid(row=1,
+                            column=SFE_FIELDS_COLUMN + PART_SFE_COLUMN_SPAN,
+                            columnspan=PART_SFE_COLUMN_SPAN,
+                            sticky=(N, W))
+
+        self.kar_sfe.grid(row=2,
+                          column=SFE_FIELDS_COLUMN,
+                          columnspan=5,
+                          sticky=(N, W))
+        self.lab_sfe.grid(row=2,
+                          column=SFE_FIELDS_COLUMN + PART_SFE_COLUMN_SPAN,
+                          columnspan=PART_SFE_COLUMN_SPAN,
+                          sticky=(N, W))
 
     def retrieve_sfe_map(self):
+        """
+        In self.sfe all values are instances of CharacterValueField.
+        This method tries to get a validated value from each instance.
+
+        If the validation fails, the method re-raises the validation error.
+
+        On success, a map with integer values is returned.
+        """
         return_map = {}
         try:
             for key, value in self.sfe.items():
-
                 value = value.get_validated()
                 return_map[key] = value
             return return_map
@@ -186,7 +208,8 @@ class CharacterAddButton(Button):
     def __init__(self, master, text, karakterek):
         self.master = master
         self.name = self.master.master.name_frame.name_field
-        self.fields = self.master.master.ep_fp_frame
+        self.ep_fp = self.master.master.ep_fp_frame
+        self.sfe = self.master.master.sfe_frame
         self.karakterek = karakterek
         self.messages = self.master.messages
         Button.__init__(self, master, text=text)
@@ -201,22 +224,17 @@ class CharacterAddButton(Button):
         exists.
         """
         # Get name, ep and fp fields
-        name_field = self.name
-        ep_field = self.fields.ep_field
-        fp_field = self.fields.fp_field
-        sfe_frame = self.master.master.sfe_frame
-
         try:
-            name = name_field.get_validated()
-            ep = ep_field.get_validated()
-            fp = fp_field.get_validated()
-            sfe_map = sfe_frame.retrieve_sfe_map()
+            name = self.name.get_validated()
+            ep = self.ep_fp.ep_field.get_validated()
+            fp = self.ep_fp.fp_field.get_validated()
+            sfe_map = self.sfe.retrieve_sfe_map()
 
         except FieldValidationError as error:
             self.messages.write_message(error.message)
             return
 
-        # Kulcscsontok mellkas pancelt hasznaljak
+        # Add exceptional sfe values to map using specified key
         sfe_map = copy_value_to_keys(sfe_map, 'Mellkas', 'Jkulcs', 'Bkulcs')
 
         # Add new character. Addition fails if character already exists.
