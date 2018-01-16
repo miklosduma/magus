@@ -155,7 +155,7 @@ class SfeFrame(ttk.LabelFrame):
         try:
             for key, value in self.sfe.items():
 
-                value = value.validate()
+                value = value.get_validated()
                 return_map[key] = value
             return return_map
 
@@ -207,9 +207,9 @@ class CharacterAddButton(Button):
         sfe_frame = self.master.master.sfe_frame
 
         try:
-            name = name_field.validate()
-            ep = ep_field.validate()
-            fp = fp_field.validate()
+            name = name_field.get_validated()
+            ep = ep_field.get_validated()
+            fp = fp_field.get_validated()
             sfe_map = sfe_frame.retrieve_sfe_map()
 
         except FieldValidationError as error:

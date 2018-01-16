@@ -222,14 +222,6 @@ class SebzesButton(Button):
         self.weapon_type = self.master.weapon_type
         self.bind('<Button-1>', self.write_results)
 
-    def get_damage(self):
-        try:
-            damage = self.sebzes.validate()
-            return damage
-
-        except FieldValidationError:
-            raise
-
     def write_results(self, _event):
         attacking_weapon = self.weapon_type.get()
         success, attacked = self.karakter_var.get_value()
@@ -242,7 +234,7 @@ class SebzesButton(Button):
         sfe = self.karakterek.get_karakter(attacked).sfe
 
         try:
-            damage = self.get_damage()
+            damage = self.sebzes.get_validated()
         except FieldValidationError as error:
             self.messages.write_message(error.message)
             return

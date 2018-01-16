@@ -56,7 +56,7 @@ class CharacterValueField(Entry):
 
         print(self.value.get())
 
-    def validate(self):
+    def get_validated(self):
         """
         Calls assigned validator function on the
         value of the field.
