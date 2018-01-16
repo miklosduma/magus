@@ -1,6 +1,6 @@
 from tkinter import (Button, Label, W, E, N, VERTICAL, ttk)
 
-from validate import validate_integer, validate_string
+from validate import validate_integer, validate_string, FieldValidationError
 from interface_elements import CharacterValueField, organize_rows_to_left
 
 KARAKTER_PANEL_COLUMN = 0
@@ -152,16 +152,15 @@ class SfeFrame(ttk.LabelFrame):
 
     def retrieve_sfe_map(self):
         return_map = {}
-        for key, value in self.sfe.items():
-            success, value = value.validate()
+        try:
+            for key, value in self.sfe.items():
 
-            if not success:
-                return False, value
-
-            else:
+                value = value.validate()
                 return_map[key] = value
+            return return_map
 
-        return True, return_map
+        except FieldValidationError:
+            raise
 
 
 class ButtonsFrame(ttk.LabelFrame):
@@ -205,35 +204,24 @@ class CharacterAddButton(Button):
         name_field = self.name
         ep_field = self.fields.ep_field
         fp_field = self.fields.fp_field
-
-        # Validate each, and add their values to list
-        values = []
-        for field in [name_field, ep_field, fp_field]:
-            success, value = field.validate()
-
-            if not success:
-                self.messages.write_message(value)
-                return
-            else:
-                values.append(value)
-
-        [name, ep, fp] = values
-
-        # Get sfe fields from sfe frame
         sfe_frame = self.master.master.sfe_frame
-        success, sfe_map = sfe_frame.retrieve_sfe_map()
 
-        if not success:
-            self.messages.write_message(sfe_map)
+        try:
+            name = name_field.validate()
+            ep = ep_field.validate()
+            fp = fp_field.validate()
+            sfe_map = sfe_frame.retrieve_sfe_map()
+
+        except FieldValidationError as error:
+            self.messages.write_message(error.message)
             return
 
         # Kulcscsontok mellkas pancelt hasznaljak
-        new_sfe_map = copy_value_to_keys(sfe_map,
-                                         'Mellkas', 'Jkulcs', 'Bkulcs')
+        sfe_map = copy_value_to_keys(sfe_map, 'Mellkas', 'Jkulcs', 'Bkulcs')
 
         # Add new character. Addition fails if character already exists.
         success, msg = self.karakterek.add_karakter(
-            name, ep, new_sfe_map, fp=fp)
+            name, ep, sfe_map, fp=fp)
 
         if not success:
             msg = ALREADY_ADDED.format(name)

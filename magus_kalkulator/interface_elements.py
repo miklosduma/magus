@@ -1,4 +1,5 @@
 from tkinter import Entry, StringVar, W
+from validate import FieldValidationError
 
 FIELD_WIDTH = 10
 FIELD_COLOR = 'white'
@@ -32,14 +33,14 @@ class CharacterValueField(Entry):
         # Varible for entered value
         self.value = StringVar(master)
         self.value.set('')
-        self.value.trace('w', self.follow_changes)
+        self.value.trace('w', self._follow_changes)
         self.validator = validate_fun
 
         # Entry field
         Entry.__init__(self, master, textvariable=self.value,
                        width=width)
 
-    def follow_changes(self, *args):
+    def _follow_changes(self, *_args):
         """
         Traces changes to the input value
         of the field.
@@ -62,8 +63,10 @@ class CharacterValueField(Entry):
 
         If validation fails, turns the field to red.
         """
-        success, value = self.validator(self.value.get())
+        try:
+            value = self.validator(self.value.get())
+            return value
 
-        if not success:
+        except FieldValidationError:
             self.config(bg=FIELD_COLOR_ERROR)
-        return success, value
+            raise

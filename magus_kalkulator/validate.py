@@ -7,6 +7,16 @@ NEGATIVE_NUMBER = 'Adj meg pozitiv szamot e helyett: {}'
 MATCH_SINGLE_QUOTES = r'\'[^\']+\''
 
 
+class FieldValidationError(Exception):
+    """
+    Exception raised on validation failures.
+    """
+
+    def __init__(self, message):
+        Exception.__init__(self)
+        self.message = message
+
+
 def get_value_from_error(msg):
     """
     Uses regexp to retrieve the value
@@ -46,22 +56,23 @@ def is_empty(value):
 
 def validate_integer(n):
     if is_empty(n):
-        return False, EMPTY_FIELD
+        raise FieldValidationError(EMPTY_FIELD)
 
     try:
         n = int(n)
 
         if is_negative(n):
-            return False, NEGATIVE_NUMBER.format(n)
-        return True, n
+            raise FieldValidationError(NEGATIVE_NUMBER.format(n))
+
+        return n
 
     except ValueError as error:
         value = get_value_from_error(error.message)
-        return False, NOT_NUMBER.format(value)
+        raise FieldValidationError(NOT_NUMBER.format(value))
 
 
 def validate_string(s):
     if is_empty(s):
-        return False, EMPTY_FIELD
+        raise FieldValidationError(EMPTY_FIELD)
 
-    return True, s
+    return s
