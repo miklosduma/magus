@@ -80,11 +80,11 @@ class KarakterPanels(ttk.PanedWindow):
         self.karakterek = self.master.karakterek
         self.messages = self.master.messages
         self.name_frame = NameFrame(self)
-        self.fields_frame = FieldsFrame(self)
+        self.ep_fp_frame = EpFpFrame(self)
         self.sfe_frame = SfeFrame(self)
         self.buttons_frame = ButtonsFrame(self)
         self.add(self.name_frame)
-        self.add(self.fields_frame)
+        self.add(self.ep_fp_frame)
         self.add(self.sfe_frame)
         self.add(self.buttons_frame)
 
@@ -102,7 +102,7 @@ class NameFrame(ttk.LabelFrame):
         organize_rows_to_left([self.name_field], NAME_COLUMN)
 
 
-class FieldsFrame(ttk.LabelFrame):
+class EpFpFrame(ttk.LabelFrame):
     """
     Part of characters panel. Contains
     ep and fp fields with labels.
@@ -186,7 +186,7 @@ class CharacterAddButton(Button):
     def __init__(self, master, text, karakterek):
         self.master = master
         self.name = self.master.master.name_frame.name_field
-        self.fields = self.master.master.fields_frame
+        self.fields = self.master.master.ep_fp_frame
         self.karakterek = karakterek
         self.messages = self.master.messages
         Button.__init__(self, master, text=text)
