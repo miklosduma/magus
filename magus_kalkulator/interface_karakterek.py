@@ -284,25 +284,31 @@ class SfePartFrame(ttk.LabelFrame):
     """
     Frame child type of main sfe frame. E.g. Fej or Lab frame.
     """
-    def __init__(self, master, text, fields, limb=False):
+    def __init__(self, master, text, body_parts, limb=False):
         ttk.LabelFrame.__init__(self, master, text=text)
-        self.keys = fields
         self.master = master
-        self.total_sfe = self.master.sfe_field.value
-        self.sfe_field = CharacterValueField(self, validate_integer, width=2)
+        self.keys = body_parts
+
+        # Sfe value shortcut that sets all other sfe values
+        self.master_sfe = self.master.sfe_field.value
+        self.master_sfe.trace('w', self._follow_master)
+
         Label(self, text=SFE_SHORTCUT_LABEL).grid(row=0, column=0, sticky=W)
+
+        # Sfe shortcut that sets all sfe values listed in body_parts
+        self.sfe_field = CharacterValueField(self, validate_integer, width=2)
         self.sfe_field.grid(row=0, column=1, sticky=W)
-        self.master = master
-        self.fields = self.master.sfe
+        self.sfe_field.value.trace('w', self._follow_total)
+
+        # Dict attribute holding validated sfe values
+        self.sfe_map = self.master.sfe
+
         self.local_fields = []
 
         if limb:
-            self._place_sfe_fields_limb(fields)
+            self._place_sfe_fields_limb(body_parts)
         else:
-            self._place_sfe_fields(fields)
-
-        self.total_sfe.trace('w', self._follow_master)
-        self.sfe_field.value.trace('w', self._follow_total)
+            self._place_sfe_fields(body_parts)
 
     def _follow_master(self, *_args):
         """
@@ -310,7 +316,7 @@ class SfePartFrame(ttk.LabelFrame):
         sub parts follow. E.g. setting Mindenhol in Lab frame
         will change both JLabszar and BBoka to the same value.
         """
-        self.sfe_field.value.set(self.total_sfe.get())
+        self.sfe_field.value.set(self.master_sfe.get())
 
     def _follow_total(self, *_args):
         """
@@ -318,7 +324,7 @@ class SfePartFrame(ttk.LabelFrame):
         fields follow. Setting the value of it changes
         all other sfe field values.
         """
-        for key, value in self.fields.items():
+        for key, value in self.sfe_map.items():
 
             if key in self.local_fields:
                 total = self.sfe_field.value.get()
@@ -342,7 +348,7 @@ class SfePartFrame(ttk.LabelFrame):
 
             sfe_field_value.grid(
                     row=row, column=column + 1, sticky=W)
-            self.fields[field] = sfe_field_value
+            self.sfe_map[field] = sfe_field_value
             self.local_fields.append(field)
 
             row += 1
@@ -385,7 +391,7 @@ class SfePartFrame(ttk.LabelFrame):
 
                 sfe_field_value.grid(
                     row=row, column=column + 1, sticky=direction)
-                self.fields[sfe_field] = sfe_field_value
+                self.sfe_map[sfe_field] = sfe_field_value
                 self.local_fields.append(sfe_field)
 
             row += 1
