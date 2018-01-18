@@ -1,7 +1,12 @@
-from tkinter import (Button, Label, W, E, N, VERTICAL, ttk)
+"""
+GUI page for adding new characters.
+"""
+
+from tkinter import (Button, Label, W, E, VERTICAL, ttk)
 
 from validate import validate_integer, validate_string, FieldValidationError
-from interface_elements import CharacterValueField, organize_rows_to_left
+from interface_elements import (CharacterValueField, organize_rows_to_left,
+                                place_next_in_columns)
 
 KARAKTER_PANEL_COLUMN = 0
 KARAKTER_PANEL_ROW = 0
@@ -132,10 +137,9 @@ class SfeFrame(ttk.LabelFrame):
         self.master = master
         self.sfe = {}
 
-        self.sfe_label = Label(self, text=SFE_SHORTCUT_LABEL)
+        Label(self, text=SFE_SHORTCUT_LABEL).grid(row=0,
+                                                  column=SFE_FIELDS_COLUMN)
         self.sfe_field = CharacterValueField(self, validate_integer, width=2)
-
-        self.sfe_label.grid(row=0, column=SFE_FIELDS_COLUMN)
         self.sfe_field.grid(row=0, column=SFE_FIELDS_COLUMN + 1)
 
         self.fej_sfe = SfePartFrame(
@@ -147,23 +151,11 @@ class SfeFrame(ttk.LabelFrame):
         self.lab_sfe = SfePartFrame(
             self, SFE_LAB_LABEL, SFE_LAB_PARTS, limb=True)
 
-        self.fej_sfe.grid(row=1,
-                          column=SFE_FIELDS_COLUMN,
-                          columnspan=PART_SFE_COLUMN_SPAN,
-                          sticky=(N, W))
-        self.torzs_sfe.grid(row=1,
-                            column=SFE_FIELDS_COLUMN + PART_SFE_COLUMN_SPAN,
-                            columnspan=PART_SFE_COLUMN_SPAN,
-                            sticky=(N, W))
-
-        self.kar_sfe.grid(row=2,
-                          column=SFE_FIELDS_COLUMN,
-                          columnspan=5,
-                          sticky=(N, W))
-        self.lab_sfe.grid(row=2,
-                          column=SFE_FIELDS_COLUMN + PART_SFE_COLUMN_SPAN,
-                          columnspan=PART_SFE_COLUMN_SPAN,
-                          sticky=(N, W))
+        place_next_in_columns([self.fej_sfe,
+                               self.torzs_sfe,
+                               self.kar_sfe,
+                               self.lab_sfe],
+                              1, SFE_FIELDS_COLUMN, PART_SFE_COLUMN_SPAN)
 
     def retrieve_sfe_map(self):
         """
@@ -353,10 +345,8 @@ class SfePartFrame(ttk.LabelFrame):
             label.grid(row=row, column=column, sticky=W)
 
             # Place field next to label
-            sfe_field = CharacterValueField(
-                    self, validate_integer, width=2)
-            sfe_field.grid(
-                    row=row, column=column + 1, sticky=W)
+            sfe_field = CharacterValueField(self, validate_integer, width=2)
+            sfe_field.grid(row=row, column=column + 1, sticky=W)
 
             # Add sfe field to sfe map. Sfe field stores the value
             # of the entry field

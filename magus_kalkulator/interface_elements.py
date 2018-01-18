@@ -1,4 +1,4 @@
-from tkinter import Entry, StringVar, W
+from tkinter import Entry, StringVar, W, N
 from validate import FieldValidationError
 
 FIELD_WIDTH = 10
@@ -18,6 +18,27 @@ def organize_rows_to_left(list_of_elements, column, start_row=0):
         start_row += 1
 
     return start_row
+
+
+def place_next_in_columns(frames, row, column, columnspan):
+    """
+    Places the specified frame elements.
+    """
+    # Save value of column parameter
+    start_column = column
+
+    # Place all frame elements
+    for frame in frames:
+        frame.grid(row=row, column=column, columnspan=columnspan, sticky=(N, W))
+
+        # If column is the same as columnspan, next item is placed in new row
+        if column == columnspan:
+            column = start_column
+            row += 1
+
+        # Else place in next column
+        else:
+            column += columnspan
 
 
 class CharacterValueField(Entry):
