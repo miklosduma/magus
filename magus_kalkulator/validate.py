@@ -4,6 +4,10 @@ EMPTY_FIELD = 'Tolts ki minden mezot!'
 NOT_NUMBER = 'Nem szam: {}'
 NEGATIVE_NUMBER = 'Adj meg pozitiv szamot e helyett: {}'
 
+NUMBER_LENGTH_ERROR = 'Adj meg egy szamot {} es {} kozott!'
+STRING_LENGTH_ERROR = ('Adj meg egy minimum {} \nes maximum {}' 
+                       ' karakter hosszu erteket!')
+
 MATCH_SINGLE_QUOTES = r'\'[^\']+\''
 
 
@@ -25,23 +29,34 @@ def get_value_from_error(msg):
     return re.findall(MATCH_SINGLE_QUOTES, msg)[0]
 
 
-def is_negative(number):
+def between_thresholds(value, min_val, max_val):
     """
-    Returns True or False depending on whether
-    the input number is smaller than zero.
+    Checks whether value falls between min_val and
+    max_val.
     """
-    return number < 0
+    return min_val <= value <= max_val
 
 
 def strip_if_string(value):
+    """
+    Removes leading and trailing spaces
+    from a string.
+
+    If value is not a string, returns it
+    as it is.
+    """
     try:
         return value.strip()
+
     except AttributeError as error:
         print(error)
         return value
 
 
 def is_empty(value):
+    """
+    Checks if a value is an empty string or None.
+    """
     value = strip_if_string(value)
 
     if value is None:
@@ -54,15 +69,22 @@ def is_empty(value):
         return False
 
 
-def validate_integer(n):
+def validate_integer(n, min_val=0, max_val=99):
+    """
+    Validates an integer value. Not, all fields
+    use string values, so n may be a string to begin with.
+
+    The function will try to change n to an integer.
+    """
     if is_empty(n):
         raise FieldValidationError(EMPTY_FIELD)
 
     try:
         n = int(n)
 
-        if is_negative(n):
-            raise FieldValidationError(NEGATIVE_NUMBER.format(n))
+        if not between_thresholds(n, min_val, max_val):
+            raise FieldValidationError(NUMBER_LENGTH_ERROR.format(min_val,
+                                                                  max_val))
 
         return n
 
@@ -71,8 +93,18 @@ def validate_integer(n):
         raise FieldValidationError(NOT_NUMBER.format(value))
 
 
-def validate_string(s):
+def validate_string(s, min_length=3, max_length=12):
+    """
+    Validates a string. Checks whether it is
+    an empty string or not.
+    """
     if is_empty(s):
         raise FieldValidationError(EMPTY_FIELD)
+
+    length = len(s)
+
+    if not between_thresholds(length, min_length, max_length):
+        raise FieldValidationError(STRING_LENGTH_ERROR.format(min_length,
+                                                              max_length))
 
     return s
