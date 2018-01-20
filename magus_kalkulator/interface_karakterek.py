@@ -218,8 +218,8 @@ class CharacterAddButton(Button):
         # Get name, ep and fp fields
         try:
             name = self.name.get_validated()
-            ep = self.ep_fp.ep_field.get_validated()
-            fp = self.ep_fp.fp_field.get_validated()
+            ep = self.ep_fp.ep_field.get_validated(min_val=1)
+            fp = self.ep_fp.fp_field.get_validated(min_val=1)
             sfe_map = self.sfe.retrieve_sfe_map()
 
         except FieldValidationError as error:

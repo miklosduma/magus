@@ -77,7 +77,7 @@ class CharacterValueField(Entry):
 
         print(self.value.get())
 
-    def get_validated(self):
+    def get_validated(self, **kwargs):
         """
         Calls assigned validator function on the
         value of the field.
@@ -85,7 +85,7 @@ class CharacterValueField(Entry):
         If validation fails, turns the field to red.
         """
         try:
-            value = self.validator(self.value.get())
+            value = self.validator(self.value.get(), **kwargs)
             return value
 
         except FieldValidationError:
