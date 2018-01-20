@@ -20,12 +20,12 @@ SEBZES_PAGE_TITLE = 'Sebzes'
 MESSAGE_BOX_COLOUR = 'azure'
 
 TABS_COLUMN = 0
-TABS_COLUMN_SPAN = 10
+TABS_COLUMN_SPAN = 9
 TABS_ROW = 0
 TABS_ROW_SPAN = 5
 
-MESSAGES_COLUMN = 11
-MESSAGES_COLUMNSPAN = TABS_COLUMN_SPAN - 1
+MESSAGES_COLUMN = 9
+MESSAGES_COLUMNSPAN = TABS_COLUMN_SPAN
 MESSAGES_ROW = TABS_ROW
 MESSAGES_ROWSPAN = TABS_ROW_SPAN
 
@@ -62,7 +62,7 @@ class MagusGUI:
         self.tabs.grid(column=TABS_COLUMN, columnspan=TABS_COLUMN_SPAN,
                        row=TABS_ROW, rowspan=TABS_ROW_SPAN, sticky=N)
         self.messages.grid(column=MESSAGES_COLUMN,
-                           columnspan=MESSAGES_COLUMNSPAN, sticky=NE,
+                           columnspan=MESSAGES_COLUMNSPAN, sticky=N,
                            row=MESSAGES_ROW, rowspan=MESSAGES_ROWSPAN)
 
 
@@ -91,7 +91,8 @@ class MyTabs(ttk.Notebook):
 
 class GuiMessage(Text):
     def __init__(self, master):
-        Text.__init__(self, master, bg=MESSAGE_BOX_COLOUR)
+        Text.__init__(self, master, bg=MESSAGE_BOX_COLOUR,
+                      width=TAB_PANEL_WIDTH)
         self.insert(END, TEXT_START)
         self._set_state(DISABLED)
 
