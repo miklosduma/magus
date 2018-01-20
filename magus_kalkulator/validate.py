@@ -57,8 +57,6 @@ def is_empty(value):
     """
     Checks if a value is an empty string or None.
     """
-    value = strip_if_string(value)
-
     if value is None:
         return True
 
@@ -76,6 +74,8 @@ def validate_integer(n, min_val=0, max_val=99):
 
     The function will try to change n to an integer.
     """
+    n = strip_if_string(n)
+
     if is_empty(n):
         raise FieldValidationError(EMPTY_FIELD)
 
@@ -98,6 +98,8 @@ def validate_string(s, min_length=3, max_length=12):
     Validates a string. Checks whether it is
     an empty string or not.
     """
+    s = strip_if_string(s)
+
     if is_empty(s):
         raise FieldValidationError(EMPTY_FIELD)
 
