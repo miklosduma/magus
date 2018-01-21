@@ -62,11 +62,6 @@ class SebzesPage(ttk.Frame):
         self.karakterek = master_gui.karakterek
         self.main_panel = CharacterPanel(self, width)
 
-        # Variable for type of attacking weapon. Can be selected from drop-down
-        self.weapon_label = Label(self, text=SELECT_WEAPON)
-        self.weapon_type = WeaponString(self, WEAPON_TYPES)
-        self.weapon_menu = WeaponTypeMenu(self, self.weapon_type, *WEAPON_TYPES)
-
         # Variable for total damage. Can be entered into entry field
         self.sebzes_label = Label(self, text=DAMAGE_TEXT)
         self.sebzes = CharacterValueField(self, validate_integer)
@@ -77,7 +72,6 @@ class SebzesPage(ttk.Frame):
 
         # Place elements on grid
         organize_rows_to_left([self.main_panel,
-                               self.weapon_label, self.weapon_menu,
                                self.sebzes_label, self.sebzes,
                                self.atutes_label, self.atutes_menu,
                                self.sebzes_button], DAMAGE_PAGE_COLUMN)
@@ -94,6 +88,9 @@ class CharacterPanel(ttk.PanedWindow):
         self.choose_frame = ChooseCharacterFrame(self)
         self.choose_frame.grid()
 
+        self.weapon_frame = WeaponTypeFrame(self)
+        self.weapon_frame.grid()
+
 
 class ChooseCharacterFrame(ttk.LabelFrame):
     def __init__(self, master):
@@ -105,6 +102,17 @@ class ChooseCharacterFrame(ttk.LabelFrame):
 
     def get_selected(self):
         return self.selected_character.get_value()
+
+
+class WeaponTypeFrame(ttk.LabelFrame):
+    def __init__(self, master):
+        ttk.LabelFrame.__init__(self, master, text=SELECT_WEAPON)
+        self.selected_weapon = WeaponString(self, WEAPON_TYPES)
+        self.weapon_menu = WeaponTypeMenu(self, self.selected_weapon, *WEAPON_TYPES)
+        self.weapon_menu.grid()
+
+    def get_weapon(self):
+        return self.selected_weapon.get_weapon_type()
 
 
 class WeaponTypeMenu(OptionMenu):
@@ -248,7 +256,7 @@ class SebzesButton(Button):
         self.tulutes = self.master.tulutes_box
         self.atutes = self.master.atutes_menu
         self.sebzes = self.master.sebzes
-        self.weapon_type = self.master.weapon_type
+        self.weapon_type = self.master.main_panel.weapon_frame.selected_weapon
         self.bind('<Button-1>', self.write_results)
 
     def write_results(self, _event):
