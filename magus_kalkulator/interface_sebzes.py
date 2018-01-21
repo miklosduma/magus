@@ -61,40 +61,31 @@ class SebzesPage(ttk.Frame):
         # SFE and Max_EP of character is used when calculating damage
         self.karakterek = master_gui.karakterek
         self.main_panel = CharacterPanel(self, width)
-
-        # Variable for total damage. Can be entered into entry field
-        #self.sebzes_label = Label(self, text=DAMAGE_TEXT)
-        #self.sebzes = CharacterValueField(self, validate_integer)
-        #self.tulutes_box = TulutesBox(self)
-
-        self.atutes_label = Label(self, text=ATUTES_TEXT)
-        self.atutes_menu = AtutesMenu(self, *ATUTES_VALUES)
         self.sebzes_button = SebzesButton(self, DAMAGE_BUTTON_TEXT)
 
         # Place elements on grid
         organize_rows_to_left([self.main_panel,
-                               #self.sebzes_label, self.sebzes,
-                               self.atutes_label, self.atutes_menu,
                                self.sebzes_button], DAMAGE_PAGE_COLUMN)
-        #self.sebzes_row = self.sebzes.grid_info()['row']
-        #self.tulutes_box.grid(column=DAMAGE_PAGE_COLUMN+1, row=self.sebzes_row)
 
 
 class CharacterPanel(ttk.PanedWindow):
     def __init__(self, master, width, orient=VERTICAL):
         ttk.PanedWindow.__init__(self, master, width=width, orient=orient)
         self.master = master
+
         self.karakterek = self.master.karakterek
         self.messages = self.master.messages
 
         self.choose_frame = ChooseCharacterFrame(self)
-        self.choose_frame.grid(sticky=W)
 
         self.weapon_frame = WeaponTypeFrame(self)
-        self.weapon_frame.grid(sticky=W)
 
         self.damage_frame = DamageFrame(self)
-        self.damage_frame.grid(sticky=W)
+
+        self.piercing_frame = PiercingFrame(self)
+
+        organize_rows_to_left([self.choose_frame, self.weapon_frame,
+                               self.damage_frame, self.piercing_frame], 0)
 
 
 class ChooseCharacterFrame(ttk.LabelFrame):
@@ -127,6 +118,13 @@ class DamageFrame(ttk.LabelFrame):
         self.tulutes = TulutesBox(self)
         self.damage.grid(sticky=W, row=0, column=0)
         self.tulutes.grid(sticky=W, row=0, column=1)
+
+
+class PiercingFrame(ttk.LabelFrame):
+    def __init__(self, master):
+        ttk.LabelFrame.__init__(self, master, text=ATUTES_TEXT)
+        self.piercing_menu = AtutesMenu(self, *ATUTES_VALUES)
+        self.piercing_menu.grid()
 
 
 class WeaponString(StringVar):
@@ -256,7 +254,7 @@ class SebzesButton(Button):
         self.karakter_var = self.master.main_panel.choose_frame.selected_character
         self.messages = self.master.messages
         self.tulutes = self.master.main_panel.damage_frame.tulutes
-        self.atutes = self.master.atutes_menu
+        self.atutes = self.master.main_panel.piercing_frame.piercing_menu
         self.sebzes = self.master.main_panel.damage_frame.damage
         self.weapon_type = self.master.main_panel.weapon_frame.selected_weapon
         self.bind('<Button-1>', self.write_results)
