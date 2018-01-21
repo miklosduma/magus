@@ -1,5 +1,5 @@
 from tkinter import (StringVar, IntVar, OptionMenu, Button, ttk,
-                     Label, Checkbutton)
+                     Label, Checkbutton, VERTICAL)
 from sebzes import return_penalty
 from validate import validate_integer, FieldValidationError
 from interface_elements import CharacterValueField, organize_rows_to_left
@@ -60,11 +60,14 @@ class SebzesPage(ttk.Frame):
         # Variable for character selection drop-down
         # SFE and Max_EP of character is used when calculating damage
         self.karakterek = master_gui.karakterek
-        self.karakter_var = KarakterVar(self, self.karakterek, self.messages)
+        self.choose_panel = CharacterPanel(self, width)
+        self.choose_panel.grid()
 
-        self.karakter_label = Label(self, text=SELECT_CHARACTER)
-        self.dropdown = KarakterekMenu(self, self.karakter_var,
-                                       self.karakterek, *[''])
+        # self.karakter_var = KarakterVar(self, self.karakterek, self.messages)
+
+        # self.karakter_label = Label(self, text=SELECT_CHARACTER)
+        # self.dropdown = KarakterekMenu(self, self.karakter_var,
+        #                              self.karakterek, *[''])
 
         # Variable for type of attacking weapon. Can be selected from drop-down
         self.weapon_label = Label(self, text=SELECT_WEAPON)
@@ -80,13 +83,32 @@ class SebzesPage(ttk.Frame):
         self.sebzes_button = SebzesButton(self, DAMAGE_BUTTON_TEXT)
 
         # Place elements on grid
-        organize_rows_to_left([self.karakter_label, self.dropdown,
+        organize_rows_to_left([#self.karakter_label, self.dropdown,
                                self.weapon_label, self.weapon_menu,
                                self.sebzes_label, self.sebzes,
                                self.atutes_label, self.atutes_menu,
-                               self.sebzes_button], DAMAGE_PAGE_COLUMN)
+                               self.sebzes_button], DAMAGE_PAGE_COLUMN, start_row=1)
         self.sebzes_row = self.sebzes.grid_info()['row']
         self.tulutes_box.grid(column=DAMAGE_PAGE_COLUMN+1, row=self.sebzes_row)
+
+
+class CharacterPanel(ttk.PanedWindow):
+    def __init__(self, master, width, orient=VERTICAL):
+        ttk.PanedWindow.__init__(self, master, width=width, orient=orient)
+        self.master = master
+        self.karakterek = self.master.karakterek
+        self.messages = self.master.messages
+        self.choose_frame = ChooseCharacterFrame(self)
+        self.choose_frame.grid()
+
+
+class ChooseCharacterFrame(ttk.LabelFrame):
+    def __init__(self, master):
+        self.master = master
+        ttk.LabelFrame.__init__(self, master, text=SELECT_CHARACTER)
+        self.selected_character = KarakterVar(self, self.master.karakterek, self.master.messages)
+        self.character_menu = KarakterekMenu(self, self.selected_character, self.master.karakterek, *[''])
+        self.character_menu.grid()
 
 
 class WeaponTypeMenu(OptionMenu):
@@ -214,7 +236,8 @@ class SebzesButton(Button):
         Button.__init__(self, master, text=text)
         self.master = master
         self.karakterek = self.master.karakterek
-        self.karakter_var = self.master.karakter_var
+        # self.karakter_var = self.master.karakter_var
+        self.karakter_var = self.master.choose_panel.choose_frame.selected_character
         self.messages = self.master.messages
         self.tulutes = self.master.tulutes_box
         self.atutes = self.master.atutes_menu

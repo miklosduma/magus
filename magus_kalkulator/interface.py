@@ -104,6 +104,7 @@ class GuiMessage(Text):
             - NORMAL (editable)
             - DISABLED (read-only)
         """
+        print(self.winfo_width())
         self.config(state=state)
         self.state = state
 
