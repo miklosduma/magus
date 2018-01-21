@@ -72,16 +72,12 @@ class CharacterPanel(ttk.PanedWindow):
     def __init__(self, master, width, orient=VERTICAL):
         ttk.PanedWindow.__init__(self, master, width=width, orient=orient)
         self.master = master
-
         self.karakterek = self.master.karakterek
         self.messages = self.master.messages
 
         self.choose_frame = ChooseCharacterFrame(self)
-
         self.weapon_frame = WeaponTypeFrame(self)
-
         self.damage_frame = DamageFrame(self)
-
         self.piercing_frame = PiercingFrame(self)
 
         organize_rows_to_left([self.choose_frame, self.weapon_frame,
@@ -92,9 +88,11 @@ class ChooseCharacterFrame(ttk.LabelFrame):
     def __init__(self, master):
         self.master = master
         ttk.LabelFrame.__init__(self, master, text=SELECT_CHARACTER)
-        self.selected_character = KarakterVar(self, self.master.karakterek, self.master.messages)
-        self.character_menu = KarakterekMenu(self, self.selected_character, self.master.karakterek, *[''])
-        self.character_menu.grid(sticky=W)
+        self.selected_character = KarakterVar(self, self.master.karakterek,
+                                              self.master.messages)
+        self.character_menu = KarakterekMenu(self, self.selected_character,
+                                             self.master.karakterek, *[''])
+        self.character_menu.grid()
 
     def get_selected(self):
         return self.selected_character.get_value()
@@ -104,8 +102,9 @@ class WeaponTypeFrame(ttk.LabelFrame):
     def __init__(self, master):
         ttk.LabelFrame.__init__(self, master, text=SELECT_WEAPON)
         self.selected_weapon = WeaponString(self, WEAPON_TYPES)
-        self.weapon_menu = OptionMenu(self, self.selected_weapon, *WEAPON_TYPES)
-        self.weapon_menu.grid(sticky=W)
+        self.weapon_menu = OptionMenu(self, self.selected_weapon,
+                                      *WEAPON_TYPES)
+        self.weapon_menu.grid()
 
     def get_weapon(self):
         return self.selected_weapon.get_weapon_type()
@@ -116,8 +115,19 @@ class DamageFrame(ttk.LabelFrame):
         ttk.LabelFrame.__init__(self, master, text=DAMAGE_TEXT)
         self.damage = CharacterValueField(self, validate_integer)
         self.tulutes = TulutesBox(self)
-        self.damage.grid(sticky=W, row=0, column=0)
-        self.tulutes.grid(sticky=W, row=0, column=1)
+        self.damage.grid(row=0, column=0)
+        self.tulutes.grid(row=0, column=1)
+
+    def get_damage(self):
+        try:
+            damage = self.damage.get_validated()
+            return True, damage
+
+        except FieldValidationError as error:
+            return False, error.message
+
+    def is_critical(self):
+        return self.tulutes.get_tulutes()
 
 
 class PiercingFrame(ttk.LabelFrame):
@@ -125,6 +135,9 @@ class PiercingFrame(ttk.LabelFrame):
         ttk.LabelFrame.__init__(self, master, text=ATUTES_TEXT)
         self.piercing_menu = AtutesMenu(self, *ATUTES_VALUES)
         self.piercing_menu.grid()
+
+    def get_piercing(self):
+        return self.piercing_menu.get_atutes()
 
 
 class WeaponString(StringVar):
@@ -250,18 +263,19 @@ class SebzesButton(Button):
         Button.__init__(self, master, text=text)
         self.master = master
         self.karakterek = self.master.karakterek
-
-        self.karakter_var = self.master.main_panel.choose_frame.selected_character
         self.messages = self.master.messages
-        self.tulutes = self.master.main_panel.damage_frame.tulutes
-        self.atutes = self.master.main_panel.piercing_frame.piercing_menu
-        self.sebzes = self.master.main_panel.damage_frame.damage
-        self.weapon_type = self.master.main_panel.weapon_frame.selected_weapon
+        self.main_panel = self.master.main_panel
+
+        self.choose_frame = self.main_panel.choose_frame
+        self.weapon_frame = self.main_panel.weapon_frame
+        self.damage_frame = self.main_panel.damage_frame
+        self.piercing_frame = self.main_panel.piercing_frame
+
         self.bind('<Button-1>', self.write_results)
 
     def write_results(self, _event):
-        attacking_weapon = self.weapon_type.get()
-        success, attacked = self.karakter_var.get_value()
+        attacking_weapon = self.weapon_frame.get_weapon()
+        success, attacked = self.choose_frame.get_selected()
 
         if not success:
             self.messages.write_message(attacked)
@@ -270,14 +284,16 @@ class SebzesButton(Button):
         max_ep = self.karakterek.get_karakter(attacked).max_ep
         sfe = self.karakterek.get_karakter(attacked).sfe
 
-        try:
-            damage = self.sebzes.get_validated()
-        except FieldValidationError as error:
-            self.messages.write_message(error.message)
+        success, result = self.damage_frame.get_damage()
+
+        if not success:
+            self.messages.write_message(result)
             return
 
-        tulutes = self.tulutes.get_tulutes()
-        atutes = self.atutes.get_atutes()
+        damage = result
+
+        tulutes = self.damage_frame.is_critical()
+        atutes = self.piercing_frame.get_piercing()
 
         penalty = return_penalty(sfe, damage, atutes, max_ep, attacking_weapon,
                                  tulutes=tulutes)
