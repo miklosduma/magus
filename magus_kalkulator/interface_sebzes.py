@@ -1,5 +1,5 @@
 from tkinter import (StringVar, IntVar, OptionMenu, Button, ttk,
-                     Label, Checkbutton, VERTICAL)
+                     Label, Checkbutton, VERTICAL, W, E)
 from sebzes import return_penalty
 from validate import validate_integer, FieldValidationError
 from interface_elements import CharacterValueField, organize_rows_to_left
@@ -63,20 +63,21 @@ class SebzesPage(ttk.Frame):
         self.main_panel = CharacterPanel(self, width)
 
         # Variable for total damage. Can be entered into entry field
-        self.sebzes_label = Label(self, text=DAMAGE_TEXT)
-        self.sebzes = CharacterValueField(self, validate_integer)
-        self.tulutes_box = TulutesBox(self)
+        #self.sebzes_label = Label(self, text=DAMAGE_TEXT)
+        #self.sebzes = CharacterValueField(self, validate_integer)
+        #self.tulutes_box = TulutesBox(self)
+
         self.atutes_label = Label(self, text=ATUTES_TEXT)
         self.atutes_menu = AtutesMenu(self, *ATUTES_VALUES)
         self.sebzes_button = SebzesButton(self, DAMAGE_BUTTON_TEXT)
 
         # Place elements on grid
         organize_rows_to_left([self.main_panel,
-                               self.sebzes_label, self.sebzes,
+                               #self.sebzes_label, self.sebzes,
                                self.atutes_label, self.atutes_menu,
                                self.sebzes_button], DAMAGE_PAGE_COLUMN)
-        self.sebzes_row = self.sebzes.grid_info()['row']
-        self.tulutes_box.grid(column=DAMAGE_PAGE_COLUMN+1, row=self.sebzes_row)
+        #self.sebzes_row = self.sebzes.grid_info()['row']
+        #self.tulutes_box.grid(column=DAMAGE_PAGE_COLUMN+1, row=self.sebzes_row)
 
 
 class CharacterPanel(ttk.PanedWindow):
@@ -85,11 +86,15 @@ class CharacterPanel(ttk.PanedWindow):
         self.master = master
         self.karakterek = self.master.karakterek
         self.messages = self.master.messages
+
         self.choose_frame = ChooseCharacterFrame(self)
-        self.choose_frame.grid()
+        self.choose_frame.grid(sticky=W)
 
         self.weapon_frame = WeaponTypeFrame(self)
-        self.weapon_frame.grid()
+        self.weapon_frame.grid(sticky=W)
+
+        self.damage_frame = DamageFrame(self)
+        self.damage_frame.grid(sticky=W)
 
 
 class ChooseCharacterFrame(ttk.LabelFrame):
@@ -98,7 +103,7 @@ class ChooseCharacterFrame(ttk.LabelFrame):
         ttk.LabelFrame.__init__(self, master, text=SELECT_CHARACTER)
         self.selected_character = KarakterVar(self, self.master.karakterek, self.master.messages)
         self.character_menu = KarakterekMenu(self, self.selected_character, self.master.karakterek, *[''])
-        self.character_menu.grid()
+        self.character_menu.grid(sticky=W)
 
     def get_selected(self):
         return self.selected_character.get_value()
@@ -108,23 +113,20 @@ class WeaponTypeFrame(ttk.LabelFrame):
     def __init__(self, master):
         ttk.LabelFrame.__init__(self, master, text=SELECT_WEAPON)
         self.selected_weapon = WeaponString(self, WEAPON_TYPES)
-        self.weapon_menu = WeaponTypeMenu(self, self.selected_weapon, *WEAPON_TYPES)
-        self.weapon_menu.grid()
+        self.weapon_menu = OptionMenu(self, self.selected_weapon, *WEAPON_TYPES)
+        self.weapon_menu.grid(sticky=W)
 
     def get_weapon(self):
         return self.selected_weapon.get_weapon_type()
 
 
-class WeaponTypeMenu(OptionMenu):
-    """
-    Drop-down for attacking weapon selection.
-    """
-
-    def __init__(self, master, variable, *weapon_types):
-        """
-        Initialise weapon drop-down.
-        """
-        OptionMenu.__init__(self, master, variable, *weapon_types)
+class DamageFrame(ttk.LabelFrame):
+    def __init__(self, master):
+        ttk.LabelFrame.__init__(self, master, text=DAMAGE_TEXT)
+        self.damage = CharacterValueField(self, validate_integer)
+        self.tulutes = TulutesBox(self)
+        self.damage.grid(sticky=W, row=0, column=0)
+        self.tulutes.grid(sticky=W, row=0, column=1)
 
 
 class WeaponString(StringVar):
@@ -250,12 +252,12 @@ class SebzesButton(Button):
         Button.__init__(self, master, text=text)
         self.master = master
         self.karakterek = self.master.karakterek
-        # self.karakter_var = self.master.karakter_var
+
         self.karakter_var = self.master.main_panel.choose_frame.selected_character
         self.messages = self.master.messages
-        self.tulutes = self.master.tulutes_box
+        self.tulutes = self.master.main_panel.damage_frame.tulutes
         self.atutes = self.master.atutes_menu
-        self.sebzes = self.master.sebzes
+        self.sebzes = self.master.main_panel.damage_frame.damage
         self.weapon_type = self.master.main_panel.weapon_frame.selected_weapon
         self.bind('<Button-1>', self.write_results)
 
