@@ -60,14 +60,7 @@ class SebzesPage(ttk.Frame):
         # Variable for character selection drop-down
         # SFE and Max_EP of character is used when calculating damage
         self.karakterek = master_gui.karakterek
-        self.choose_panel = CharacterPanel(self, width)
-        self.choose_panel.grid()
-
-        # self.karakter_var = KarakterVar(self, self.karakterek, self.messages)
-
-        # self.karakter_label = Label(self, text=SELECT_CHARACTER)
-        # self.dropdown = KarakterekMenu(self, self.karakter_var,
-        #                              self.karakterek, *[''])
+        self.main_panel = CharacterPanel(self, width)
 
         # Variable for type of attacking weapon. Can be selected from drop-down
         self.weapon_label = Label(self, text=SELECT_WEAPON)
@@ -83,11 +76,11 @@ class SebzesPage(ttk.Frame):
         self.sebzes_button = SebzesButton(self, DAMAGE_BUTTON_TEXT)
 
         # Place elements on grid
-        organize_rows_to_left([#self.karakter_label, self.dropdown,
+        organize_rows_to_left([self.main_panel,
                                self.weapon_label, self.weapon_menu,
                                self.sebzes_label, self.sebzes,
                                self.atutes_label, self.atutes_menu,
-                               self.sebzes_button], DAMAGE_PAGE_COLUMN, start_row=1)
+                               self.sebzes_button], DAMAGE_PAGE_COLUMN)
         self.sebzes_row = self.sebzes.grid_info()['row']
         self.tulutes_box.grid(column=DAMAGE_PAGE_COLUMN+1, row=self.sebzes_row)
 
@@ -109,6 +102,9 @@ class ChooseCharacterFrame(ttk.LabelFrame):
         self.selected_character = KarakterVar(self, self.master.karakterek, self.master.messages)
         self.character_menu = KarakterekMenu(self, self.selected_character, self.master.karakterek, *[''])
         self.character_menu.grid()
+
+    def get_selected(self):
+        return self.selected_character.get_value()
 
 
 class WeaponTypeMenu(OptionMenu):
@@ -217,6 +213,13 @@ class KarakterekMenu(OptionMenu):
 
         # Every time the drop-down is selected, update values for selection
         self.bind('<Button-1>', self._update)
+        self.config(width=10)
+
+    def _width_match_longest(self, list):
+
+        if list:
+            lengths = [len(x) for x in list]
+            self.config(width=max(lengths) + 2)
 
     def _update(self, _event):
         """
@@ -226,6 +229,9 @@ class KarakterekMenu(OptionMenu):
         menu = self.children['menu']
         menu.delete(0, 'end')
         new_choices = self.karakterek.get_all_karakters()
+
+        self._width_match_longest(new_choices)
+
         for value in new_choices:
             menu.add_command(label=value,
                              command=lambda v=value: self.variable.set(v))
@@ -237,7 +243,7 @@ class SebzesButton(Button):
         self.master = master
         self.karakterek = self.master.karakterek
         # self.karakter_var = self.master.karakter_var
-        self.karakter_var = self.master.choose_panel.choose_frame.selected_character
+        self.karakter_var = self.master.main_panel.choose_frame.selected_character
         self.messages = self.master.messages
         self.tulutes = self.master.tulutes_box
         self.atutes = self.master.atutes_menu
