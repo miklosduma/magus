@@ -86,11 +86,11 @@ RLEG_LIST = [RLEG, [
 # Left leg parts
 LLEG = 'Blab'
 
-LTHIGH = 'Jcomb'
-LKNEE = 'Jterd'
-LSHIN = 'Jlabszar'
-LANKLE = 'Jboka'
-LFOOT = 'Jlabfej'
+LTHIGH = 'Bcomb'
+LKNEE = 'Bterd'
+LSHIN = 'Blabszar'
+LANKLE = 'Bboka'
+LFOOT = 'Blabfej'
 
 LLEG_LIST = [LLEG, [
     [LLEG, LTHIGH], [LLEG, LTHIGH],
