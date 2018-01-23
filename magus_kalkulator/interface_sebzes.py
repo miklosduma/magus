@@ -4,6 +4,8 @@ from sebzes import return_penalty
 from validate import validate_integer, FieldValidationError
 from interface_elements import CharacterValueField, organize_rows_to_left
 
+from magus_constants import HEAD, TORSO, RARM, LARM, RLEG, LLEG
+
 
 DAMAGE_PAGE_COLUMN = 0
 
@@ -79,9 +81,10 @@ class CharacterPanel(ttk.PanedWindow):
         self.weapon_frame = WeaponTypeFrame(self)
         self.damage_frame = DamageFrame(self)
         self.piercing_frame = PiercingFrame(self)
+        self.body_parts_frame = ChooseBodyPartFrame(self)
 
         organize_rows_to_left([self.choose_frame, self.weapon_frame,
-                               self.damage_frame, self.piercing_frame], 0)
+                               self.damage_frame, self.piercing_frame, self.body_parts_frame], 0)
 
 
 class ChooseCharacterFrame(ttk.LabelFrame):
@@ -138,6 +141,21 @@ class PiercingFrame(ttk.LabelFrame):
 
     def get_piercing(self):
         return self.piercing_menu.get_atutes()
+
+
+class ChooseBodyPartFrame(ttk.LabelFrame):
+    def __init__(self, master):
+        ttk.LabelFrame.__init__(self, master, text='Talalat helye')
+        self.main_body_part = StringVar()
+        self.main_body_part.set('Valassz')
+        self.main_body_parts = OptionMenu(self, self.main_body_part, *['Valassz',
+                                                                       HEAD,
+                                                                       TORSO,
+                                                                       RARM,
+                                                                       LARM,
+                                                                       RLEG,
+                                                                       LLEG])
+        self.main_body_parts.grid()
 
 
 class WeaponString(StringVar):
