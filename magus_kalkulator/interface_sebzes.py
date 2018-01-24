@@ -178,9 +178,18 @@ class PiercingFrame(ttk.LabelFrame):
 class ChooseBodyPartFrame(ttk.LabelFrame):
     def __init__(self, master):
         ttk.LabelFrame.__init__(self, master, text='Talalat helye')
+        self.main_body_part_frame = ChooseMainBodyPartFrame(self)
+        self.main_body_part_frame.grid(row=0, column=0)
+        self.sub_body_part_frame = ChooseSubBodyPartFrame(self)
+        self.sub_body_part_frame.grid(row=0, column=1)
+
+
+class ChooseMainBodyPartFrame(ttk.LabelFrame):
+    def __init__(self, master):
+        ttk.LabelFrame.__init__(self, master, text='Fo testresz')
         self.main_body_part = StringVar()
-        self.main_body_part.set('Valassz')
-        self.main_body_parts = OptionMenu(self, self.main_body_part, *['Valassz',
+        self.main_body_part.set('Barhol')
+        self.main_body_parts = OptionMenu(self, self.main_body_part, *['Barhol',
                                                                        HEAD,
                                                                        TORSO,
                                                                        RARM,
@@ -188,6 +197,23 @@ class ChooseBodyPartFrame(ttk.LabelFrame):
                                                                        RLEG,
                                                                        LLEG])
         self.main_body_parts.grid()
+
+
+class ChooseSubBodyPartFrame(ttk.LabelFrame):
+    def __init__(self, master):
+        ttk.LabelFrame.__init__(self, master, text='Al testresz')
+        self.master = master
+        self.main_body_part_frame = self.master.main_body_part_frame
+        self.main_body_part = self.main_body_part_frame.main_body_part
+        self.main_body_part.trace('w', self._follow_main_bodypart)
+        self.sub_body_part = StringVar()
+        self.sub_body_part.set('Barhol')
+        self.sub_body_parts = OptionMenu(self, self.sub_body_part, *['Barhol'])
+        self.sub_body_parts.grid()
+
+    def _follow_main_bodypart(self, *_args):
+        print(self.main_body_part.get())
+
 
 
 class WeaponString(StringVar):
