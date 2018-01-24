@@ -4,7 +4,9 @@ from sebzes import return_penalty
 from validate import validate_integer, FieldValidationError
 from interface_elements import CharacterValueField, organize_rows_to_left
 
-from magus_constants import HEAD, TORSO, RARM, LARM, RLEG, LLEG
+from magus_constants import (HEAD, TORSO, RARM, LARM, RLEG, LLEG,
+                             HEAD_LIST, TORSO_LIST, RARM_LIST, LARM_LIST,
+                             RLEG_LIST, LLEG_LIST)
 
 
 DAMAGE_PAGE_COLUMN = 0
@@ -29,6 +31,36 @@ KEY_TEXT_DICT = {
     'hit_target': 'Talalati hely',
     'penalty': 'Hatrany'
 }
+
+
+def remove_duplicates(a_list):
+    """
+    Removes all duplicates from a list, making sure
+    each elem is unique.
+    """
+    for elem in a_list:
+        while a_list.count(elem) > 1:
+            a_list.remove(elem)
+
+    return a_list
+
+
+def get_unique_body_parts(body_parts_list):
+    """
+    Used in removing duplicates from a body parts
+    list.
+    """
+    [main_part, sub_parts_list] = body_parts_list
+    unique_sub_parts_list = remove_duplicates(sub_parts_list)
+    return [main_part, unique_sub_parts_list]
+
+
+UNIQUE_HEAD_LIST = get_unique_body_parts(HEAD_LIST)
+UNIQUE_TORSO_LIST = get_unique_body_parts(TORSO_LIST)
+UNIQUE_RARM_LIST = get_unique_body_parts(RARM_LIST)
+UNIQUE_LARM_LIST = get_unique_body_parts(LARM_LIST)
+UNIQUE_RLEG_LIST = get_unique_body_parts(RLEG_LIST)
+UNIQUE_LLEG_LIST = get_unique_body_parts(LLEG_LIST)
 
 
 def format_damage_msg(penalty_dict):
