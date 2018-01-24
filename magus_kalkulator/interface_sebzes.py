@@ -1,5 +1,5 @@
 from tkinter import (StringVar, IntVar, OptionMenu, Button, ttk,
-                     Label, Checkbutton, VERTICAL, W, E)
+                     Checkbutton, VERTICAL, N, W)
 from sebzes import return_penalty
 from random_body import pick_sub_parts
 from validate import validate_integer, FieldValidationError
@@ -188,11 +188,14 @@ class PiercingFrame(ttk.LabelFrame):
 class ChooseBodyPartFrame(ttk.LabelFrame):
     def __init__(self, master):
         ttk.LabelFrame.__init__(self, master, text='Talalat helye')
+
+        self.from_behind_box = FromBehind(self)
         self.main_body_frame = ChooseMainBodyPartFrame(self)
-        self.main_body_frame.grid(row=0, column=0)
+        self.main_body_frame.grid(row=1, column=0)
         self.sub_body_frame = ChooseSubBodyPartFrame(self,
                                                      self.main_body_frame)
-        self.sub_body_frame.grid(row=0, column=1)
+        self.sub_body_frame.grid(row=1, column=1)
+        self.from_behind_box.grid(row=0, column=0, sticky=(N,W))
 
     def get_targeted(self):
         main_part = self.main_body_frame.main_body_part.get()
@@ -206,6 +209,27 @@ class ChooseBodyPartFrame(ttk.LabelFrame):
             return main_part, ''
 
         return main_part, sub_part
+
+
+class FromBehind(Checkbutton):
+    def __init__(self, master):
+        self.tick = IntVar()
+        self.tick.set(0)
+        self.state = self.tick.get()
+        Checkbutton.__init__(self, master, text='Hatulrol',
+                             variable=self.tick, command=self.print_on_change)
+        self.config(bg='gray')
+
+    def print_on_change(self, *_args):
+        self.state = self.tick.get()
+
+        if self.state:
+            print('Selected')
+        else:
+            print('Unselected')
+
+    def is_from_behind(self):
+        return self.tick.get()
 
 
 class ChooseMainBodyPartFrame(ttk.LabelFrame):
