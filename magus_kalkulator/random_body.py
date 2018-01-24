@@ -9,11 +9,16 @@ BODY_PARTS_LIST = [
 ]
 
 
-def pick_sub_parts(main_part=None):
+def pick_sub_parts(main_part=None, sub_part=None):
     """
     Returns a randomly chosen sub-body part.
     """
+    if main_part and sub_part:
+        pen_part, sfe_part = sub_part
+        return main_part, pen_part, sfe_part
+
     if main_part:
+        print(main_part)
         body_part = [x for x in BODY_PARTS_LIST if x[0] == main_part][0]
 
     else:

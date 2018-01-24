@@ -1,6 +1,7 @@
 from tkinter import (StringVar, IntVar, OptionMenu, Button, ttk,
                      Label, Checkbutton, VERTICAL, W, E)
 from sebzes import return_penalty
+from random_body import pick_sub_parts
 from validate import validate_integer, FieldValidationError
 from interface_elements import CharacterValueField, organize_rows_to_left
 
@@ -422,7 +423,17 @@ class SebzesButton(Button):
         self.bind('<Button-1>', self.write_results)
 
     def write_results(self, _event):
-        print(self.body_frame.get_targeted())
+        main_part, sub_parts = self.body_frame.get_targeted()
+        key_word_args = {}
+
+        if main_part:
+            key_word_args['main_part'] = main_part
+
+        if sub_parts:
+            key_word_args['sub_part'] = sub_parts
+
+        body_parts_list = pick_sub_parts(**key_word_args)
+
         attacking_weapon = self.weapon_frame.get_weapon()
         success, attacked = self.choose_frame.get_selected()
 
@@ -444,8 +455,8 @@ class SebzesButton(Button):
         tulutes = self.damage_frame.is_critical()
         atutes = self.piercing_frame.get_piercing()
 
-        penalty = return_penalty(sfe, damage, atutes, max_ep, attacking_weapon,
-                                 tulutes=tulutes)
+        penalty = return_penalty(sfe, damage, body_parts_list, max_ep, attacking_weapon,
+                                 tulutes=tulutes, atutes=atutes)
         msg = format_damage_msg(penalty)
         self.messages.write_message(msg)
 

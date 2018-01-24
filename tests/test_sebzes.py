@@ -28,7 +28,7 @@ def test_calculate_damage(sfe, damage, atutes, tulutes, expected):
 
 
 def test_return_penalty():
-    result = return_penalty(test_sfe_map, 21, 3, 14, 'Szur')
+    result = return_penalty(test_sfe_map, 21, ('Fej', 'Koponya', 'Koponya'), 14, 'Szur', atutes=3)
     expected_keys = ['ep_loss', 'fp_loss', 'hit_target', 'penalty']
     actual_keys = result.keys()
     assert all(x in actual_keys for x in expected_keys)
@@ -41,4 +41,5 @@ def test_return_penalty():
 
     penalty = result['penalty']
 
-    assert isinstance(penalty, list) or penalty == 'nincs hatrany'
+    assert isinstance(penalty, list)
+    assert penalty == ['gyv', 'zh', 'gyf', 'k6']
