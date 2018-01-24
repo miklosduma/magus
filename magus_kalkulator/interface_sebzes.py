@@ -187,10 +187,11 @@ class PiercingFrame(ttk.LabelFrame):
 class ChooseBodyPartFrame(ttk.LabelFrame):
     def __init__(self, master):
         ttk.LabelFrame.__init__(self, master, text='Talalat helye')
-        self.main_body_part_frame = ChooseMainBodyPartFrame(self)
-        self.main_body_part_frame.grid(row=0, column=0)
-        self.sub_body_part_frame = ChooseSubBodyPartFrame(self)
-        self.sub_body_part_frame.grid(row=0, column=1)
+        self.main_body_frame = ChooseMainBodyPartFrame(self)
+        self.main_body_frame.grid(row=0, column=0)
+        self.sub_body_frame = ChooseSubBodyPartFrame(self,
+                                                     self.main_body_frame)
+        self.sub_body_frame.grid(row=0, column=1)
 
 
 class ChooseMainBodyPartFrame(ttk.LabelFrame):
@@ -209,11 +210,12 @@ class ChooseMainBodyPartFrame(ttk.LabelFrame):
 
 
 class ChooseSubBodyPartFrame(ttk.LabelFrame):
-    def __init__(self, master):
+    def __init__(self, master, main_body_frame):
         ttk.LabelFrame.__init__(self, master, text='Al testresz')
         self.master = master
-        self.main_body_part_frame = self.master.main_body_part_frame
-        self.main_body_part = self.main_body_part_frame.main_body_part
+        self.selected_sub_parts = None
+        self.main_body_frame = main_body_frame
+        self.main_body_part = main_body_frame.main_body_part
         self.main_body_part.trace('w', self._follow_main_bodypart)
         self.sub_body_part = StringVar()
         self.sub_body_part.set('Barhol')
@@ -222,9 +224,30 @@ class ChooseSubBodyPartFrame(ttk.LabelFrame):
 
     def _follow_main_bodypart(self, *_args):
         selected_main_body_part = self.main_body_part.get()
-        [_main_part, sub_parts] = BODY_LISTS_DICT[selected_main_body_part]
-        print(sub_parts)
 
+        if selected_main_body_part != 'Barhol':
+            [_main_part, sub_parts] = BODY_LISTS_DICT[selected_main_body_part]
+            self.selected_sub_parts = sub_parts
+            choices = ['Barhol'] + [x[1] for x in sub_parts]
+
+        else:
+            choices = ['Barhol']
+
+        self._update(choices)
+
+    def _update(self, list_of_choices):
+        """
+        When clicking the drop-down, get the name of
+        all characters currently in memory.
+        """
+        menu = self.sub_body_parts.children['menu']
+        menu.delete(0, 'end')
+
+        for value in list_of_choices:
+            menu.add_command(label=value,
+                             command=lambda v=value: self.sub_body_part.set(v))
+
+        self.sub_body_part.set(list_of_choices[0])
 
 
 class WeaponString(StringVar):
