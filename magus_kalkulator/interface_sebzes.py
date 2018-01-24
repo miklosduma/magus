@@ -66,7 +66,7 @@ BODY_LISTS_DICT = {
     HEAD: UNIQUE_HEAD_LIST,
     TORSO: UNIQUE_TORSO_LIST,
     RARM: UNIQUE_RARM_LIST,
-    LARM: UNIQUE_RARM_LIST,
+    LARM: UNIQUE_LARM_LIST,
     RLEG: UNIQUE_RLEG_LIST,
     LLEG: UNIQUE_LLEG_LIST
 }
@@ -193,6 +193,19 @@ class ChooseBodyPartFrame(ttk.LabelFrame):
                                                      self.main_body_frame)
         self.sub_body_frame.grid(row=0, column=1)
 
+    def get_targeted(self):
+        main_part = self.main_body_frame.main_body_part.get()
+
+        if main_part == 'Barhol':
+            return '', ''
+
+        sub_part = self.sub_body_frame.selected_sub_part
+
+        if not sub_part:
+            return main_part, ''
+
+        return main_part, sub_part
+
 
 class ChooseMainBodyPartFrame(ttk.LabelFrame):
     def __init__(self, master):
@@ -214,31 +227,54 @@ class ChooseSubBodyPartFrame(ttk.LabelFrame):
         ttk.LabelFrame.__init__(self, master, text='Al testresz')
         self.master = master
         self.selected_sub_parts = None
+        self.selected_sub_part = None
         self.main_body_frame = main_body_frame
         self.main_body_part = main_body_frame.main_body_part
         self.main_body_part.trace('w', self._follow_main_bodypart)
         self.sub_body_part = StringVar()
         self.sub_body_part.set('Barhol')
+        self.sub_body_part.trace('w', self._follow_sub_part)
         self.sub_body_parts = OptionMenu(self, self.sub_body_part, *['Barhol'])
         self.sub_body_parts.grid()
 
+    def _follow_sub_part(self, *_args):
+        selected_sub_part = self.sub_body_part.get()
+
+        if selected_sub_part and selected_sub_part != 'Barhol':
+            self.selected_sub_part = [x for x in self.selected_sub_parts if selected_sub_part in x][0]
+        else:
+            self.selected_sub_part = None
+
     def _follow_main_bodypart(self, *_args):
+        """
+        Sub body parts dropdown follows changes in
+        the main body part dropwdown.
+        """
+        # Get currently selected value of main dropdown.
         selected_main_body_part = self.main_body_part.get()
 
+        # Calculate options for sub part dropdown if a main part is selected.
         if selected_main_body_part != 'Barhol':
             [_main_part, sub_parts] = BODY_LISTS_DICT[selected_main_body_part]
+
+            # Sub parts are a list of lists with two elements
+            # E.g. [['Mellkas', 'sziv'],..]. Save choices to state
             self.selected_sub_parts = sub_parts
+
+            # Only use the second element of sub body part for options
             choices = ['Barhol'] + [x[1] for x in sub_parts]
 
+        # If no main body part is selected, sub parts can only be Barhol.
         else:
+            self.selected_sub_parts = None
             choices = ['Barhol']
 
+        # Update drop-down menu with choices.
         self._update(choices)
 
     def _update(self, list_of_choices):
         """
-        When clicking the drop-down, get the name of
-        all characters currently in memory.
+        Update dropdown with supported choices.
         """
         menu = self.sub_body_parts.children['menu']
         menu.delete(0, 'end')
@@ -247,6 +283,7 @@ class ChooseSubBodyPartFrame(ttk.LabelFrame):
             menu.add_command(label=value,
                              command=lambda v=value: self.sub_body_part.set(v))
 
+        # Set dropdown to first element in list. ('Barhol')
         self.sub_body_part.set(list_of_choices[0])
 
 
@@ -380,10 +417,12 @@ class SebzesButton(Button):
         self.weapon_frame = self.main_panel.weapon_frame
         self.damage_frame = self.main_panel.damage_frame
         self.piercing_frame = self.main_panel.piercing_frame
+        self.body_frame = self.main_panel.body_parts_frame
 
         self.bind('<Button-1>', self.write_results)
 
     def write_results(self, _event):
+        print(self.body_frame.get_targeted())
         attacking_weapon = self.weapon_frame.get_weapon()
         success, attacked = self.choose_frame.get_selected()
 
