@@ -62,6 +62,15 @@ UNIQUE_LARM_LIST = get_unique_body_parts(LARM_LIST)
 UNIQUE_RLEG_LIST = get_unique_body_parts(RLEG_LIST)
 UNIQUE_LLEG_LIST = get_unique_body_parts(LLEG_LIST)
 
+BODY_LISTS_DICT = {
+    HEAD: UNIQUE_HEAD_LIST,
+    TORSO: UNIQUE_TORSO_LIST,
+    RARM: UNIQUE_RARM_LIST,
+    LARM: UNIQUE_RARM_LIST,
+    RLEG: UNIQUE_RLEG_LIST,
+    LLEG: UNIQUE_LLEG_LIST
+}
+
 
 def format_damage_msg(penalty_dict):
     """
@@ -212,7 +221,9 @@ class ChooseSubBodyPartFrame(ttk.LabelFrame):
         self.sub_body_parts.grid()
 
     def _follow_main_bodypart(self, *_args):
-        print(self.main_body_part.get())
+        selected_main_body_part = self.main_body_part.get()
+        [_main_part, sub_parts] = BODY_LISTS_DICT[selected_main_body_part]
+        print(sub_parts)
 
 
 
