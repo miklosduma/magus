@@ -55,6 +55,15 @@ class MagusGUI:
         master.geometry(WINDOW_DIMENSIONS)
         master.title(WINDOW_TEXT)
 
+        """
+        style = ttk.Style()
+
+        style.theme_create("yummy", parent="alt", settings={
+        "TLabelframe": {"configure": {"background": "red"}}})
+
+        style.theme_use("yummy")
+        """
+
         # Create multiple tabs on main page, making characters
         # accessible to each
         self.messages = GuiMessage(self.master)

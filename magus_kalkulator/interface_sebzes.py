@@ -1,5 +1,6 @@
 from tkinter import (StringVar, IntVar, OptionMenu, Button, ttk,
                      Checkbutton, VERTICAL, N, W)
+
 from sebzes import return_penalty
 from random_body import pick_sub_parts
 from validate import validate_integer, FieldValidationError
@@ -210,6 +211,9 @@ class ChooseBodyPartFrame(ttk.LabelFrame):
 
         return main_part, sub_part
 
+    def is_from_behind(self):
+        return self.from_behind_box.get_from_behind()
+
 
 class FromBehind(Checkbutton):
     def __init__(self, master):
@@ -218,7 +222,6 @@ class FromBehind(Checkbutton):
         self.state = self.tick.get()
         Checkbutton.__init__(self, master, text='Hatulrol',
                              variable=self.tick, command=self.print_on_change)
-        self.config(bg='gray')
 
     def print_on_change(self, *_args):
         self.state = self.tick.get()
@@ -228,7 +231,7 @@ class FromBehind(Checkbutton):
         else:
             print('Unselected')
 
-    def is_from_behind(self):
+    def get_from_behind(self):
         return self.tick.get()
 
 
@@ -277,6 +280,9 @@ class ChooseSubBodyPartFrame(ttk.LabelFrame):
         """
         # Get currently selected value of main dropdown.
         selected_main_body_part = self.main_body_part.get()
+
+        # See if from behind box is ticked
+        is_from_behind = self.master.is_from_behind()
 
         # Calculate options for sub part dropdown if a main part is selected.
         if selected_main_body_part != 'Barhol':
@@ -447,6 +453,9 @@ class SebzesButton(Button):
         self.bind('<Button-1>', self.write_results)
 
     def write_results(self, _event):
+
+        is_from_behind = self.body_frame.is_from_behind()
+        print(is_from_behind)
         main_part, sub_parts = self.body_frame.get_targeted()
         key_word_args = {}
 
