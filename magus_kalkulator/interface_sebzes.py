@@ -485,6 +485,9 @@ class SebzesButton(Button):
         main_part, sub_parts = self.body_frame.get_targeted()
         key_word_args = {}
 
+        if is_from_behind:
+            key_word_args['from_behind'] = True
+
         if main_part:
             key_word_args['main_part'] = main_part
 
