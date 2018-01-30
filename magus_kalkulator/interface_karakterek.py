@@ -7,6 +7,7 @@ from tkinter import (Button, Label, W, E, VERTICAL, ttk)
 from validate import validate_integer, validate_string, FieldValidationError
 from interface_elements import (CharacterValueField, organize_rows_to_left,
                                 place_next_in_columns)
+from magus_constants import (SHOULDERBLADE, BACK, WAIST, BUTTOCKS, SPINE)
 
 KARAKTER_PANEL_COLUMN = 0
 KARAKTER_PANEL_ROW = 0
@@ -33,6 +34,15 @@ SFE_FEJ_PARTS = ['Arc', 'Nyak', 'Koponya']
 
 SFE_TORZS_LABEL = 'Torzs SFE'
 SFE_TORZS_PARTS = ['Mellkas', 'Has', 'Agyek']
+
+# Each from behind torso part references a from front torso part,
+# taking the front part's SFE
+SFE_TORZS_PARTS_BEHIND = [(SHOULDERBLADE, 'Mellkas'),
+                          (BACK, 'Mellkas'),
+                          (WAIST, 'Has'),
+                          (BUTTOCKS, 'Agyek'),
+                          (SPINE, 'Has')]
+
 
 SFE_KAR_LABEL = 'Kar SFE'
 SFE_KAR_PARTS = ['Vall', 'Felkar', 'Konyok', 'Alkar', 'Csuklo', 'Kezfej']
@@ -63,6 +73,23 @@ def copy_value_to_keys(my_map, key, *new_keys):
         my_map[new_key] = value
 
     return my_map
+
+
+def insert_torso_back_armour(sfe_map):
+    """
+    Inserts all the back torso armour values into the
+    armour map using a constant list.
+
+    The constant list is made up of tuples, where
+    the first element of the tuple is the new key to be
+    inserted, the second element is the existing key whose
+    value the new key will take.
+    """
+    for new_key, key in SFE_TORZS_PARTS_BEHIND:
+        sfe_map = copy_value_to_keys(sfe_map, key, new_key)
+
+    return sfe_map
+
 
 
 class KarakterPage(ttk.Frame):
@@ -228,6 +255,7 @@ class CharacterAddButton(Button):
 
         # Add exceptional sfe values to map using specified key
         sfe_map = copy_value_to_keys(sfe_map, 'Mellkas', 'Jkulcs', 'Bkulcs')
+        sfe_map = insert_torso_back_armour(sfe_map)
 
         # Add new character. Addition fails if character already exists.
         success, msg = self.karakterek.add_karakter(

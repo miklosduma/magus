@@ -7,8 +7,8 @@ from validate import validate_integer, FieldValidationError
 from interface_elements import CharacterValueField, organize_rows_to_left
 
 from magus_constants import (HEAD, TORSO, RARM, LARM, RLEG, LLEG,
-                             HEAD_LIST, TORSO_LIST, RARM_LIST, LARM_LIST,
-                             RLEG_LIST, LLEG_LIST)
+                             HEAD_LIST, TORSO_LIST, TORSO_LIST_BEHIND,
+                             RARM_LIST, LARM_LIST, RLEG_LIST, LLEG_LIST)
 
 
 DAMAGE_PAGE_COLUMN = 0
@@ -59,6 +59,7 @@ def get_unique_body_parts(body_parts_list):
 
 UNIQUE_HEAD_LIST = get_unique_body_parts(HEAD_LIST)
 UNIQUE_TORSO_LIST = get_unique_body_parts(TORSO_LIST)
+UNIQUE_TORSO_LIST_BEHIND = TORSO_LIST_BEHIND
 UNIQUE_RARM_LIST = get_unique_body_parts(RARM_LIST)
 UNIQUE_LARM_LIST = get_unique_body_parts(LARM_LIST)
 UNIQUE_RLEG_LIST = get_unique_body_parts(RLEG_LIST)
@@ -73,6 +74,14 @@ BODY_LISTS_DICT = {
     LLEG: UNIQUE_LLEG_LIST
 }
 
+BODY_LISTS_DICT_BEHIND = {
+    HEAD: UNIQUE_HEAD_LIST,
+    TORSO: UNIQUE_TORSO_LIST_BEHIND,
+    RARM: UNIQUE_RARM_LIST,
+    LARM: UNIQUE_LARM_LIST,
+    RLEG: UNIQUE_RLEG_LIST,
+    LLEG: UNIQUE_LLEG_LIST
+}
 
 def format_damage_msg(penalty_dict):
     """
@@ -190,13 +199,14 @@ class ChooseBodyPartFrame(ttk.LabelFrame):
     def __init__(self, master):
         ttk.LabelFrame.__init__(self, master, text='Talalat helye')
 
-        self.from_behind_box = FromBehind(self)
         self.main_body_frame = ChooseMainBodyPartFrame(self)
+        self.from_behind_box = FromBehind(self)
+        self.from_behind_box.grid(row=0, column=0, sticky=(N, W))
+
         self.main_body_frame.grid(row=1, column=0)
         self.sub_body_frame = ChooseSubBodyPartFrame(self,
                                                      self.main_body_frame)
         self.sub_body_frame.grid(row=1, column=1)
-        self.from_behind_box.grid(row=0, column=0, sticky=(N,W))
 
     def get_targeted(self):
         main_part = self.main_body_frame.main_body_part.get()
@@ -217,6 +227,7 @@ class ChooseBodyPartFrame(ttk.LabelFrame):
 
 class FromBehind(Checkbutton):
     def __init__(self, master):
+        self.main_body_frame = master.main_body_frame
         self.tick = IntVar()
         self.tick.set(0)
         self.state = self.tick.get()
@@ -224,6 +235,7 @@ class FromBehind(Checkbutton):
                              variable=self.tick, command=self.print_on_change)
 
     def print_on_change(self, *_args):
+        self.main_body_frame.main_body_part.set('Barhol')
         self.state = self.tick.get()
 
         if self.state:
@@ -266,6 +278,15 @@ class ChooseSubBodyPartFrame(ttk.LabelFrame):
         self.sub_body_parts.grid()
 
     def _follow_sub_part(self, *_args):
+        """
+        Traces the sub body part selected. Since the
+        damage calculation expects the sub body part to
+        be a list of two, this function selects the
+        corresponding pair based on the selected sub part.
+
+        E.g. if Breastbone is selected, the pair will be
+        [Chest, Breastbone].
+        """
         selected_sub_part = self.sub_body_part.get()
 
         if selected_sub_part and selected_sub_part != 'Barhol':
@@ -284,13 +305,19 @@ class ChooseSubBodyPartFrame(ttk.LabelFrame):
         # See if from behind box is ticked
         is_from_behind = self.master.is_from_behind()
 
+        if is_from_behind:
+            body_list_map = BODY_LISTS_DICT_BEHIND
+        else:
+            body_list_map = BODY_LISTS_DICT
+
         # Calculate options for sub part dropdown if a main part is selected.
         if selected_main_body_part != 'Barhol':
-            [_main_part, sub_parts] = BODY_LISTS_DICT[selected_main_body_part]
+            [_main_part, sub_parts] = body_list_map[selected_main_body_part]
 
             # Sub parts are a list of lists with two elements
             # E.g. [['Mellkas', 'sziv'],..]. Save choices to state
             self.selected_sub_parts = sub_parts
+            print(self.selected_sub_parts)
 
             # Only use the second element of sub body part for options
             choices = ['Barhol'] + [x[1] for x in sub_parts]
@@ -455,7 +482,6 @@ class SebzesButton(Button):
     def write_results(self, _event):
 
         is_from_behind = self.body_frame.is_from_behind()
-        print(is_from_behind)
         main_part, sub_parts = self.body_frame.get_targeted()
         key_word_args = {}
 

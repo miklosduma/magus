@@ -36,7 +36,6 @@ TORSO_LIST = [TORSO, [
     [STOMACH, STOMACH], [STOMACH, GROINS]]]
 
 # Torso parts from behind
-
 SHOULDERBLADE = 'Lapocka'
 RSHOULDERBLADE = 'Jlapocka'
 LSHOULDERBLADE = 'Blapocka'
@@ -49,7 +48,7 @@ LWAIST = 'Bderek'
 BUTTOCKS = 'Ulep'
 RBUTTOCKS = 'Julep'
 LBUTTOCKS = 'Bulep'
-SPINE = 'Gernic'
+SPINE = 'Gerinc'
 SPINE_UPPER = 'Hat'
 SPINE_LOWER = 'Derek'
 
