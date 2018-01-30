@@ -7,7 +7,8 @@ from tkinter import (Button, Label, W, E, VERTICAL, ttk)
 from validate import validate_integer, validate_string, FieldValidationError
 from interface_elements import (CharacterValueField, organize_rows_to_left,
                                 place_next_in_columns)
-from magus_constants import (SHOULDERBLADE, BACK, WAIST, BUTTOCKS, SPINE)
+from magus_constants import (SHOULDERBLADE, BACK, WAIST, BUTTOCKS,
+                             SPINE_UPPER, SPINE_LOWER)
 
 KARAKTER_PANEL_COLUMN = 0
 KARAKTER_PANEL_ROW = 0
@@ -41,7 +42,8 @@ SFE_TORZS_PARTS_BEHIND = [(SHOULDERBLADE, 'Mellkas'),
                           (BACK, 'Mellkas'),
                           (WAIST, 'Has'),
                           (BUTTOCKS, 'Agyek'),
-                          (SPINE, 'Has')]
+                          (SPINE_UPPER, 'Mellkas'),
+                          (SPINE_LOWER, 'Has')]
 
 
 SFE_KAR_LABEL = 'Kar SFE'
