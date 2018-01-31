@@ -1,10 +1,12 @@
+import magus_constants as mgc
+
 FEJ_THRESHOLDS = [75, 50, 34, 17]
 
 
 FEJ_TABLA = {
     "Vag":
     {
-        "Arc":
+        mgc.FACE:
         [
             "nincs hatrany",
             ["gyv", "zh", "mf", "k6"],
@@ -12,7 +14,7 @@ FEJ_TABLA = {
             ["mv(b)", "vh", "hf"],
             "halal"
         ],
-        "Nyak":
+        mgc.NECK:
         [
             "nincs hatrany",
             ["mv", "zh", "gyf", "k6"],
@@ -20,7 +22,7 @@ FEJ_TABLA = {
             ["hv", "tb", "mf"],
             "halal"
         ],
-        "Koponya":
+        mgc.SKULL:
         [
             "nincs hatrany",
             ["gyv", "zh", "gyf", "k6"],
@@ -31,7 +33,7 @@ FEJ_TABLA = {
     },
     "Szur":
     {
-        "Arc":
+        mgc.FACE:
         [
             "nincs hatrany",
             ["gyv", "zh", "gyf", "k6"],
@@ -39,7 +41,7 @@ FEJ_TABLA = {
             ["gyv(b)", "vh", "hf"],
             "halal"
         ],
-        "Nyak":
+        mgc.NECK:
         [
             "nincs hatrany",
             ["mv", "zh", "k6"],
@@ -47,7 +49,7 @@ FEJ_TABLA = {
             ["hv", "tb"],
             "halal"
         ],
-        "Koponya":
+        mgc.SKULL:
         [
             "nincs hatrany",
             ["gyv", "zh", "gyf", "k6"],
@@ -59,7 +61,7 @@ FEJ_TABLA = {
 
     "Zuz":
     {
-        "Arc":
+        mgc.FACE:
         [
             "nincs hatrany",
             ["gyv", "jh", "mf", "k6"],
@@ -67,7 +69,7 @@ FEJ_TABLA = {
             ["mv(b)", "ajulas"],
             "halal"
         ],
-        "Nyak":
+        mgc.NECK:
         [
             "nincs hatrany",
             ["zh", "rosszullet"],
@@ -75,7 +77,7 @@ FEJ_TABLA = {
             ["mv(b)", "vh", "mf"],
             "halal"
         ],
-        "Koponya":
+        mgc.SKULL:
         [
             "nincs hatrany",
             ["zh", "gyf"],
@@ -86,7 +88,7 @@ FEJ_TABLA = {
     },
     "Karmol":
     {
-        "Arc":
+        mgc.FACE:
         [
             "nincs hatrany",
             ["gyv", "jh", "mf", "k6"],
@@ -94,7 +96,7 @@ FEJ_TABLA = {
             ["mv(b)", "ajulas"],
             "halal"
         ],
-        "Nyak":
+        mgc.NECK:
         [
             "nincs hatrany",
             ["gyv", "zh", "gyf", "k6"],
@@ -102,7 +104,7 @@ FEJ_TABLA = {
             ["hv", "tb", "hf"],
             "halal"
         ],
-        "Koponya":
+        mgc.SKULL:
         [
             "nincs hatrany",
             ["gyv", "zh", "gyf", "k6"],
@@ -113,7 +115,7 @@ FEJ_TABLA = {
     },
     "Harap":
     {
-        "Arc":
+        mgc.FACE:
         [
             "nincs hatrany",
             ["gyv", "zh", "mf", "k6"],
@@ -121,7 +123,7 @@ FEJ_TABLA = {
             ["mv", "vh", "hf"],
             "halal"
         ],
-        "Nyak":
+        mgc.NECK:
         [
             "nincs hatrany",
             ["gyv", "zh", "gyf", "k6"],
@@ -129,7 +131,7 @@ FEJ_TABLA = {
             ["hv", "tb", "mf"],
             "halal"
         ],
-        "Koponya":
+        mgc.SKULL:
         [
             "nincs hatrany",
             ["gyv", "zh", "gyf", "k6"],

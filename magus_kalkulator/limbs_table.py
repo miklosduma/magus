@@ -1,10 +1,12 @@
+import magus_constants as mgc
+
 VEGTAG_THRESHOLDS = [50, 25, 17, 9]
 
 
 VEGTAG_TABLA = {
     'Vag':
     {
-        'Jlab':
+        mgc.RLEG:
         [
             'nincs hatrany',
             ['gyv', '80%'],
@@ -12,7 +14,7 @@ VEGTAG_TABLA = {
             ['mv', 'tb*', '30%'],
             'csonkolas'
         ],
-        'Blab':
+        mgc.LLEG:
         [
             'nincs hatrany',
             ['gyv', '80%'],
@@ -20,7 +22,7 @@ VEGTAG_TABLA = {
             ['mv', 'tb*', '30%'],
             'csonkolas'
         ],
-        'Jkez':
+        mgc.RARM:
         [
             'nincs hatrany',
             'gyv',
@@ -29,7 +31,7 @@ VEGTAG_TABLA = {
             'csonkolas'
         ],
 
-        'Bkez':
+        mgc.LARM:
         [
             'nincs hatrany',
             'gyv',
@@ -40,7 +42,7 @@ VEGTAG_TABLA = {
     },
     'Szur':
     {
-        'Jlab':
+        mgc.RLEG:
         [
             'nincs hatrany',
             ['k6', '80%'],
@@ -48,7 +50,7 @@ VEGTAG_TABLA = {
             ['gyv', 'tb*', 'mf', '40%'],
             'maradando benulas'
         ],
-        'Blab':
+        mgc.LLEG:
         [
             'nincs hatrany',
             ['k6', '80%'],
@@ -56,7 +58,7 @@ VEGTAG_TABLA = {
             ['gyv', 'tb*', 'mf', '40%'],
             'maradando benulas'
         ],
-        'Jkez':
+        mgc.RARM:
         [
             'nincs hatrany',
             ['gyv', 'zh*'],
@@ -65,7 +67,7 @@ VEGTAG_TABLA = {
             'csonkolas'
         ],
 
-        'Bkez':
+        mgc.LARM:
         [
             'nincs hatrany',
             ['gyv', 'zh*'],
@@ -77,7 +79,7 @@ VEGTAG_TABLA = {
 
     'Zuz':
     {
-        'Jlab':
+        mgc.RLEG:
         [
             'nincs hatrany',
             ['zh', '80%'],
@@ -85,7 +87,7 @@ VEGTAG_TABLA = {
             ['tb*', 'mf', '30%'],
             'maradando benulas'
         ],
-        'Blab':
+        mgc.LLEG:
         [
             'nincs hatrany',
             ['zh', '80%'],
@@ -93,7 +95,7 @@ VEGTAG_TABLA = {
             ['tb*', 'mf', '30%'],
             'maradando benulas'
         ],
-        'Jkez':
+        mgc.RARM:
         [
             'nincs hatrany',
             'zh*',
@@ -102,7 +104,7 @@ VEGTAG_TABLA = {
             'maradando benulas'
         ],
 
-        'Bkez':
+        mgc.LARM:
         [
             'nincs hatrany',
             'zh*',
@@ -113,7 +115,7 @@ VEGTAG_TABLA = {
     },
     'Karmol':
     {
-        'Jlab':
+        mgc.RLEG:
         [
             'nincs hatrany',
             ['gyv', '90%'],
@@ -121,7 +123,7 @@ VEGTAG_TABLA = {
             ['mv', 'tb*', 'gyf', '30%'],
             'maradando benulas'
         ],
-        'Blab':
+        mgc.LLEG:
         [
             'nincs hatrany',
             ['gyv', '90%'],
@@ -129,7 +131,7 @@ VEGTAG_TABLA = {
             ['mv', 'tb*', 'gyf', '30%'],
             'maradando benulas'
         ],
-        'Jkez':
+        mgc.RARM:
         [
             'nincs hatrany',
             ['gyv', 'k6'],
@@ -138,7 +140,7 @@ VEGTAG_TABLA = {
             'maradando benulas'
         ],
 
-        'Bkez':
+        mgc.LARM:
         [
             'nincs hatrany',
             ['gyv', 'k6'],
@@ -149,7 +151,7 @@ VEGTAG_TABLA = {
     },
     'Harap':
     {
-        'Jlab':
+        mgc.RLEG:
         [
             'nincs hatrany',
             ['k6', '90%'],
@@ -157,7 +159,7 @@ VEGTAG_TABLA = {
             ['mv', 'tb*', 'mf', '30%'],
             'csonkolas'
         ],
-        'Blab':
+        mgc.LLEG:
         [
             'nincs hatrany',
             ['k6', '90%'],
@@ -165,7 +167,7 @@ VEGTAG_TABLA = {
             ['mv', 'tb*', 'mf', '30%'],
             'csonkolas'
         ],
-        'Jkez':
+        mgc.RARM:
         [
             'nincs hatrany',
             ['gyv', 'zh*'],
@@ -174,7 +176,7 @@ VEGTAG_TABLA = {
             'csonkolas'
         ],
 
-        'Bkez':
+        mgc.LARM:
         [
             'nincs hatrany',
             ['gyv', 'zh*'],
