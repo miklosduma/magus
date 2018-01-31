@@ -1,5 +1,7 @@
 import pytest
 
+from magus_kalkulator import magus_constants as mgc
+
 from magus_kalkulator.choose import (pick_penalty, calculate_seriousness,
                                      get_threshold, calculate_penalty)
 from magus_kalkulator.torso_table import TORZS_TABLA, TORZS_THRESHOLDS
@@ -7,11 +9,11 @@ from magus_kalkulator.head_table import FEJ_TABLA, FEJ_THRESHOLDS
 from magus_kalkulator.limbs_table import VEGTAG_TABLA, VEGTAG_THRESHOLDS
 
 test_data_penalty = [
-    (TORZS_TABLA, 'Vag', 'Mellkas', 1, ['gyv', 'zh', 'gyf', 'k6']),
-    (FEJ_TABLA, 'Szur', 'Arc', 0, 'nincs hatrany'),
-    (VEGTAG_TABLA, 'Zuz', 'Jkez', 4, 'maradando benulas'),
-    (VEGTAG_TABLA, 'Foo', 'Jkez', 4, ('key_error','Foo')),
-    (TORZS_TABLA, 'Vag', 'Mellkas', 5, ('index_error','list index out of range'))
+    (TORZS_TABLA, 'Vag', mgc.CHEST, 1, ['gyv', 'zh', 'gyf', 'k6']),
+    (FEJ_TABLA, 'Szur', mgc.FACE, 0, 'nincs hatrany'),
+    (VEGTAG_TABLA, 'Zuz', mgc.RARM, 4, 'maradando benulas'),
+    (VEGTAG_TABLA, 'Foo', mgc.RARM, 4, ('key_error','Foo')),
+    (TORZS_TABLA, 'Vag', mgc.CHEST, 5, ('index_error','list index out of range'))
 ]
 
 
@@ -66,9 +68,9 @@ def test_calculate_seriousness(damage, max_ep, thresholds, expected):
 
 
 test_data_penalty = [
-    (3,13,'Szur', 'Jkez', 'Jkez',['mv', 'tb*', 'mf']),
-    (7,14,'Vag', 'Torzs', 'Mellkas',['mv', 'jh', 'mf']),
-    (11,15,'Zuz','Fej','Koponya', 'halal')
+    (3,13,'Szur', mgc.RARM, mgc.RARM, ['mv', 'tb*', 'mf']),
+    (7,14,'Vag', mgc.TORSO, mgc.CHEST, ['mv', 'jh', 'mf']),
+    (11,15,'Zuz', mgc.HEAD, mgc.SKULL, 'halal')
 ]
 
 
