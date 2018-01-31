@@ -1,9 +1,8 @@
 from __future__ import division
-import pytest
 
-from torzs import TORZS_TABLA, TORZS_THRESHOLDS
-from vegtag import VEGTAG_TABLA, VEGTAG_THRESHOLDS
-from fej import FEJ_TABLA, FEJ_THRESHOLDS
+from torso_table import TORZS_TABLA, TORZS_THRESHOLDS
+from limbs_table import VEGTAG_TABLA, VEGTAG_THRESHOLDS
+from head_table import FEJ_TABLA, FEJ_THRESHOLDS
 
 TABLE_PER_PART = {
     'Jlab': VEGTAG_TABLA,
