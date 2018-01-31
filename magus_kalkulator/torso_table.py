@@ -1,10 +1,12 @@
+import magus_constants as mgc
+
 TORZS_THRESHOLDS = [100, 75, 50, 25]
 
 
 TORZS_TABLA = {
     "Vag":
     {
-        "Kulcscsont":
+        mgc.COLLARBONE:
         [
             "nincs hatrany",
             ["mv", "zh", "k6"],
@@ -12,7 +14,7 @@ TORZS_TABLA = {
             ["hv", "tb*", "jh"],
             "halal"
         ],
-        "Mellkas":
+        mgc.CHEST:
         [
             "nincs hatrany",
             ["gyv", "zh", "gyf", "k6"],
@@ -20,7 +22,7 @@ TORZS_TABLA = {
             ["hv", "vh", "mf", "beteg"],
             "halal"
         ],
-        "Has":
+        mgc.STOMACH:
         [
             "nincs hatrany",
             ["gyv", "zh", "gyf", "k6"],
@@ -28,7 +30,7 @@ TORZS_TABLA = {
             ["hv", "vh", "hf", "beteg"],
             "halal"
         ],
-        "Lapocka":
+        mgc.SHOULDERBLADE:
         [
             "nincs hatrany",
             ["zh", "gyf"],
@@ -36,7 +38,7 @@ TORZS_TABLA = {
             ["mv", "beteg", "jh", "rb*", "mf"],
             "halal"
         ],
-        "Hat":
+        mgc.BACK:
         [
             "nincs hatrany",
             ["gyv", "gyf", "zh"],
@@ -44,7 +46,7 @@ TORZS_TABLA = {
             ["mv", "beteg", "jh", "mf"],
             "halal"
         ],
-        "Derek":
+        mgc.WAIST:
         [
             "nincs hatrany",
             ["gyv", "gyf", "zh"],
@@ -53,7 +55,7 @@ TORZS_TABLA = {
             "halal"
         ],
 
-        "Ulep":
+        mgc.BUTTOCKS:
         [
             "nincs hatrany",
             ["gyv", "zh", "50%"],
@@ -61,7 +63,7 @@ TORZS_TABLA = {
             ["hv", "zh", "tb*", "10%"],
             "halal"
         ],
-        "Gerinc":
+        mgc.SPINE:
         [
             "nincs hatrany",
             ["mv", "zh", "gyf", "k6"],
@@ -72,7 +74,7 @@ TORZS_TABLA = {
     },
     "Szur":
     {
-        "Kulcscsont":
+        mgc.COLLARBONE:
         [
             "nincs hatrany",
             ["mv", "zh*", "k6"],
@@ -80,7 +82,7 @@ TORZS_TABLA = {
             ["hv", "tb*",  "mf"],
             "halal"
         ],
-        "Mellkas":
+        mgc.CHEST:
         [
             "nincs hatrany",
             ["zh", "gyf", "k6"],
@@ -88,7 +90,7 @@ TORZS_TABLA = {
             ["hv(b)", "vh", "mf", "beteg"],
             "halal"
         ],
-        "Has":
+        mgc.STOMACH:
         [
             "nincs hatrany",
             ["gyv", "zh", "k10"],
@@ -96,7 +98,7 @@ TORZS_TABLA = {
             ["hv(b)", "jh", "mf"],
             "halal"
         ],
-        "Lapocka":
+        mgc.SHOULDERBLADE:
         [
             "nincs hatrany",
             ["gyf"],
@@ -104,7 +106,7 @@ TORZS_TABLA = {
             ["mv(b)", "beteg", "vh", "hf"],
             "halal"
         ],
-        "Hat":
+        mgc.BACK:
         [
             "nincs hatrany",
             ["gyv", "zh", "k6"],
@@ -112,7 +114,7 @@ TORZS_TABLA = {
             ["mv(b)", "beteg", "jh", "hf"],
             "halal"
         ],
-        "Derek":
+        mgc.WAIST:
         [
             "nincs hatrany",
             ["gyv", "zh", "k6"],
@@ -121,7 +123,7 @@ TORZS_TABLA = {
             "halal"
         ],
 
-        "Ulep":
+        mgc.BUTTOCKS:
         [
             "nincs hatrany",
             ["gyv", "zh", "50%"],
@@ -129,7 +131,7 @@ TORZS_TABLA = {
             ["mv", "jh", "mf", "10%"],
             "halal"
         ],
-        "Gerinc":
+        mgc.SPINE:
         [
             "nincs hatrany",
             ["mv", "zh", "gyf", "k6"],
@@ -142,7 +144,7 @@ TORZS_TABLA = {
     "Zuz":
     {
 
-        "Kulcscsont":
+        mgc.COLLARBONE:
         [
             "nincs hatrany",
             ["rb*", "gyf", "k6"],
@@ -152,7 +154,7 @@ TORZS_TABLA = {
         ],
 
 
-        "Mellkas":
+        mgc.CHEST:
         [
             "nincs hatrany",
             ["zh", "gyf"],
@@ -160,7 +162,7 @@ TORZS_TABLA = {
             ["mv(b)", "jh", "mf", "beteg"],
             "halal"
         ],
-        "Has":
+        mgc.STOMACH:
         [
             "nincs hatrany",
             ["kabulat1kor_zh", "k10"],
@@ -168,7 +170,7 @@ TORZS_TABLA = {
             ["mv(b)", "jh", "mf", "beteg"],
             "halal"
         ],
-        "Lapocka":
+        mgc.SHOULDERBLADE:
         [
             "nincs hatrany",
             ["gyf"],
@@ -176,7 +178,7 @@ TORZS_TABLA = {
             ["mv", "zh", "tb*", "mf"],
             "halal"
         ],
-        "Hat":
+        mgc.BACK:
         [
             "nincs hatrany",
             ["gyf", "k6"],
@@ -184,7 +186,7 @@ TORZS_TABLA = {
             ["mv(b)", "beteg", "vh", "mf"],
             "halal"
         ],
-        "Derek":
+        mgc.WAIST:
         [
             "nincs hatrany",
             ["gyf", "k6"],
@@ -193,7 +195,7 @@ TORZS_TABLA = {
             "halal"
         ],
 
-        "Ulep":
+        mgc.BUTTOCKS:
         [
             "nincs hatrany",
             ["mf", "80%"],
@@ -201,7 +203,7 @@ TORZS_TABLA = {
             ["mv", "zh", "tb*", "hf"],
             "halal"
         ],
-        "Gerinc":
+        mgc.SPINE:
         [
             "nincs hatrany",
             ["zh", "mf", "k6"],
@@ -214,7 +216,7 @@ TORZS_TABLA = {
     "Karmol":
     {
 
-        "Kulcscsont":
+        mgc.COLLARBONE:
         [
             "nincs hatrany",
             ["gyv", "zh", "gyf", "k6"],
@@ -224,7 +226,7 @@ TORZS_TABLA = {
         ],
 
 
-        "Mellkas":
+        mgc.CHEST:
         [
             "nincs hatrany",
             ["gyv", "zh", "mf"],
@@ -232,7 +234,7 @@ TORZS_TABLA = {
             ["hv", "vh", "hf", "beteg"],
             "halal"
         ],
-        "Has":
+        mgc.STOMACH:
         [
             "nincs hatrany",
             ["gyv", "zh", "gyf", "k6"],
@@ -240,7 +242,7 @@ TORZS_TABLA = {
             ["mv", "jh", "hf", "beteg"],
             "halal"
         ],
-        "Lapocka":
+        mgc.SHOULDERBLADE:
         [
             "nincs hatrany",
             ["zh", "gyf"],
@@ -248,7 +250,7 @@ TORZS_TABLA = {
             ["mv", "jh", "rb*", "mf"],
             "halal"
         ],
-        "Hat":
+        mgc.BACK:
         [
             "nincs hatrany",
             ["gyv", "gyf", "k6"],
@@ -256,7 +258,7 @@ TORZS_TABLA = {
             ["mv", "beteg", "jh", "hf"],
             "halal"
         ],
-        "Derek":
+        mgc.WAIST:
         [
             "nincs hatrany",
             ["gyv", "gyf", "k6"],
@@ -265,7 +267,7 @@ TORZS_TABLA = {
             "halal"
         ],
 
-        "Ulep":
+        mgc.BUTTOCKS:
         [
             "nincs hatrany",
             ["gyv", "gyf", "80%"],
@@ -273,7 +275,7 @@ TORZS_TABLA = {
             ["mv", "zh", "tb*", "mf", "20%"],
             "halal"
         ],
-        "Gerinc":
+        mgc.SPINE:
         [
             "nincs hatrany",
             ["mv", "zh", "gyf", "k6"],
@@ -286,7 +288,7 @@ TORZS_TABLA = {
     "Harap":
     {
 
-        "Kulcscsont":
+        mgc.COLLARBONE:
         [
             "nincs hatrany",
             ["gyv", "zh*", "gyf", "k6"],
@@ -296,7 +298,7 @@ TORZS_TABLA = {
         ],
 
 
-        "Mellkas":
+        mgc.CHEST:
         [
             "nincs hatrany",
             ["zh", "gyf", "k6"],
@@ -304,7 +306,7 @@ TORZS_TABLA = {
             ["mv(b)", "vh", "hf", "beteg"],
             "halal"
         ],
-        "Has":
+        mgc.STOMACH:
         [
             "nincs hatrany",
             ["gyv", "zh", "k6"],
@@ -312,7 +314,7 @@ TORZS_TABLA = {
             ["mv(b)", "vh", "hf"],
             "halal"
         ],
-        "Lapocka":
+        mgc.SHOULDERBLADE:
         [
             "nincs hatrany",
             ["gyv", "zh*", "gyf", "k6"],
@@ -320,7 +322,7 @@ TORZS_TABLA = {
             ["hv", "zh", "tb*", "mf"],
             "halal"
         ],
-        "Hat":
+        mgc.BACK:
         [
             "nincs hatrany",
             ["gyv", "zh", "gyf", "k6"],
@@ -328,7 +330,7 @@ TORZS_TABLA = {
             ["mv(b)", "beteg", "vh", "hf"],
             "halal"
         ],
-        "Derek":
+        mgc.WAIST:
         [
             "nincs hatrany",
             ["gyv", "zh", "gyf", "k6"],
@@ -337,7 +339,7 @@ TORZS_TABLA = {
             "halal"
         ],
 
-        "Ulep":
+        mgc.BUTTOCKS:
         [
             "nincs hatrany",
             ["gyv", "zh", "k6", "70%"],
@@ -345,7 +347,7 @@ TORZS_TABLA = {
             ["mv", "zh", "tb*", "mf", "10%"],
             "halal"
         ],
-        "Gerinc":
+        mgc.SPINE:
         [
             "nincs hatrany",
             ["ervenytelen", "ujradobas"],
