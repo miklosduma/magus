@@ -1,26 +1,29 @@
 from __future__ import division
 
+import magus_constants as mgc
+
 from torso_table import TORZS_TABLA, TORZS_THRESHOLDS
 from limbs_table import VEGTAG_TABLA, VEGTAG_THRESHOLDS
 from head_table import FEJ_TABLA, FEJ_THRESHOLDS
 
 TABLE_PER_PART = {
-    'Jlab': VEGTAG_TABLA,
-    'Blab': VEGTAG_TABLA,
-    'Jkez': VEGTAG_TABLA,
-    'Bkez': VEGTAG_TABLA,
-    'Torzs': TORZS_TABLA,
-    'Fej': FEJ_TABLA
+    mgc.RLEG: VEGTAG_TABLA,
+    mgc.LLEG: VEGTAG_TABLA,
+    mgc.RARM: VEGTAG_TABLA,
+    mgc.LARM: VEGTAG_TABLA,
+    mgc.TORSO: TORZS_TABLA,
+    mgc.HEAD: FEJ_TABLA
 }
 
 THRESHOLDS_PER_PART = {
-    'Jlab': VEGTAG_THRESHOLDS,
-    'Blab': VEGTAG_THRESHOLDS,
-    'Jkez': VEGTAG_THRESHOLDS,
-    'Bkez': VEGTAG_THRESHOLDS,
-    'Torzs': TORZS_THRESHOLDS,
-    'Fej': FEJ_THRESHOLDS
+    mgc.RLEG: VEGTAG_THRESHOLDS,
+    mgc.LLEG: VEGTAG_THRESHOLDS,
+    mgc.RARM: VEGTAG_THRESHOLDS,
+    mgc.LARM: VEGTAG_THRESHOLDS,
+    mgc.TORSO: TORZS_THRESHOLDS,
+    mgc.HEAD: FEJ_THRESHOLDS
 }
+
 
 def pick_penalty(table, wtype, bpart, rank):
     """
