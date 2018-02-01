@@ -7,8 +7,7 @@ from tkinter import (Button, Label, W, E, VERTICAL, ttk)
 from validate import validate_integer, validate_string, FieldValidationError
 from interface_elements import (CharacterValueField, organize_rows_to_left,
                                 place_next_in_columns)
-from magus_constants import (SHOULDERBLADE, BACK, WAIST, BUTTOCKS,
-                             SPINE_UPPER, SPINE_LOWER)
+import magus_constants as mgc
 
 KARAKTER_PANEL_COLUMN = 0
 KARAKTER_PANEL_ROW = 0
@@ -31,26 +30,35 @@ SFE_LABEL = 'Max SFE'
 SFE_SHORTCUT_LABEL = 'Mindenhol'
 
 SFE_FEJ_LABEL = 'Fej SFE'
-SFE_FEJ_PARTS = ['Arc', 'Nyak', 'Koponya']
+SFE_FEJ_PARTS = [mgc.FACE, mgc.NECK, mgc.SKULL]
 
 SFE_TORZS_LABEL = 'Torzs SFE'
-SFE_TORZS_PARTS = ['Mellkas', 'Has', 'Agyek']
+SFE_TORZS_PARTS = [mgc.CHEST, mgc.STOMACH, mgc.GROINS]
 
 # Each from behind torso part references a from front torso part,
 # taking the front part's SFE
-SFE_TORZS_PARTS_BEHIND = [(SHOULDERBLADE, 'Mellkas'),
-                          (BACK, 'Mellkas'),
-                          (WAIST, 'Has'),
-                          (BUTTOCKS, 'Agyek'),
-                          (SPINE_UPPER, 'Mellkas'),
-                          (SPINE_LOWER, 'Has')]
+SFE_TORZS_PARTS_BEHIND = [(mgc.SHOULDERBLADE, mgc.CHEST),
+                          (mgc.BACK, mgc.CHEST),
+                          (mgc.WAIST, mgc.STOMACH),
+                          (mgc.BUTTOCKS, mgc.GROINS),
+                          (mgc.SPINE_UPPER, mgc.CHEST),
+                          (mgc.SPINE_LOWER, mgc.STOMACH)]
 
 
 SFE_KAR_LABEL = 'Kar SFE'
-SFE_KAR_PARTS = ['Vall', 'Felkar', 'Konyok', 'Alkar', 'Csuklo', 'Kezfej']
+SFE_KAR_PARTS = [('Vall', mgc.RSHOULDSERS, mgc.LSHOULDSERS),
+                 ('Felkar', mgc.RUPPERARM, mgc.LUPPERARM),
+                 ('Konyok', mgc.RELBOW, mgc.LELBOW),
+                 ('Alkar', mgc.RLOWERARM, mgc.LLOWERARM),
+                 ('Csuklo', mgc.RWRIST, mgc.LWRIST),
+                 ('Kezfej', mgc.RHAND, mgc.LHAND)]
 
 SFE_LAB_LABEL = 'Lab SFE'
-SFE_LAB_PARTS = ['Comb', 'Terd', 'Labszar', 'Boka', 'Labfej']
+SFE_LAB_PARTS = [('Comb', mgc.RTHIGH, mgc.LTHIGH),
+                 ('Terd', mgc.RKNEE, mgc.LKNEE),
+                 ('Labszar', mgc.RSHIN, mgc.LSHIN),
+                 ('Boka', mgc.RANKLE, mgc.LANKLE),
+                 ('Labfej', mgc.RFOOT, mgc.LFOOT)]
 
 BUTTONS_FRAME_TITLE = 'Buttons'
 ADD_BUTTON = 'Add'
@@ -309,7 +317,15 @@ class SfePartFrame(ttk.LabelFrame):
     def __init__(self, master, text, body_parts, limb=False):
         ttk.LabelFrame.__init__(self, master, text=text)
         self.master = master
-        self.keys = body_parts
+
+        if limb:
+            self.keys = []
+            for text, right_part, left_part in body_parts:
+                self.keys.append(right_part)
+                self.keys.append(left_part)
+
+        else:
+            self.keys = body_parts
 
         # Sfe value shortcut that sets all other sfe values
         self.master_sfe = self.master.sfe_field.value
@@ -354,11 +370,12 @@ class SfePartFrame(ttk.LabelFrame):
             if key in self.keys:
                 total = self.sfe_field.value.get()
                 value.value.set(total)
-
+            """
             # Match also body parts transformed to start with J/B (right/left)
             elif any(key.lower().endswith(x.lower()) for x in self.keys):
                 total = self.sfe_field.value.get()
                 value.value.set(total)
+            """
 
     def _place_sfe_fields(self, fields):
         """
@@ -401,15 +418,14 @@ class SfePartFrame(ttk.LabelFrame):
         row += 1
 
         for field in fields:
+            label_text, right_part, left_part = field
 
             # Each limb sfe (e.g. Labszar or Boka) is added twice
             # e.g. both as Jlabszar and Blabszar
-            jobb_field = 'J{}'.format(field.lower())
-            bal_field = 'B{}'.format(field.lower())
-            sfe_fields = [jobb_field, bal_field]
+            sfe_fields = [right_part, left_part]
 
             # Add only one label though
-            label = Label(self, text=field)
+            label = Label(self, text=label_text)
             label.grid(row=row, column=column, sticky=W)
 
             # Place right and left limb field
