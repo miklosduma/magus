@@ -5,8 +5,8 @@ GUI page for adding new characters.
 from tkinter import (Button, Label, W, E, VERTICAL, ttk)
 
 from validate import validate_integer, validate_string, FieldValidationError
-from interface_elements import (CharacterValueField, organize_rows_to_left,
-                                place_next_in_columns)
+from interface_elements import (CharacterValueField, SfePartFrame,
+                                organize_rows_to_left, place_next_in_columns)
 import magus_constants as mgc
 
 KARAKTER_PANEL_COLUMN = 0
@@ -179,14 +179,10 @@ class SfeFrame(ttk.LabelFrame):
         self.sfe_field = CharacterValueField(self, validate_integer, width=2)
         self.sfe_field.grid(row=0, column=SFE_FIELDS_COLUMN + 1)
 
-        self.fej_sfe = SfePartFrame(
-            self, SFE_FEJ_LABEL, SFE_FEJ_PARTS)
-        self.torzs_sfe = SfePartFrame(
-            self, SFE_TORZS_LABEL, SFE_TORZS_PARTS)
-        self.kar_sfe = SfePartFrame(self, SFE_KAR_LABEL, SFE_KAR_PARTS,
-                                    limb=True)
-        self.lab_sfe = SfePartFrame(
-            self, SFE_LAB_LABEL, SFE_LAB_PARTS, limb=True)
+        self.fej_sfe = SfePartFrameNotLimb(self, SFE_FEJ_LABEL, SFE_FEJ_PARTS)
+        self.torzs_sfe = SfePartFrameNotLimb(self, SFE_TORZS_LABEL, SFE_TORZS_PARTS)
+        self.kar_sfe = SfePartFrameLimb(self, SFE_KAR_LABEL, SFE_KAR_PARTS)
+        self.lab_sfe = SfePartFrameLimb(self, SFE_LAB_LABEL, SFE_LAB_PARTS)
 
         place_next_in_columns([self.fej_sfe,
                                self.torzs_sfe,
@@ -310,72 +306,14 @@ class CharactersGetButton(Button):
         self.messages.write_message(msg)
 
 
-class SfePartFrame(ttk.LabelFrame):
+class SfePartFrameNotLimb(SfePartFrame):
     """
-    Frame child type of main sfe frame. E.g. Fej or Lab frame.
+    Frame child type of main sfe frame. E.g. Torso or Head frame.
     """
-    def __init__(self, master, text, body_parts, limb=False):
-        ttk.LabelFrame.__init__(self, master, text=text)
-        self.master = master
-
-        if limb:
-            self.keys = []
-            for text, right_part, left_part in body_parts:
-                self.keys.append(right_part)
-                self.keys.append(left_part)
-
-        else:
-            self.keys = body_parts
-
-        # Sfe value shortcut that sets all other sfe values
-        self.master_sfe = self.master.sfe_field.value
-        self.master_sfe.trace('w', self._follow_master)
-
-        Label(self, text=SFE_SHORTCUT_LABEL).grid(row=0, column=0, sticky=W)
-
-        # Sfe shortcut that sets all sfe values listed in body_parts
-        self.sfe_field = CharacterValueField(self, validate_integer, width=2)
-        self.sfe_field.grid(row=0, column=1, sticky=W)
-        self.sfe_field.value.trace('w', self._follow_total)
-
-        # Dict attribute holding validated sfe values
-        self.sfe_map = self.master.sfe
-
-        if limb:
-            self._place_sfe_fields_limb(body_parts)
-        else:
-            self._place_sfe_fields(body_parts)
-
-    def _follow_master(self, *_args):
-        """
-        Each child frame has a shortcut value that all
-        sub parts follow. E.g. setting Mindenhol in Lab frame
-        will change both JLabszar and BBoka to the same value.
-
-        The frame shortcut values however follow a master shortcut value.
-        Thus, setting the master value at the top level changes all
-        sub-level master values, which in turn change individual sfe values.
-        """
-        master_value = self.master_sfe.get()
-        self.sfe_field.value.set(master_value)
-
-    def _follow_total(self, *_args):
-        """
-        There is a master shortcut value per body part frame
-        that all body parts belonging to that frame follow.
-        """
-        for key, value in self.sfe_map.items():
-
-            # Only body parts that belong to this frame should follow
-            if key in self.keys:
-                total = self.sfe_field.value.get()
-                value.value.set(total)
-            """
-            # Match also body parts transformed to start with J/B (right/left)
-            elif any(key.lower().endswith(x.lower()) for x in self.keys):
-                total = self.sfe_field.value.get()
-                value.value.set(total)
-            """
+    def __init__(self, master, text, body_parts):
+        SfePartFrame.__init__(self, master, text, SFE_SHORTCUT_LABEL, body_parts)
+        self.body_parts = body_parts
+        self._place_sfe_fields(body_parts)
 
     def _place_sfe_fields(self, fields):
         """
@@ -401,6 +339,20 @@ class SfePartFrame(ttk.LabelFrame):
 
             # Next label/field will go into next row
             row += 1
+
+
+class SfePartFrameLimb(SfePartFrame):
+    """
+    Frame child type of main sfe frame. E.g. Fej or Lab frame.
+    """
+    def __init__(self, master, text, body_parts):
+        SfePartFrame.__init__(self, master, text, SFE_SHORTCUT_LABEL, body_parts)
+
+        for text, right_part, left_part in body_parts:
+            self.body_parts.append(right_part)
+            self.body_parts.append(left_part)
+
+        self._place_sfe_fields_limb(body_parts)
 
     def _place_sfe_fields_limb(self, fields):
         """

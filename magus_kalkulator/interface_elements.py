@@ -1,5 +1,5 @@
-from tkinter import Entry, StringVar, W, N
-from validate import FieldValidationError
+from tkinter import Entry, StringVar, W, N, ttk, Label
+from validate import FieldValidationError, validate_integer
 
 FIELD_WIDTH = 10
 FIELD_COLOR = 'white'
@@ -91,3 +91,52 @@ class CharacterValueField(Entry):
         except FieldValidationError:
             self.config(bg=FIELD_COLOR_ERROR)
             raise
+
+
+class SfePartFrame(ttk.LabelFrame):
+    """
+    Frame child type of main sfe frame. E.g. Torso or Head frame.
+    """
+    def __init__(self, master, main_text, shortcut_text, body_parts):
+        ttk.LabelFrame.__init__(self, master, text=main_text)
+        self.master = master
+        self.body_parts = []
+
+        # Sfe value shortcut that sets all other sfe values
+        self.master_sfe = self.master.sfe_field.value
+        self.master_sfe.trace('w', self._follow_master)
+
+        Label(self, text=shortcut_text).grid(row=0, column=0, sticky=W)
+
+        # Sfe shortcut that sets all sfe values listed in body_parts
+        self.sfe_field = CharacterValueField(self, validate_integer, width=2)
+        self.sfe_field.grid(row=0, column=1, sticky=W)
+        self.sfe_field.value.trace('w', self._follow_total)
+
+        # Dict attribute holding validated sfe values
+        self.sfe_map = self.master.sfe
+
+    def _follow_master(self, *_args):
+        """
+        Each child frame has a shortcut value that all
+        sub parts follow. E.g. setting Mindenhol in Lab frame
+        will change both JLabszar and BBoka to the same value.
+
+        The frame shortcut values however follow a master shortcut value.
+        Thus, setting the master value at the top level changes all
+        sub-level master values, which in turn change individual sfe values.
+        """
+        master_value = self.master_sfe.get()
+        self.sfe_field.value.set(master_value)
+
+    def _follow_total(self, *_args):
+        """
+        There is a master shortcut value per body part frame
+        that all body parts belonging to that frame follow.
+        """
+        for key, value in self.sfe_map.items():
+
+            # Only body parts that belong to this frame should follow
+            if key in self.body_parts:
+                total = self.sfe_field.value.get()
+                value.value.set(total)
