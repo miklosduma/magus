@@ -312,33 +312,6 @@ class SfePartFrameNotLimb(SfePartFrame):
     """
     def __init__(self, master, text, body_parts):
         SfePartFrame.__init__(self, master, text, SFE_SHORTCUT_LABEL, body_parts)
-        self.body_parts = body_parts
-        self._place_sfe_fields(body_parts)
-
-    def _place_sfe_fields(self, fields):
-        """
-        Function to place multiple connected fields assigning
-        each a label.
-        """
-        column = 0
-        row = 1
-
-        for field in fields:
-
-            # Place label, it takes its name from the field
-            label = Label(self, text=field)
-            label.grid(row=row, column=column, sticky=W)
-
-            # Place field next to label
-            sfe_field = CharacterValueField(self, validate_integer, width=2)
-            sfe_field.grid(row=row, column=column + 1, sticky=W)
-
-            # Add sfe field to sfe map. Sfe field stores the value
-            # of the entry field
-            self.sfe_map[field] = sfe_field
-
-            # Next label/field will go into next row
-            row += 1
 
 
 class SfePartFrameLimb(SfePartFrame):
@@ -348,16 +321,22 @@ class SfePartFrameLimb(SfePartFrame):
     def __init__(self, master, text, body_parts):
         SfePartFrame.__init__(self, master, text, SFE_SHORTCUT_LABEL, body_parts)
 
-        for text, right_part, left_part in body_parts:
-            self.body_parts.append(right_part)
-            self.body_parts.append(left_part)
-
-        self._place_sfe_fields_limb(body_parts)
-
-    def _place_sfe_fields_limb(self, fields):
+    def _sort_body_parts(self, body_parts):
         """
-        Function to place multiple connected fields assigning
-        each a label. Each field value gets a left and right value.
+        In the case of limbs, body_parts are a list of tuples,
+        each comprising: a label text, a right and a left limb.
+        """
+        result = []
+        for tuple in body_parts:
+            text, right_part, left_part = tuple
+            result.append(right_part)
+            result.append(left_part)
+        return result
+
+    def _place_sfe_fields(self, fields):
+        """
+        Overrides the same method of SfePartFrame. Since we
+        have both right and left limbs.
         """
         column = 0
         row = 1

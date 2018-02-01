@@ -100,7 +100,7 @@ class SfePartFrame(ttk.LabelFrame):
     def __init__(self, master, main_text, shortcut_text, body_parts):
         ttk.LabelFrame.__init__(self, master, text=main_text)
         self.master = master
-        self.body_parts = []
+        self.body_parts = self._sort_body_parts(body_parts)
 
         # Sfe value shortcut that sets all other sfe values
         self.master_sfe = self.master.sfe_field.value
@@ -115,6 +115,35 @@ class SfePartFrame(ttk.LabelFrame):
 
         # Dict attribute holding validated sfe values
         self.sfe_map = self.master.sfe
+
+        self._place_sfe_fields(body_parts)
+
+    def _sort_body_parts(self, body_parts):
+        return body_parts
+
+    def _place_sfe_fields(self, fields):
+        """
+        Function to place multiple connected fields assigning
+        each a label.
+        """
+        column = 0
+        row = 1
+
+        for field in fields:
+            # Place label, it takes its name from the field
+            label = Label(self, text=field)
+            label.grid(row=row, column=column, sticky=W)
+
+            # Place field next to label
+            sfe_field = CharacterValueField(self, validate_integer, width=2)
+            sfe_field.grid(row=row, column=column + 1, sticky=W)
+
+            # Add sfe field to sfe map. Sfe field stores the value
+            # of the entry field
+            self.sfe_map[field] = sfe_field
+
+            # Next label/field will go into next row
+            row += 1
 
     def _follow_master(self, *_args):
         """
