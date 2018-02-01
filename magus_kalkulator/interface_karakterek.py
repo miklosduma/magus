@@ -101,7 +101,6 @@ def insert_torso_back_armour(sfe_map):
     return sfe_map
 
 
-
 class KarakterPage(ttk.Frame):
     """
     Adding characters main page.
@@ -179,10 +178,14 @@ class SfeFrame(ttk.LabelFrame):
         self.sfe_field = CharacterValueField(self, validate_integer, width=2)
         self.sfe_field.grid(row=0, column=SFE_FIELDS_COLUMN + 1)
 
-        self.fej_sfe = SfePartFrameNotLimb(self, SFE_FEJ_LABEL, SFE_FEJ_PARTS)
-        self.torzs_sfe = SfePartFrameNotLimb(self, SFE_TORZS_LABEL, SFE_TORZS_PARTS)
-        self.kar_sfe = SfePartFrameLimb(self, SFE_KAR_LABEL, SFE_KAR_PARTS)
-        self.lab_sfe = SfePartFrameLimb(self, SFE_LAB_LABEL, SFE_LAB_PARTS)
+        self.fej_sfe = SfePartFrame(self, SFE_FEJ_LABEL,
+                                    SFE_SHORTCUT_LABEL, SFE_FEJ_PARTS)
+        self.torzs_sfe = SfePartFrame(self, SFE_TORZS_LABEL,
+                                      SFE_SHORTCUT_LABEL, SFE_TORZS_PARTS)
+        self.kar_sfe = SfePartFrameLimb(self, SFE_SHORTCUT_LABEL,
+                                        SFE_KAR_LABEL, SFE_KAR_PARTS)
+        self.lab_sfe = SfePartFrameLimb(self, SFE_SHORTCUT_LABEL,
+                                        SFE_LAB_LABEL, SFE_LAB_PARTS)
 
         place_next_in_columns([self.fej_sfe,
                                self.torzs_sfe,
@@ -318,8 +321,8 @@ class SfePartFrameLimb(SfePartFrame):
     """
     Frame child type of main sfe frame. E.g. Fej or Lab frame.
     """
-    def __init__(self, master, text, body_parts):
-        SfePartFrame.__init__(self, master, text, SFE_SHORTCUT_LABEL, body_parts)
+    def __init__(self, master, text, shortcut_text, body_parts):
+        SfePartFrame.__init__(self, master, text, shortcut_text, body_parts)
 
     def _sort_body_parts(self, body_parts):
         """
@@ -327,8 +330,8 @@ class SfePartFrameLimb(SfePartFrame):
         each comprising: a label text, a right and a left limb.
         """
         result = []
-        for tuple in body_parts:
-            text, right_part, left_part = tuple
+        for bp_tuple in body_parts:
+            text, right_part, left_part = bp_tuple
             result.append(right_part)
             result.append(left_part)
         return result
