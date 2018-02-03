@@ -125,3 +125,9 @@ LLEG_LIST = [LLEG, [
     [LLEG, LANKLE], [LLEG, LFOOT]
 ]]
 
+# Weapon types
+THRUST = 'Szuras'
+SLASH = 'Vagas'
+BLUDGEON = 'Zuzas'
+BITE = 'Harapas'
+CLAW = 'Karmolas'

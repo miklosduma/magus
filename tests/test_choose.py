@@ -9,11 +9,11 @@ from magus_kalkulator.head_table import FEJ_TABLA, FEJ_THRESHOLDS
 from magus_kalkulator.limbs_table import VEGTAG_TABLA, VEGTAG_THRESHOLDS
 
 test_data_penalty = [
-    (TORZS_TABLA, 'Vag', mgc.CHEST, 1, ['gyv', 'zh', 'gyf', 'k6']),
-    (FEJ_TABLA, 'Szur', mgc.FACE, 0, 'nincs hatrany'),
-    (VEGTAG_TABLA, 'Zuz', mgc.RARM, 4, 'maradando benulas'),
+    (TORZS_TABLA, mgc.SLASH, mgc.CHEST, 1, ['gyv', 'zh', 'gyf', 'k6']),
+    (FEJ_TABLA, mgc.THRUST, mgc.FACE, 0, 'nincs hatrany'),
+    (VEGTAG_TABLA, mgc.BLUDGEON, mgc.RARM, 4, 'maradando benulas'),
     (VEGTAG_TABLA, 'Foo', mgc.RARM, 4, ('key_error','Foo')),
-    (TORZS_TABLA, 'Vag', mgc.CHEST, 5, ('index_error','list index out of range'))
+    (TORZS_TABLA, mgc.SLASH, mgc.CHEST, 5, ('index_error','list index out of range'))
 ]
 
 
@@ -68,9 +68,9 @@ def test_calculate_seriousness(damage, max_ep, thresholds, expected):
 
 
 test_data_penalty = [
-    (3,13,'Szur', mgc.RARM, mgc.RARM, ['mv', 'tb*', 'mf']),
-    (7,14,'Vag', mgc.TORSO, mgc.CHEST, ['mv', 'jh', 'mf']),
-    (11,15,'Zuz', mgc.HEAD, mgc.SKULL, 'halal')
+    (3,13,mgc.THRUST, mgc.RARM, mgc.RARM, ['mv', 'tb*', 'mf']),
+    (7,14,mgc.SLASH, mgc.TORSO, mgc.CHEST, ['mv', 'jh', 'mf']),
+    (11,15,mgc.THRUST, mgc.HEAD, mgc.SKULL, 'halal')
 ]
 
 

@@ -4,7 +4,7 @@ FEJ_THRESHOLDS = [75, 50, 34, 17]
 
 
 FEJ_TABLA = {
-    "Vag":
+    mgc.SLASH:
     {
         mgc.FACE:
         [
@@ -31,7 +31,7 @@ FEJ_TABLA = {
             "halal"
         ]
     },
-    "Szur":
+    mgc.THRUST:
     {
         mgc.FACE:
         [
@@ -59,7 +59,7 @@ FEJ_TABLA = {
         ]
     },
 
-    "Zuz":
+    mgc.BLUDGEON:
     {
         mgc.FACE:
         [
@@ -86,7 +86,7 @@ FEJ_TABLA = {
             "halal"
         ]
     },
-    "Karmol":
+    mgc.CLAW:
     {
         mgc.FACE:
         [
@@ -113,7 +113,7 @@ FEJ_TABLA = {
             "halal"
         ]
     },
-    "Harap":
+    mgc.BITE:
     {
         mgc.FACE:
         [

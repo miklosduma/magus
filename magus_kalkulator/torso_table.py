@@ -4,7 +4,7 @@ TORZS_THRESHOLDS = [100, 75, 50, 25]
 
 
 TORZS_TABLA = {
-    "Vag":
+    mgc.SLASH:
     {
         mgc.COLLARBONE:
         [
@@ -72,7 +72,7 @@ TORZS_TABLA = {
             "halal"
         ]
     },
-    "Szur":
+    mgc.THRUST:
     {
         mgc.COLLARBONE:
         [
@@ -141,7 +141,7 @@ TORZS_TABLA = {
         ]
     },
 
-    "Zuz":
+    mgc.BLUDGEON:
     {
 
         mgc.COLLARBONE:
@@ -213,7 +213,7 @@ TORZS_TABLA = {
         ]
 
     },
-    "Karmol":
+    mgc.CLAW:
     {
 
         mgc.COLLARBONE:
@@ -285,7 +285,7 @@ TORZS_TABLA = {
         ]
 
     },
-    "Harap":
+    mgc.BITE:
     {
 
         mgc.COLLARBONE:

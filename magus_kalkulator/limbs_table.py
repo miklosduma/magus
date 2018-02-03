@@ -4,7 +4,7 @@ VEGTAG_THRESHOLDS = [50, 25, 17, 9]
 
 
 VEGTAG_TABLA = {
-    'Vag':
+    mgc.SLASH:
     {
         mgc.RLEG:
         [
@@ -40,7 +40,7 @@ VEGTAG_TABLA = {
             'csonkolas'
         ]
     },
-    'Szur':
+    mgc.THRUST:
     {
         mgc.RLEG:
         [
@@ -77,7 +77,7 @@ VEGTAG_TABLA = {
         ]
     },
 
-    'Zuz':
+    mgc.BLUDGEON:
     {
         mgc.RLEG:
         [
@@ -113,7 +113,7 @@ VEGTAG_TABLA = {
             'maradando benulas'
         ]
     },
-    'Karmol':
+    mgc.CLAW:
     {
         mgc.RLEG:
         [
@@ -149,7 +149,7 @@ VEGTAG_TABLA = {
             'maradando benulas'
         ]
     },
-    'Harap':
+    mgc.BITE:
     {
         mgc.RLEG:
         [

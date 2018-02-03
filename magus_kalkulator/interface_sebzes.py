@@ -8,7 +8,8 @@ from interface_elements import CharacterValueField, organize_rows_to_left
 
 from magus_constants import (HEAD, TORSO, RARM, LARM, RLEG, LLEG,
                              HEAD_LIST, TORSO_LIST, TORSO_LIST_BEHIND,
-                             RARM_LIST, LARM_LIST, RLEG_LIST, LLEG_LIST)
+                             RARM_LIST, LARM_LIST, RLEG_LIST, LLEG_LIST,
+                             THRUST, SLASH, BLUDGEON, BITE, CLAW)
 
 
 DAMAGE_PAGE_COLUMN = 0
@@ -23,7 +24,7 @@ ATUTES_TEXT = 'Atutes'
 NO_CHARACTER = 'Valassz karaktert!'
 
 # Types of attacking weapons. Used when calculating the damage
-WEAPON_TYPES = ['Szur', 'Vag', 'Zuz', 'Harap', 'Karmol']
+WEAPON_TYPES = [THRUST, SLASH, BLUDGEON, BITE, CLAW]
 
 ATUTES_VALUES = [0, 1, 2, 3, 4, 5]
 
