@@ -4,7 +4,7 @@ from magus_kalkulator.validate import (validate_integer, validate_string,
 
 
 test_data_validate_int = [
-    ('foo', {}, 'Nem szam: \'foo\''),
+    ('foo', {}, 'Nem szam: foo'),
     (-1, {}, 'Adj meg egy szamot 0 es 99 kozott!'),
     ('0', {'min_val': 1}, 'Adj meg egy szamot 1 es 99 kozott!'),
     ('1', {'min_val': 1}, 1),

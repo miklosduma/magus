@@ -88,9 +88,8 @@ def validate_integer(n, min_val=0, max_val=99):
 
         return n
 
-    except ValueError as error:
-        value = get_value_from_error(error.message)
-        raise FieldValidationError(NOT_NUMBER.format(value))
+    except ValueError:
+        raise FieldValidationError(NOT_NUMBER.format(n))
 
 
 def validate_string(s, min_length=3, max_length=12):

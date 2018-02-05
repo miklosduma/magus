@@ -37,10 +37,10 @@ def pick_penalty(table, wtype, bpart, rank):
         return table[wtype][bpart][rank]
 
     except KeyError as error:
-        return 'key_error', error.message
+        return 'key_error', error.args[0]
 
     except IndexError as error:
-        return 'index_error', error.message
+        return 'index_error', error.args[0]
 
 
 def get_threshold(max_ep, threshold):
