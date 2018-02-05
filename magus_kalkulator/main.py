@@ -1,6 +1,6 @@
 from tkinter import Tk, mainloop
 
-from interface import MagusGUI
+from magus_kalkulator.interface import MagusGUI
 
 
 def fire_up_interface():
@@ -11,7 +11,3 @@ def fire_up_interface():
     root = Tk()
     MagusGUI(root)
     mainloop()
-
-
-if __name__ == "__main__" :
-    fire_up_interface()

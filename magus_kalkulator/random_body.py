@@ -1,6 +1,6 @@
 import random
 
-from magus_constants import (HEAD_LIST, TORSO_LIST, TORSO_LIST_BEHIND,
+from magus_kalkulator.magus_constants import (HEAD_LIST, TORSO_LIST, TORSO_LIST_BEHIND,
                              RLEG_LIST, LLEG_LIST, RARM_LIST, LARM_LIST)
 
 BODY_PARTS_LIST = [

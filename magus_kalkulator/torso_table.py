@@ -1,4 +1,4 @@
-import magus_constants as mgc
+import magus_kalkulator.magus_constants as mgc
 
 TORZS_THRESHOLDS = [100, 75, 50, 25]
 

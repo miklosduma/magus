@@ -1,4 +1,4 @@
-import magus_constants as mgc
+import magus_kalkulator.magus_constants as mgc
 
 VEGTAG_THRESHOLDS = [50, 25, 17, 9]
 

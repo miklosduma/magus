@@ -2,8 +2,7 @@ from __future__ import division
 
 import math
 
-from choose import calculate_penalty
-from random_body import pick_sub_parts
+from magus_kalkulator.choose import calculate_penalty
 
 
 def calculate_damage(sfe, damage, atutes, tulutes=False):

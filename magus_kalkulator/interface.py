@@ -1,8 +1,8 @@
 from tkinter import (ttk, Text, END, DISABLED, NORMAL, N, NE)
 
-from karakterek import Karakterek
-from interface_sebzes import SebzesPage
-from interface_karakterek import KarakterPage
+from magus_kalkulator.karakterek import Karakterek
+from magus_kalkulator.interface_sebzes import SebzesPage
+from magus_kalkulator.interface_karakterek import KarakterPage
 
 
 WINDOW_WIDTH = 800

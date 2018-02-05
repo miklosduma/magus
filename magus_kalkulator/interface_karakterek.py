@@ -4,10 +4,10 @@ GUI page for adding new characters.
 
 from tkinter import (Button, Label, W, E, VERTICAL, ttk)
 
-from validate import validate_integer, validate_string, FieldValidationError
-from interface_elements import (CharacterValueField, SfePartFrame,
+from magus_kalkulator.validate import validate_integer, validate_string, FieldValidationError
+from magus_kalkulator.interface_elements import (CharacterValueField, SfePartFrame,
                                 organize_rows_to_left, place_next_in_columns)
-import magus_constants as mgc
+import magus_kalkulator.magus_constants as mgc
 
 KARAKTER_PANEL_COLUMN = 0
 KARAKTER_PANEL_ROW = 0

@@ -1,12 +1,12 @@
 from tkinter import (StringVar, IntVar, OptionMenu, Button, ttk,
                      Checkbutton, VERTICAL, N, W)
 
-from sebzes import return_penalty
-from random_body import pick_sub_parts
-from validate import validate_integer, FieldValidationError
-from interface_elements import CharacterValueField, organize_rows_to_left
+from magus_kalkulator.sebzes import return_penalty
+from magus_kalkulator.random_body import pick_sub_parts
+from magus_kalkulator.validate import validate_integer, FieldValidationError
+from magus_kalkulator.interface_elements import CharacterValueField, organize_rows_to_left
 
-from magus_constants import (HEAD, TORSO, RARM, LARM, RLEG, LLEG,
+from magus_kalkulator.magus_constants import (HEAD, TORSO, RARM, LARM, RLEG, LLEG,
                              HEAD_LIST, TORSO_LIST, TORSO_LIST_BEHIND,
                              RARM_LIST, LARM_LIST, RLEG_LIST, LLEG_LIST,
                              THRUST, SLASH, BLUDGEON, BITE, CLAW)

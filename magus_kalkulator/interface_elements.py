@@ -1,5 +1,5 @@
 from tkinter import Entry, StringVar, W, N, ttk, Label
-from validate import FieldValidationError, validate_integer
+from magus_kalkulator.validate import FieldValidationError, validate_integer
 
 FIELD_WIDTH = 10
 FIELD_COLOR = 'white'

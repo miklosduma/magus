@@ -1,10 +1,10 @@
 from __future__ import division
 
-import magus_constants as mgc
+import magus_kalkulator.magus_constants as mgc
 
-from torso_table import TORZS_TABLA, TORZS_THRESHOLDS
-from limbs_table import VEGTAG_TABLA, VEGTAG_THRESHOLDS
-from head_table import FEJ_TABLA, FEJ_THRESHOLDS
+from magus_kalkulator.torso_table import TORZS_TABLA, TORZS_THRESHOLDS
+from magus_kalkulator.limbs_table import VEGTAG_TABLA, VEGTAG_THRESHOLDS
+from magus_kalkulator.head_table import FEJ_TABLA, FEJ_THRESHOLDS
 
 TABLE_PER_PART = {
     mgc.RLEG: VEGTAG_TABLA,
