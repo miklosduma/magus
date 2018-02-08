@@ -5,7 +5,7 @@ NOT_NUMBER = 'Nem szam: {}'
 NEGATIVE_NUMBER = 'Adj meg pozitiv szamot e helyett: {}'
 
 NUMBER_LENGTH_ERROR = 'Adj meg egy szamot {} es {} kozott!'
-STRING_LENGTH_ERROR = ('Adj meg egy minimum {} \nes maximum {}' 
+STRING_LENGTH_ERROR = ('Adj meg egy minimum {} \nes maximum {}'
                        ' karakter hosszu erteket!')
 
 MATCH_SINGLE_QUOTES = r'\'[^\']+\''
