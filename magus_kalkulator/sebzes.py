@@ -51,7 +51,8 @@ def get_sfe_per_part(sfe_map, bp_list):
     return sfe
 
 
-def return_penalty(sfe, damage, body_parts_list, max_ep, wtype, tulutes=False, atutes=0):
+def return_penalty(sfe, damage, body_parts_list, max_ep, wtype,
+                   tulutes=False, atutes=0):
     """
     Gets the penalty associated with a damage.
     """
@@ -63,5 +64,4 @@ def return_penalty(sfe, damage, body_parts_list, max_ep, wtype, tulutes=False, a
         'ep_loss': ep_loss,
         'fp_loss': fp_loss,
         'hit_target': [main_part, penalty_part, sfe_part],
-        'penalty': result
-    }
+        'penalty': result}

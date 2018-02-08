@@ -2,11 +2,14 @@
 GUI page for adding new characters.
 """
 
-from tkinter import (Button, Label, W, E, VERTICAL, ttk)
+from tkinter import Button, Label, W, E, VERTICAL, ttk
 
-from magus_kalkulator.validate import validate_integer, validate_string, FieldValidationError
-from magus_kalkulator.interface_elements import (CharacterValueField, SfePartFrame,
-                                organize_rows_to_left, place_next_in_columns)
+from magus_kalkulator.validate import (validate_integer, validate_string,
+                                       FieldValidationError)
+from magus_kalkulator.interface_elements import (CharacterValueField,
+                                                 SfePartFrame,
+                                                 organize_rows_to_left,
+                                                 place_next_in_columns)
 import magus_kalkulator.magus_constants as mgc
 
 KARAKTER_PANEL_COLUMN = 0
@@ -314,7 +317,8 @@ class SfePartFrameNotLimb(SfePartFrame):
     Frame child type of main sfe frame. E.g. Torso or Head frame.
     """
     def __init__(self, master, text, body_parts):
-        SfePartFrame.__init__(self, master, text, SFE_SHORTCUT_LABEL, body_parts)
+        SfePartFrame.__init__(self, master, text, SFE_SHORTCUT_LABEL,
+                              body_parts)
 
 
 class SfePartFrameLimb(SfePartFrame):

@@ -4,12 +4,10 @@ from tkinter import (StringVar, IntVar, OptionMenu, Button, ttk,
 from magus_kalkulator.sebzes import return_penalty
 from magus_kalkulator.random_body import pick_sub_parts
 from magus_kalkulator.validate import validate_integer, FieldValidationError
-from magus_kalkulator.interface_elements import CharacterValueField, organize_rows_to_left
+from magus_kalkulator.interface_elements import (CharacterValueField,
+                                                 organize_rows_to_left)
 
-from magus_kalkulator.magus_constants import (HEAD, TORSO, RARM, LARM, RLEG, LLEG,
-                             HEAD_LIST, TORSO_LIST, TORSO_LIST_BEHIND,
-                             RARM_LIST, LARM_LIST, RLEG_LIST, LLEG_LIST,
-                             THRUST, SLASH, BLUDGEON, BITE, CLAW)
+from magus_kalkulator import magus_constants as mgc
 
 
 DAMAGE_PAGE_COLUMN = 0
@@ -24,7 +22,7 @@ ATUTES_TEXT = 'Atutes'
 NO_CHARACTER = 'Valassz karaktert!'
 
 # Types of attacking weapons. Used when calculating the damage
-WEAPON_TYPES = [THRUST, SLASH, BLUDGEON, BITE, CLAW]
+WEAPON_TYPES = [mgc.THRUST, mgc.SLASH, mgc.BLUDGEON, mgc.BITE, mgc.CLAW]
 
 ATUTES_VALUES = [0, 1, 2, 3, 4, 5]
 
@@ -58,31 +56,32 @@ def get_unique_body_parts(body_parts_list):
     return [main_part, unique_sub_parts_list]
 
 
-UNIQUE_HEAD_LIST = get_unique_body_parts(HEAD_LIST)
-UNIQUE_TORSO_LIST = get_unique_body_parts(TORSO_LIST)
-UNIQUE_TORSO_LIST_BEHIND = TORSO_LIST_BEHIND
-UNIQUE_RARM_LIST = get_unique_body_parts(RARM_LIST)
-UNIQUE_LARM_LIST = get_unique_body_parts(LARM_LIST)
-UNIQUE_RLEG_LIST = get_unique_body_parts(RLEG_LIST)
-UNIQUE_LLEG_LIST = get_unique_body_parts(LLEG_LIST)
+UNIQUE_HEAD_LIST = get_unique_body_parts(mgc.HEAD_LIST)
+UNIQUE_TORSO_LIST = get_unique_body_parts(mgc.TORSO_LIST)
+UNIQUE_TORSO_LIST_BEHIND = mgc.TORSO_LIST_BEHIND
+UNIQUE_RARM_LIST = get_unique_body_parts(mgc.RARM_LIST)
+UNIQUE_LARM_LIST = get_unique_body_parts(mgc.LARM_LIST)
+UNIQUE_RLEG_LIST = get_unique_body_parts(mgc.RLEG_LIST)
+UNIQUE_LLEG_LIST = get_unique_body_parts(mgc.LLEG_LIST)
 
 BODY_LISTS_DICT = {
-    HEAD: UNIQUE_HEAD_LIST,
-    TORSO: UNIQUE_TORSO_LIST,
-    RARM: UNIQUE_RARM_LIST,
-    LARM: UNIQUE_LARM_LIST,
-    RLEG: UNIQUE_RLEG_LIST,
-    LLEG: UNIQUE_LLEG_LIST
+    mgc.HEAD: UNIQUE_HEAD_LIST,
+    mgc.TORSO: UNIQUE_TORSO_LIST,
+    mgc.RARM: UNIQUE_RARM_LIST,
+    mgc.LARM: UNIQUE_LARM_LIST,
+    mgc.RLEG: UNIQUE_RLEG_LIST,
+    mgc.LLEG: UNIQUE_LLEG_LIST
 }
 
 BODY_LISTS_DICT_BEHIND = {
-    HEAD: UNIQUE_HEAD_LIST,
-    TORSO: UNIQUE_TORSO_LIST_BEHIND,
-    RARM: UNIQUE_RARM_LIST,
-    LARM: UNIQUE_LARM_LIST,
-    RLEG: UNIQUE_RLEG_LIST,
-    LLEG: UNIQUE_LLEG_LIST
+    mgc.HEAD: UNIQUE_HEAD_LIST,
+    mgc.TORSO: UNIQUE_TORSO_LIST_BEHIND,
+    mgc.RARM: UNIQUE_RARM_LIST,
+    mgc.LARM: UNIQUE_LARM_LIST,
+    mgc.RLEG: UNIQUE_RLEG_LIST,
+    mgc.LLEG: UNIQUE_LLEG_LIST
 }
+
 
 def format_damage_msg(penalty_dict):
     """
@@ -137,7 +136,8 @@ class CharacterPanel(ttk.PanedWindow):
         self.body_parts_frame = ChooseBodyPartFrame(self)
 
         organize_rows_to_left([self.choose_frame, self.weapon_frame,
-                               self.damage_frame, self.piercing_frame, self.body_parts_frame], 0)
+                               self.damage_frame, self.piercing_frame,
+                               self.body_parts_frame], 0)
 
 
 class ChooseCharacterFrame(ttk.LabelFrame):
@@ -253,13 +253,11 @@ class ChooseMainBodyPartFrame(ttk.LabelFrame):
         ttk.LabelFrame.__init__(self, master, text='Fo testresz')
         self.main_body_part = StringVar()
         self.main_body_part.set('Barhol')
-        self.main_body_parts = OptionMenu(self, self.main_body_part, *['Barhol',
-                                                                       HEAD,
-                                                                       TORSO,
-                                                                       RARM,
-                                                                       LARM,
-                                                                       RLEG,
-                                                                       LLEG])
+        self.main_body_parts = OptionMenu(self,
+                                          self.main_body_part,
+                                          *['Barhol', mgc.HEAD, mgc.TORSO,
+                                            mgc.RARM, mgc.LARM, mgc.RLEG,
+                                            mgc.LLEG])
         self.main_body_parts.grid()
 
 
@@ -291,7 +289,8 @@ class ChooseSubBodyPartFrame(ttk.LabelFrame):
         selected_sub_part = self.sub_body_part.get()
 
         if selected_sub_part and selected_sub_part != 'Barhol':
-            self.selected_sub_part = [x for x in self.selected_sub_parts if selected_sub_part in x][0]
+            self.selected_sub_part = [x for x in self.selected_sub_parts
+                                      if selected_sub_part in x][0]
         else:
             self.selected_sub_part = None
 
@@ -442,10 +441,10 @@ class KarakterekMenu(OptionMenu):
         self.bind('<Button-1>', self._update)
         self.config(width=10)
 
-    def _width_match_longest(self, list):
+    def _width_match_longest(self, opt_list):
 
-        if list:
-            lengths = [len(x) for x in list]
+        if opt_list:
+            lengths = [len(x) for x in opt_list]
             self.config(width=max(lengths) + 2)
 
     def _update(self, _event):
@@ -518,7 +517,8 @@ class SebzesButton(Button):
         tulutes = self.damage_frame.is_critical()
         atutes = self.piercing_frame.get_piercing()
 
-        penalty = return_penalty(sfe, damage, body_parts_list, max_ep, attacking_weapon,
+        penalty = return_penalty(sfe, damage, body_parts_list, max_ep,
+                                 attacking_weapon,
                                  tulutes=tulutes, atutes=atutes)
         msg = format_damage_msg(penalty)
         self.messages.write_message(msg)
@@ -530,7 +530,8 @@ class TulutesBox(Checkbutton):
         self.tick.set(0)
         self.state = self.tick.get()
         Checkbutton.__init__(self, master, text=TULUTES_TEXT,
-                             variable=self.tick, command=self.print_on_change)
+                             variable=self.tick,
+                             command=self.print_on_change)
 
     def print_on_change(self, *_args):
         self.state = self.tick.get()

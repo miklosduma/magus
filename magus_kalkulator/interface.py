@@ -1,4 +1,4 @@
-from tkinter import (ttk, Text, END, DISABLED, NORMAL, N, NE)
+from tkinter import ttk, Text, END, DISABLED, NORMAL, N
 
 from magus_kalkulator.karakterek import Karakterek
 from magus_kalkulator.interface_sebzes import SebzesPage

@@ -1,5 +1,6 @@
 from __future__ import print_function
 
+
 class Karakter:
     """
     Class for adding individual characters.
@@ -65,7 +66,6 @@ class Karakterek:
             return self.karakterek[name]
         except KeyError as error:
             return 'Nincs ilyen karakter!'
-
 
     def delete_karakter(self, name):
         """

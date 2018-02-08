@@ -83,8 +83,8 @@ def validate_integer(n, min_val=0, max_val=99):
         n = int(n)
 
         if not between_thresholds(n, min_val, max_val):
-            raise FieldValidationError(NUMBER_LENGTH_ERROR.format(min_val,
-                                                                  max_val))
+            error_msg = NUMBER_LENGTH_ERROR.format(min_val, max_val)
+            raise FieldValidationError(error_msg)
 
         return n
 
@@ -105,7 +105,7 @@ def validate_string(s, min_length=3, max_length=12):
     length = len(s)
 
     if not between_thresholds(length, min_length, max_length):
-        raise FieldValidationError(STRING_LENGTH_ERROR.format(min_length,
-                                                              max_length))
+        error_msg = STRING_LENGTH_ERROR.format(min_length, max_length)
+        raise FieldValidationError(error_msg)
 
     return s

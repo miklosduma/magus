@@ -1,17 +1,17 @@
 import random
 
-from magus_kalkulator.magus_constants import (HEAD_LIST, TORSO_LIST, TORSO_LIST_BEHIND,
-                             RLEG_LIST, LLEG_LIST, RARM_LIST, LARM_LIST)
+from magus_kalkulator import magus_constants as mgc
 
 BODY_PARTS_LIST = [
-    HEAD_LIST, TORSO_LIST, TORSO_LIST, TORSO_LIST, TORSO_LIST,
-    RARM_LIST, RARM_LIST, LARM_LIST, RLEG_LIST, LLEG_LIST
-]
+    mgc.HEAD_LIST, mgc.TORSO_LIST, mgc.TORSO_LIST, mgc.TORSO_LIST,
+    mgc.TORSO_LIST, mgc.RARM_LIST, mgc.RARM_LIST, mgc.LARM_LIST,
+    mgc.RLEG_LIST, mgc.LLEG_LIST]
 
 BODY_PARTS_LIST_BEHIND = [
-    HEAD_LIST, TORSO_LIST_BEHIND, TORSO_LIST_BEHIND, TORSO_LIST_BEHIND,
-    TORSO_LIST_BEHIND, RARM_LIST, RARM_LIST, LARM_LIST, RLEG_LIST, LLEG_LIST
-]
+    mgc.HEAD_LIST, mgc.TORSO_LIST_BEHIND, mgc.TORSO_LIST_BEHIND,
+    mgc.TORSO_LIST_BEHIND, mgc.TORSO_LIST_BEHIND, mgc.RARM_LIST,
+    mgc.RARM_LIST, mgc.LARM_LIST,
+    mgc.RLEG_LIST, mgc.LLEG_LIST]
 
 
 def pick_sub_parts(main_part=None, sub_part=None, from_behind=False):

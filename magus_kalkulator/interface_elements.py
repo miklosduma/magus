@@ -29,7 +29,10 @@ def place_next_in_columns(frames, row, column, columnspan):
 
     # Place all frame elements
     for frame in frames:
-        frame.grid(row=row, column=column, columnspan=columnspan, sticky=(N, W))
+        frame.grid(row=row,
+                   column=column,
+                   columnspan=columnspan,
+                   sticky=(N, W))
 
         # If column is the same as columnspan, next item is placed in new row
         if column == columnspan:
