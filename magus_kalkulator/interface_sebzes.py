@@ -146,9 +146,9 @@ class CharacterPanel(ttk.PanedWindow):
         """
         ttk.PanedWindow.__init__(self, master, width=width, orient=orient)
         self.master = master
-        self.messages = self.master.messages
 
-        self.choose_frame = ChooseCharacterFrame(self, self.master.karakterek)
+        self.choose_frame = ChooseCharacterFrame(self, self.master.karakterek,
+                                                 self.master.messages)
         self.weapon_frame = WeaponTypeFrame(self)
         self.damage_frame = DamageFrame(self)
         self.piercing_frame = PiercingFrame(self)
@@ -163,14 +163,13 @@ class ChooseCharacterFrame(ttk.LabelFrame):
     """
     Frame comprising character-selection drop-down.
     """
-    def __init__(self, master, karakterek):
+    def __init__(self, master, karakterek, messages):
         """
         Initialise character-selection frame.
         """
         self.master = master
         ttk.LabelFrame.__init__(self, master, text=SELECT_CHARACTER)
-        self.selected_character = KarakterVar(self, karakterek,
-                                              self.master.messages)
+        self.selected_character = KarakterVar(self, karakterek, messages)
         self.character_menu = KarakterekMenu(self, self.selected_character,
                                              karakterek, *[''])
         self.character_menu.grid()
@@ -573,11 +572,11 @@ class SebzesButton(Button):
         self.messages = self.master.messages
         self.main_panel = self.master.main_panel
 
-        self.choose_frame = self.main_panel.choose_frame
-        self.weapon_frame = self.main_panel.weapon_frame
-        self.damage_frame = self.main_panel.damage_frame
-        self.piercing_frame = self.main_panel.piercing_frame
-        self.body_frame = self.main_panel.body_parts_frame
+        #self.choose_frame = self.main_panel.choose_frame
+        #self.weapon_frame = self.main_panel.weapon_frame
+        #self.damage_frame = self.main_panel.damage_frame
+        #self.piercing_frame = self.main_panel.piercing_frame
+        #self.body_frame = self.main_panel.body_parts_frame
 
         self.bind('<Button-1>', self.write_results)
 
@@ -586,14 +585,15 @@ class SebzesButton(Button):
         Gets result based on input fields/values and writes
         result to message panel.
         """
-        is_from_behind = self.body_frame.is_from_behind()
-        main_part, sub_parts = self.body_frame.get_targeted()
+        is_from_behind = self.main_panel.body_parts_frame.is_from_behind()
+        main_part, sub_parts = self.main_panel.body_parts_frame.get_targeted()
 
         body_parts_list = pick_sub_parts(from_behind=is_from_behind,
-                                         main_part=main_part, sub_part=sub_parts)
+                                         main_part=main_part,
+                                         sub_part=sub_parts)
 
-        attacking_weapon = self.weapon_frame.get_weapon()
-        success, attacked = self.choose_frame.get_selected()
+        attacking_weapon = self.main_panel.weapon_frame.get_weapon()
+        success, attacked = self.main_panel.choose_frame.get_selected()
 
         if not success:
             self.messages.write_message(attacked)
@@ -602,7 +602,7 @@ class SebzesButton(Button):
         max_ep = self.karakterek.get_karakter(attacked).max_ep
         sfe = self.karakterek.get_karakter(attacked).sfe
 
-        success, result = self.damage_frame.get_damage()
+        success, result = self.main_panel.damage_frame.get_damage()
 
         if not success:
             self.messages.write_message(result)
@@ -610,8 +610,8 @@ class SebzesButton(Button):
 
         damage = result
 
-        tulutes = self.damage_frame.is_critical()
-        atutes = self.piercing_frame.get_piercing()
+        tulutes = self.main_panel.damage_frame.is_critical()
+        atutes = self.main_panel.piercing_frame.get_piercing()
 
         penalty = return_penalty(sfe, damage, body_parts_list, max_ep,
                                  attacking_weapon,
