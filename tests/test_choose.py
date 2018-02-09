@@ -18,7 +18,7 @@ test_data_penalty = [
 ]
 
 
-@pytest.mark.parametrize('table,type,target,index,expected', test_data_penalty)
+@pytest.mark.parametrize('table,wp_type,target,index,expected', test_data_penalty)
 def test_pick_penalty(table, wp_type, target, index, expected):
     """
     Expects the correct penalties to be chosen.
