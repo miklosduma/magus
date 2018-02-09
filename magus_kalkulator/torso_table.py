@@ -1,3 +1,7 @@
+"""
+Penalties depending on seriousness, weapon-type and actual place of hit.
+"""
+
 import magus_kalkulator.magus_constants as mgc
 
 TORZS_THRESHOLDS = [100, 75, 50, 25]
@@ -79,7 +83,7 @@ TORZS_TABLA = {
             "nincs hatrany",
             ["mv", "zh*", "k6"],
             ["mv", "rb*", "gyf"],
-            ["hv", "tb*",  "mf"],
+            ["hv", "tb*", "mf"],
             "halal"
         ],
         mgc.CHEST:

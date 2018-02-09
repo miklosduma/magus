@@ -571,13 +571,6 @@ class SebzesButton(Button):
         self.karakterek = self.master.karakterek
         self.messages = self.master.messages
         self.main_panel = self.master.main_panel
-
-        #self.choose_frame = self.main_panel.choose_frame
-        #self.weapon_frame = self.main_panel.weapon_frame
-        #self.damage_frame = self.main_panel.damage_frame
-        #self.piercing_frame = self.main_panel.piercing_frame
-        #self.body_frame = self.main_panel.body_parts_frame
-
         self.bind('<Button-1>', self.write_results)
 
     def write_results(self, _event):

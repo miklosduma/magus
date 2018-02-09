@@ -1,3 +1,7 @@
+"""
+Functions to select attacked body part.
+"""
+
 import random
 
 from magus_kalkulator import magus_constants as mgc

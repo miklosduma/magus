@@ -1,3 +1,7 @@
+"""
+Functions to calculate actual damage.
+"""
+
 from __future__ import division
 
 import math
@@ -41,7 +45,7 @@ def get_sfe_per_part(sfe_map, bp_list):
     The corresponding body part will be either
     the second or the third element of the body parts list.
     """
-    main_part, penalty_part, sfe_part = bp_list
+    _main_part, penalty_part, sfe_part = bp_list
 
     try:
         sfe = sfe_map[sfe_part]

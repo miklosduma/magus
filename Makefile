@@ -18,8 +18,17 @@ test3:
 	python3 -m pytest
 
 .PHONY: lint
-lint:
-	python3 -m pylint magus_kalkulator/*.py --disable=too-many-ancestors
+lint: pep pylint
+
+.PHONY: pep
+pep:
 	python3 -m pycodestyle magus_kalkulator/*.py
-	python3 -m pylint tests/*.py --disable=too-many-ancestors
 	python3 -m pycodestyle tests/*.py
+
+.PHONY: pylint
+pylint:
+	python3 -m pylint magus_kalkulator/*.py --disable=too-many-ancestors
+	python3 -m pylint tests/*.py
+	
+
+	
