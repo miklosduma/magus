@@ -147,8 +147,7 @@ class CharacterPanel(ttk.PanedWindow):
         ttk.PanedWindow.__init__(self, master, width=width, orient=orient)
         self.master = master
 
-        self.choose_frame = ChooseCharacterFrame(self, self.master.karakterek,
-                                                 self.master.messages)
+        self.choose_frame = ChooseCharacterFrame(self, self.master.karakterek)
         self.weapon_frame = WeaponTypeFrame(self)
         self.damage_frame = DamageFrame(self)
         self.piercing_frame = PiercingFrame(self)
@@ -163,22 +162,54 @@ class ChooseCharacterFrame(ttk.LabelFrame):
     """
     Frame comprising character-selection drop-down.
     """
-    def __init__(self, master, karakterek, messages):
+    def __init__(self, master, karakterek):
         """
         Initialise character-selection frame.
         """
         self.master = master
         ttk.LabelFrame.__init__(self, master, text=SELECT_CHARACTER)
-        self.selected_character = KarakterVar(self, karakterek, messages)
-        self.character_menu = KarakterekMenu(self, self.selected_character,
-                                             karakterek, *[''])
+        self.karakterek = karakterek
+        self.variable = StringVar()
+        self.variable.set('')
+        self.character_menu = OptionMenu(self, self.variable, *[''])
+        self.character_menu.bind('<Button-1>', self._update)
+        self.character_menu.config(width=10)
         self.character_menu.grid()
 
     def get_selected(self):
         """
-        Returns selected character.
+        Return latest value.
         """
-        return self.selected_character.get_value()
+        character = self.variable.get()
+
+        if character:
+            return True, character
+
+        return False, NO_CHARACTER
+
+    def _width_match_longest(self, opt_list):
+        """
+        Width of menu list must match longest menu item.
+        """
+
+        if opt_list:
+            lengths = [len(x) for x in opt_list]
+            self.character_menu.config(width=max(lengths) + 2)
+
+    def _update(self, _event):
+        """
+        When clicking the drop-down, get the name of
+        all characters currently in memory.
+        """
+        menu = self.character_menu.children['menu']
+        menu.delete(0, 'end')
+        new_choices = self.karakterek.get_all_karakters()
+
+        self._width_match_longest(new_choices)
+
+        for value in new_choices:
+            menu.add_command(label=value,
+                             command=lambda v=value: self.variable.set(v))
 
 
 class WeaponTypeFrame(ttk.LabelFrame):
@@ -473,89 +504,6 @@ class WeaponString(StringVar):
         Prints value on changes.
         """
         print(self.get_weapon_type())
-
-
-class KarakterVar(StringVar):
-    """
-    Variable for selected character.
-    """
-    def __init__(self, master, karakterek, messages):
-        """
-        Initialise variable.
-        """
-        StringVar.__init__(self, master)
-        self.set_value('')
-        self.master = master
-        self.karakterek = karakterek
-        self.messages = messages
-        self.trace('w', self.print_on_change)
-
-    def set_value(self, value):
-        """
-        Set value to selected.
-        """
-        self.set(value)
-
-    def get_value(self):
-        """
-        Return latest value.
-        """
-        character = self.get()
-
-        if character:
-            return True, character
-
-        return False, NO_CHARACTER
-
-    def print_on_change(self, *_args):
-        """
-        Print latest value and max_ep of
-        selected character.
-        """
-        print(self.get())
-        print(self.karakterek.get_karakter(
-            self.get()).max_ep)
-        self.messages.write_message(self.get())
-
-
-class KarakterekMenu(OptionMenu):
-    """
-    Drop-down for character selection.
-    """
-
-    def __init__(self, master, variable, karakterek, *choices):
-        """
-        Initialise drop-down.
-        """
-        # Get already-added characters
-        self.karakterek = karakterek
-        OptionMenu.__init__(self, master, variable, *choices)
-        self.variable = variable
-
-        # Every time the drop-down is selected, update values for selection
-        self.bind('<Button-1>', self._update)
-        self.config(width=10)
-
-    def _width_match_longest(self, opt_list):
-
-        if opt_list:
-            lengths = [len(x) for x in opt_list]
-            self.config(width=max(lengths) + 2)
-
-    def _update(self, _event):
-        """
-        When clicking the drop-down, get the name of
-        all characters currently in memory.
-        """
-        menu = self.children['menu']
-        menu.delete(0, 'end')
-        new_choices = self.karakterek.get_all_karakters()
-
-        self._width_match_longest(new_choices)
-
-        for value in new_choices:
-            menu.add_command(label=value,
-                             command=lambda v=value: self.variable.set(v))
 
 
 class SebzesButton(Button):
