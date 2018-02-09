@@ -29,7 +29,9 @@ def test_calculate_damage(sfe, damage, atutes, tulutes, expected):
 
 
 def test_return_penalty():
-    result = return_penalty(test_sfe_map, 21, ('Fej', 'Koponya', 'Koponya'), 14, mgc.THRUST, atutes=3)
+    result = return_penalty(test_sfe_map, 21,
+                            ('Fej', 'Koponya', 'Koponya'),
+                            14, mgc.THRUST, atutes=3)
     expected_keys = ['ep_loss', 'fp_loss', 'hit_target', 'penalty']
     actual_keys = result.keys()
     assert all(x in actual_keys for x in expected_keys)

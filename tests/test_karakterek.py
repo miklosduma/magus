@@ -66,6 +66,3 @@ def test_karakterek():
     karakter_nevek = karakterek.get_all_karakters()
     assert not all(name in karakter_nevek for name in ['Esme', 'Sam'])
     assert sam == 'Nincs ilyen karakter!'
-
-
-

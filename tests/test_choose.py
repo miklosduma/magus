@@ -12,17 +12,18 @@ test_data_penalty = [
     (TORZS_TABLA, mgc.SLASH, mgc.CHEST, 1, ['gyv', 'zh', 'gyf', 'k6']),
     (FEJ_TABLA, mgc.THRUST, mgc.FACE, 0, 'nincs hatrany'),
     (VEGTAG_TABLA, mgc.BLUDGEON, mgc.RARM, 4, 'maradando benulas'),
-    (VEGTAG_TABLA, 'Foo', mgc.RARM, 4, ('key_error','Foo')),
-    (TORZS_TABLA, mgc.SLASH, mgc.CHEST, 5, ('index_error','list index out of range'))
+    (VEGTAG_TABLA, 'Foo', mgc.RARM, 4, ('key_error', 'Foo')),
+    (TORZS_TABLA, mgc.SLASH, mgc.CHEST, 5, ('index_error',
+                                            'list index out of range'))
 ]
 
 
 @pytest.mark.parametrize('table,type,target,index,expected', test_data_penalty)
-def test_pick_penalty(table, type, target, index, expected):
+def test_pick_penalty(table, wp_type, target, index, expected):
     """
     Expects the correct penalties to be chosen.
     """
-    result = pick_penalty(table, type, target, index)
+    result = pick_penalty(table, wp_type, target, index)
     assert result == expected
 
 
@@ -58,7 +59,8 @@ test_data_seriousness = [
 ]
 
 
-@pytest.mark.parametrize('damage,max_ep,thresholds,expected', test_data_seriousness)
+@pytest.mark.parametrize('damage,max_ep,thresholds,expected',
+                         test_data_seriousness)
 def test_calculate_seriousness(damage, max_ep, thresholds, expected):
     """
     Expects the correct penalties to be chosen.
@@ -68,9 +70,9 @@ def test_calculate_seriousness(damage, max_ep, thresholds, expected):
 
 
 test_data_penalty = [
-    (3,13,mgc.THRUST, mgc.RARM, mgc.RARM, ['mv', 'tb*', 'mf']),
-    (7,14,mgc.SLASH, mgc.TORSO, mgc.CHEST, ['mv', 'jh', 'mf']),
-    (11,15,mgc.THRUST, mgc.HEAD, mgc.SKULL, 'halal')
+    (3, 13, mgc.THRUST, mgc.RARM, mgc.RARM, ['mv', 'tb*', 'mf']),
+    (7, 14, mgc.SLASH, mgc.TORSO, mgc.CHEST, ['mv', 'jh', 'mf']),
+    (11, 15, mgc.THRUST, mgc.HEAD, mgc.SKULL, 'halal')
 ]
 
 

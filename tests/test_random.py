@@ -18,5 +18,5 @@ def test_pick_sub_parts_specific():
     body_part, pen_part, sfe_part = pick_sub_parts(main_part='Jkez')
     assert all(isinstance(x, str) for x in (body_part, pen_part, sfe_part))
     assert pen_part == body_part == 'Jkez'
-    assert  sfe_part in ['Jfelkar', 'Jkonyok', 'Jalkar', 'Jcsuklo', 'Jkezfej',
-                         'Jvall']
+    assert sfe_part in ['Jfelkar', 'Jkonyok', 'Jalkar', 'Jcsuklo', 'Jkezfej',
+                        'Jvall']

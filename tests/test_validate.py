@@ -45,5 +45,3 @@ def test_validate_str(value, expected, kwargs):
 
     except FieldValidationError as error:
         assert error.message == expected
-
-
