@@ -107,7 +107,7 @@ class SfePartFrame(ttk.LabelFrame):
     def __init__(self, master, main_text, shortcut_text, body_parts):
         ttk.LabelFrame.__init__(self, master, text=main_text)
         self.master = master
-        self.body_parts = self._sort_body_parts(body_parts)
+        self.body_parts = body_parts
 
         # Sfe value shortcut that sets all other sfe values
         self.master_sfe = self.master.sfe_field.value
@@ -124,9 +124,6 @@ class SfePartFrame(ttk.LabelFrame):
         self.sfe_map = self.master.sfe
 
         self._place_sfe_fields(body_parts)
-
-    def _sort_body_parts(self, body_parts):
-        return body_parts
 
     def _place_sfe_fields(self, fields):
         """

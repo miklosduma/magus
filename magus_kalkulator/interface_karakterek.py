@@ -330,6 +330,7 @@ class SfePartFrameLimb(SfePartFrame):
     """
     def __init__(self, master, text, shortcut_text, body_parts):
         SfePartFrame.__init__(self, master, text, shortcut_text, body_parts)
+        self._sort_body_parts(body_parts)
 
     def _sort_body_parts(self, body_parts):
         """
@@ -341,7 +342,7 @@ class SfePartFrameLimb(SfePartFrame):
             _text, right_part, left_part = bp_tuple
             result.append(right_part)
             result.append(left_part)
-        return result
+        self.body_parts = result
 
     def _place_sfe_fields(self, fields):
         """
