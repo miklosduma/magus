@@ -1,6 +1,15 @@
 """
 Main interface window and top-level components, such as the messages panel
 and the tabs frame.
+
+
+Use style to customise interface.
+
+style = ttk.Style()
+style.theme_create("yummy", parent="alt", settings={
+    "TLabelframe": {"configure": {"background": "red"}}})
+
+style.theme_use("yummy")
 """
 
 from tkinter import ttk, Text, END, DISABLED, NORMAL, N
@@ -59,15 +68,6 @@ class MagusGUI:
         master.maxsize(WINDOW_WIDTH, WINDOW_HEIGHT)
         master.geometry(WINDOW_DIMENSIONS)
         master.title(WINDOW_TEXT)
-
-        """
-        style = ttk.Style()
-
-        style.theme_create("yummy", parent="alt", settings={
-        "TLabelframe": {"configure": {"background": "red"}}})
-
-        style.theme_use("yummy")
-        """
 
         # Create multiple tabs on main page, making characters
         # accessible to each
