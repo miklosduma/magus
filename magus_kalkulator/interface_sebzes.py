@@ -1,3 +1,7 @@
+"""
+Classes used by Damage page.
+"""
+
 from tkinter import (StringVar, IntVar, OptionMenu, Button, ttk,
                      Checkbutton, VERTICAL, N, W)
 
@@ -133,13 +137,18 @@ class SebzesPage(ttk.Frame):
 
 
 class CharacterPanel(ttk.PanedWindow):
+    """
+    Main panel of damage page.
+    """
     def __init__(self, master, width, orient=VERTICAL):
+        """
+        Initialise main panel.
+        """
         ttk.PanedWindow.__init__(self, master, width=width, orient=orient)
         self.master = master
-        self.karakterek = self.master.karakterek
         self.messages = self.master.messages
 
-        self.choose_frame = ChooseCharacterFrame(self)
+        self.choose_frame = ChooseCharacterFrame(self, self.master.karakterek)
         self.weapon_frame = WeaponTypeFrame(self)
         self.damage_frame = DamageFrame(self)
         self.piercing_frame = PiercingFrame(self)
@@ -151,21 +160,36 @@ class CharacterPanel(ttk.PanedWindow):
 
 
 class ChooseCharacterFrame(ttk.LabelFrame):
-    def __init__(self, master):
+    """
+    Frame comprising character-selection drop-down.
+    """
+    def __init__(self, master, karakterek):
+        """
+        Initialise character-selection frame.
+        """
         self.master = master
         ttk.LabelFrame.__init__(self, master, text=SELECT_CHARACTER)
-        self.selected_character = KarakterVar(self, self.master.karakterek,
+        self.selected_character = KarakterVar(self, karakterek,
                                               self.master.messages)
         self.character_menu = KarakterekMenu(self, self.selected_character,
-                                             self.master.karakterek, *[''])
+                                             karakterek, *[''])
         self.character_menu.grid()
 
     def get_selected(self):
+        """
+        Returns selected character.
+        """
         return self.selected_character.get_value()
 
 
 class WeaponTypeFrame(ttk.LabelFrame):
+    """
+    Frame for weapon-type selection drop-down.
+    """
     def __init__(self, master):
+        """
+        Initialises weapon-type frame.
+        """
         ttk.LabelFrame.__init__(self, master, text=SELECT_WEAPON)
         self.selected_weapon = WeaponString(self, WEAPON_TYPES)
         self.weapon_menu = OptionMenu(self, self.selected_weapon,
@@ -173,11 +197,20 @@ class WeaponTypeFrame(ttk.LabelFrame):
         self.weapon_menu.grid()
 
     def get_weapon(self):
+        """
+        Returns selected weapon.
+        """
         return self.selected_weapon.get_weapon_type()
 
 
 class DamageFrame(ttk.LabelFrame):
+    """
+    Frame comprising damage entry field.
+    """
     def __init__(self, master):
+        """
+        Initialises frame.
+        """
         ttk.LabelFrame.__init__(self, master, text=DAMAGE_TEXT)
         self.damage = CharacterValueField(self, validate_integer)
         self.tulutes = TulutesBox(self)
@@ -185,6 +218,11 @@ class DamageFrame(ttk.LabelFrame):
         self.tulutes.grid(row=0, column=1)
 
     def get_damage(self):
+        """
+        Tries to return value of entry field. Returns
+        an error message if the value of the field
+        is invalid.
+        """
         try:
             damage = self.damage.get_validated()
             return True, damage
@@ -193,21 +231,39 @@ class DamageFrame(ttk.LabelFrame):
             return False, error.message
 
     def is_critical(self):
+        """
+        Checks whether the critical tick-box is checked.
+        """
         return self.tulutes.get_tulutes()
 
 
 class PiercingFrame(ttk.LabelFrame):
+    """
+    Frame comprising the armour-piercing value drop-down.
+    """
     def __init__(self, master):
+        """
+        Initialises frame.
+        """
         ttk.LabelFrame.__init__(self, master, text=ATUTES_TEXT)
         self.piercing_menu = AtutesMenu(self, *ATUTES_VALUES)
         self.piercing_menu.grid()
 
     def get_piercing(self):
+        """
+        Retrieves value of AP drop-down.
+        """
         return self.piercing_menu.get_atutes()
 
 
 class ChooseBodyPartFrame(ttk.LabelFrame):
+    """
+    Master frame for body selection drop-downs.
+    """
     def __init__(self, master):
+        """
+        Initialises frame.
+        """
         ttk.LabelFrame.__init__(self, master, text=HIT_LABEL)
 
         self.main_body_frame = ChooseMainBodyPartFrame(self)
@@ -220,6 +276,9 @@ class ChooseBodyPartFrame(ttk.LabelFrame):
         self.sub_body_frame.grid(row=1, column=1)
 
     def get_targeted(self):
+        """
+        Retrieves the selected main and sub-body parts, if any.
+        """
         main_part = self.main_body_frame.main_body_part.get()
 
         if main_part == ANYWHERE:
@@ -233,11 +292,20 @@ class ChooseBodyPartFrame(ttk.LabelFrame):
         return main_part, sub_part
 
     def is_from_behind(self):
+        """
+        Gets the state of the from-behind tick-box.
+        """
         return self.from_behind_box.get_from_behind()
 
 
 class FromBehind(Checkbutton):
+    """
+    Tick-box for attacks from behind.
+    """
     def __init__(self, master):
+        """
+        Initialise tick-box.
+        """
         self.main_body_frame = master.main_body_frame
         self.tick = IntVar()
         self.tick.set(0)
@@ -246,15 +314,30 @@ class FromBehind(Checkbutton):
                              variable=self.tick, command=self.set_state)
 
     def set_state(self, *_args):
+        """
+        Set the state based on tick-box being selected or not.
+        Also, reset main body part drop-down as any selected value
+        can become invalid once the attack comes from behind not from
+        the front or vice versa.
+        """
         self.main_body_frame.main_body_part.set(ANYWHERE)
         self.state = self.tick.get()
 
     def get_from_behind(self):
+        """
+        Returns state of tick-box.
+        """
         return self.tick.get()
 
 
 class ChooseMainBodyPartFrame(ttk.LabelFrame):
+    """
+    Main body-part drop-down frame.
+    """
     def __init__(self, master):
+        """
+        Initialises frame.
+        """
         ttk.LabelFrame.__init__(self, master, text=MAIN_PART_LABEL)
         self.main_body_part = StringVar()
         self.main_body_part.set(ANYWHERE)
@@ -267,7 +350,13 @@ class ChooseMainBodyPartFrame(ttk.LabelFrame):
 
 
 class ChooseSubBodyPartFrame(ttk.LabelFrame):
+    """
+    Sub body-part frame.
+    """
     def __init__(self, master, main_body_frame):
+        """
+        Initialise sub body part frame.
+        """
         ttk.LabelFrame.__init__(self, master, text=SUB_PART_LABEL)
         self.master = master
         self.selected_sub_parts = None
@@ -471,7 +560,13 @@ class KarakterekMenu(OptionMenu):
 
 
 class SebzesButton(Button):
+    """
+    Damage button.
+    """
     def __init__(self, master, text):
+        """
+        Initialise button.
+        """
         Button.__init__(self, master, text=text)
         self.master = master
         self.karakterek = self.master.karakterek
@@ -487,7 +582,10 @@ class SebzesButton(Button):
         self.bind('<Button-1>', self.write_results)
 
     def write_results(self, _event):
-
+        """
+        Gets result based on input fields/values and writes
+        result to message panel.
+        """
         is_from_behind = self.body_frame.is_from_behind()
         main_part, sub_parts = self.body_frame.get_targeted()
 
@@ -523,7 +621,13 @@ class SebzesButton(Button):
 
 
 class TulutesBox(Checkbutton):
+    """
+    Tick-box for critical hits.
+    """
     def __init__(self, master):
+        """
+        Init button.
+        """
         self.tick = IntVar()
         self.tick.set(0)
         self.state = self.tick.get()
@@ -532,21 +636,32 @@ class TulutesBox(Checkbutton):
                              command=self.save_state)
 
     def save_state(self, *_args):
+        """
+        Saves state.
+        """
         self.state = self.tick.get()
 
     def get_tulutes(self):
+        """
+        Gets currently selected value.
+        """
         return self.tick.get()
 
 
 class AtutesMenu(OptionMenu):
+    """
+    Armour piercing menu.
+    """
     def __init__(self, master, *options):
+        """
+        Init menu.
+        """
         self.atutes = IntVar()
-        self.atutes.trace('w', callback=self.print_on_change)
         self.atutes.set(options[0])
         OptionMenu.__init__(self, master, self.atutes, *options)
 
-    def print_on_change(self, *_args):
-        print(self.get_atutes())
-
     def get_atutes(self):
+        """
+        Retrieve current value of AP drop-down.
+        """
         return self.atutes.get()

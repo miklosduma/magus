@@ -259,8 +259,8 @@ class CharacterAddButton(Button):
         # Get name, ep and fp fields
         try:
             name = self.name.get_validated()
-            ep = self.ep_fp.ep_field.get_validated(min_val=1)
-            fp = self.ep_fp.fp_field.get_validated(min_val=1)
+            max_ep = self.ep_fp.ep_field.get_validated(min_val=1)
+            max_fp = self.ep_fp.fp_field.get_validated(min_val=1)
             sfe_map = self.sfe.retrieve_sfe_map()
 
         except FieldValidationError as error:
@@ -274,7 +274,7 @@ class CharacterAddButton(Button):
 
         # Add new character. Addition fails if character already exists.
         success, msg = self.karakterek.add_karakter(
-            name, ep, sfe_map, fp=fp)
+            name, max_ep, sfe_map, fp=max_fp)
 
         if not success:
             msg = ALREADY_ADDED.format(name)
@@ -338,7 +338,7 @@ class SfePartFrameLimb(SfePartFrame):
         """
         result = []
         for bp_tuple in body_parts:
-            text, right_part, left_part = bp_tuple
+            _text, right_part, left_part = bp_tuple
             result.append(right_part)
             result.append(left_part)
         return result

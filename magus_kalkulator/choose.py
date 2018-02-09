@@ -1,3 +1,7 @@
+"""
+Functions to calculate seriousness of damage and choose associated handicap.
+"""
+
 from __future__ import division
 
 import magus_kalkulator.magus_constants as mgc
@@ -77,8 +81,7 @@ def calculate_seriousness(damage, max_ep, thresholds):
     elif damage < vegzetes:
         return 3
 
-    else:
-        return 4
+    return 4
 
 
 def calculate_penalty(ep_damage, max_ep, wtype, mainpart, subpart):

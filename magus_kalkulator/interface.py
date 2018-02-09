@@ -1,3 +1,8 @@
+"""
+Main interface window and top-level components, such as the messages panel
+and the tabs frame.
+"""
+
 from tkinter import ttk, Text, END, DISABLED, NORMAL, N
 
 from magus_kalkulator.karakterek import Karakterek
@@ -99,7 +104,15 @@ class MyTabs(ttk.Notebook):
 
 
 class GuiMessage(Text):
+    """
+    Class for the main message panel.
+    """
     def __init__(self, master):
+        """
+        Initialise main message panel.
+
+        Its master must be the root element.
+        """
         Text.__init__(self, master, bg=MESSAGE_BOX_COLOUR,
                       width=TAB_PANEL_WIDTH)
         self.insert(END, TEXT_START)

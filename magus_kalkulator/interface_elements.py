@@ -1,3 +1,7 @@
+"""
+Generic, reusable interface elements and constants.
+"""
+
 from tkinter import Entry, StringVar, W, N, ttk, Label
 from magus_kalkulator.validate import FieldValidationError, validate_integer
 

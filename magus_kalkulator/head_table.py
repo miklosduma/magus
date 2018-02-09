@@ -1,3 +1,7 @@
+"""
+Table containing all penalties per weapon-type/seriousness/hit target.
+"""
+
 import magus_kalkulator.magus_constants as mgc
 
 FEJ_THRESHOLDS = [75, 50, 34, 17]
