@@ -225,7 +225,6 @@ class ButtonsFrame(ttk.LabelFrame):
     def __init__(self, master):
         ttk.LabelFrame.__init__(self, master, text=BUTTONS_FRAME_TITLE)
         self.master = master
-        self.messages = self.master.messages
         self.add_button = Button(self, text=ADD_BUTTON)
         self.add_button.bind('<Button-1>', self.add_character)
         self.get_button = Button(self, text=GET_BUTTON)
@@ -247,7 +246,7 @@ class ButtonsFrame(ttk.LabelFrame):
             msg = CHARACTERS_ADDED.format(
                 '\n'.join(all_characters))
 
-        self.messages.write_message(msg)
+        self.master.messages.write_message(msg)
 
     def add_character(self, _event):
         """
@@ -265,7 +264,7 @@ class ButtonsFrame(ttk.LabelFrame):
             sfe_map = self.master.sfe_frame.retrieve_sfe_map()
 
         except FieldValidationError as error:
-            self.messages.write_message(error.message)
+            self.master.messages.write_message(error.message)
             return
 
         # Add exceptional sfe values to map using specified key
@@ -285,16 +284,7 @@ class ButtonsFrame(ttk.LabelFrame):
             new_char = self.master.karakterek.get_karakter(name)
             print(new_char.max_ep, new_char.max_fp, new_char.sfe)
 
-        self.messages.write_message(msg)
-
-
-class SfePartFrameNotLimb(SfePartFrame):
-    """
-    Frame child type of main sfe frame. E.g. Torso or Head frame.
-    """
-    def __init__(self, master, text, body_parts):
-        SfePartFrame.__init__(self, master, text, SFE_SHORTCUT_LABEL,
-                              body_parts)
+        self.master.messages.write_message(msg)
 
 
 class SfePartFrameLimb(SfePartFrame):
