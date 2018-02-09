@@ -30,6 +30,8 @@ NEV_LABEL = 'Nev'
 SFE_FRAME_TITLE = 'SFE'
 SFE_LABEL = 'Max SFE'
 
+RIGHT_LEFT_LABEL = 'Jobb/Bal'
+
 SFE_SHORTCUT_LABEL = 'Mindenhol'
 
 SFE_FEJ_LABEL = 'Fej SFE'
@@ -266,7 +268,8 @@ class CharacterAddButton(Button):
             return
 
         # Add exceptional sfe values to map using specified key
-        sfe_map = copy_value_to_keys(sfe_map, 'Mellkas', 'Jkulcs', 'Bkulcs')
+        sfe_map = copy_value_to_keys(sfe_map, mgc.CHEST, mgc.RCOLLARBONE,
+                                     mgc.LCOLLARBONE)
         sfe_map = insert_torso_back_armour(sfe_map)
 
         # Add new character. Addition fails if character already exists.
@@ -349,7 +352,7 @@ class SfePartFrameLimb(SfePartFrame):
         row = 1
 
         # Jobb and Bal label added one level higher than fields to the right
-        jobb_bal = Label(self, text='Jobb/Bal')
+        jobb_bal = Label(self, text=RIGHT_LEFT_LABEL)
         jobb_bal.grid(row=row, column=column + 1)
 
         # Place everything below Jobb/Bal label

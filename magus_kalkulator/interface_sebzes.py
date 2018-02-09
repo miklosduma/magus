@@ -18,6 +18,11 @@ SELECT_WEAPON = 'Tamado fegyver'
 DAMAGE_TEXT = 'Sebzes'
 TULUTES_TEXT = 'Tulutes'
 ATUTES_TEXT = 'Atutes'
+HIT_LABEL = 'Talalat helye'
+FROM_BACK_LABEL = 'Hatulrol'
+ANYWHERE = 'Barhol'
+MAIN_PART_LABEL = 'Fo testresz'
+SUB_PART_LABEL = 'Al testresz'
 
 NO_CHARACTER = 'Valassz karaktert!'
 
@@ -26,11 +31,16 @@ WEAPON_TYPES = [mgc.THRUST, mgc.SLASH, mgc.BLUDGEON, mgc.BITE, mgc.CLAW]
 
 ATUTES_VALUES = [0, 1, 2, 3, 4, 5]
 
+EP_LOSS_KEY = 'ep_loss'
+FP_LOSS_KEY = 'fp_loss'
+HIT_KEY = 'hit_target'
+PENALTY_KEY = 'penalty'
+
 KEY_TEXT_DICT = {
-    'ep_loss': 'EP veszteseg',
-    'fp_loss': 'FP veszteseg',
-    'hit_target': 'Talalati hely',
-    'penalty': 'Hatrany'
+    EP_LOSS_KEY: 'EP veszteseg',
+    FP_LOSS_KEY: 'FP veszteseg',
+    HIT_KEY: 'Talalati hely',
+    PENALTY_KEY: 'Hatrany'
 }
 
 
@@ -198,7 +208,7 @@ class PiercingFrame(ttk.LabelFrame):
 
 class ChooseBodyPartFrame(ttk.LabelFrame):
     def __init__(self, master):
-        ttk.LabelFrame.__init__(self, master, text='Talalat helye')
+        ttk.LabelFrame.__init__(self, master, text=HIT_LABEL)
 
         self.main_body_frame = ChooseMainBodyPartFrame(self)
         self.from_behind_box = FromBehind(self)
@@ -212,13 +222,13 @@ class ChooseBodyPartFrame(ttk.LabelFrame):
     def get_targeted(self):
         main_part = self.main_body_frame.main_body_part.get()
 
-        if main_part == 'Barhol':
-            return '', ''
+        if main_part == ANYWHERE:
+            return None, None
 
         sub_part = self.sub_body_frame.selected_sub_part
 
         if not sub_part:
-            return main_part, ''
+            return main_part, None
 
         return main_part, sub_part
 
@@ -232,17 +242,12 @@ class FromBehind(Checkbutton):
         self.tick = IntVar()
         self.tick.set(0)
         self.state = self.tick.get()
-        Checkbutton.__init__(self, master, text='Hatulrol',
-                             variable=self.tick, command=self.print_on_change)
+        Checkbutton.__init__(self, master, text=FROM_BACK_LABEL,
+                             variable=self.tick, command=self.set_state)
 
-    def print_on_change(self, *_args):
-        self.main_body_frame.main_body_part.set('Barhol')
+    def set_state(self, *_args):
+        self.main_body_frame.main_body_part.set(ANYWHERE)
         self.state = self.tick.get()
-
-        if self.state:
-            print('Selected')
-        else:
-            print('Unselected')
 
     def get_from_behind(self):
         return self.tick.get()
@@ -250,12 +255,12 @@ class FromBehind(Checkbutton):
 
 class ChooseMainBodyPartFrame(ttk.LabelFrame):
     def __init__(self, master):
-        ttk.LabelFrame.__init__(self, master, text='Fo testresz')
+        ttk.LabelFrame.__init__(self, master, text=MAIN_PART_LABEL)
         self.main_body_part = StringVar()
-        self.main_body_part.set('Barhol')
+        self.main_body_part.set(ANYWHERE)
         self.main_body_parts = OptionMenu(self,
                                           self.main_body_part,
-                                          *['Barhol', mgc.HEAD, mgc.TORSO,
+                                          *[ANYWHERE, mgc.HEAD, mgc.TORSO,
                                             mgc.RARM, mgc.LARM, mgc.RLEG,
                                             mgc.LLEG])
         self.main_body_parts.grid()
@@ -263,7 +268,7 @@ class ChooseMainBodyPartFrame(ttk.LabelFrame):
 
 class ChooseSubBodyPartFrame(ttk.LabelFrame):
     def __init__(self, master, main_body_frame):
-        ttk.LabelFrame.__init__(self, master, text='Al testresz')
+        ttk.LabelFrame.__init__(self, master, text=SUB_PART_LABEL)
         self.master = master
         self.selected_sub_parts = None
         self.selected_sub_part = None
@@ -271,9 +276,11 @@ class ChooseSubBodyPartFrame(ttk.LabelFrame):
         self.main_body_part = main_body_frame.main_body_part
         self.main_body_part.trace('w', self._follow_main_bodypart)
         self.sub_body_part = StringVar()
-        self.sub_body_part.set('Barhol')
+        self.sub_body_part.set(ANYWHERE)
         self.sub_body_part.trace('w', self._follow_sub_part)
-        self.sub_body_parts = OptionMenu(self, self.sub_body_part, *['Barhol'])
+        self.sub_body_parts = OptionMenu(self,
+                                         self.sub_body_part,
+                                         *[ANYWHERE])
         self.sub_body_parts.grid()
 
     def _follow_sub_part(self, *_args):
@@ -288,7 +295,7 @@ class ChooseSubBodyPartFrame(ttk.LabelFrame):
         """
         selected_sub_part = self.sub_body_part.get()
 
-        if selected_sub_part and selected_sub_part != 'Barhol':
+        if selected_sub_part and selected_sub_part != ANYWHERE:
             self.selected_sub_part = [x for x in self.selected_sub_parts
                                       if selected_sub_part in x][0]
         else:
@@ -311,7 +318,7 @@ class ChooseSubBodyPartFrame(ttk.LabelFrame):
             body_list_map = BODY_LISTS_DICT
 
         # Calculate options for sub part dropdown if a main part is selected.
-        if selected_main_body_part != 'Barhol':
+        if selected_main_body_part != ANYWHERE:
             [_main_part, sub_parts] = body_list_map[selected_main_body_part]
 
             # Sub parts are a list of lists with two elements
@@ -320,12 +327,12 @@ class ChooseSubBodyPartFrame(ttk.LabelFrame):
             print(self.selected_sub_parts)
 
             # Only use the second element of sub body part for options
-            choices = ['Barhol'] + [x[1] for x in sub_parts]
+            choices = [ANYWHERE] + [x[1] for x in sub_parts]
 
-        # If no main body part is selected, sub parts can only be Barhol.
+        # If no main body part is selected, sub parts can only be ANYWHERE.
         else:
             self.selected_sub_parts = None
-            choices = ['Barhol']
+            choices = [ANYWHERE]
 
         # Update drop-down menu with choices.
         self._update(choices)
@@ -341,7 +348,7 @@ class ChooseSubBodyPartFrame(ttk.LabelFrame):
             menu.add_command(label=value,
                              command=lambda v=value: self.sub_body_part.set(v))
 
-        # Set dropdown to first element in list. ('Barhol')
+        # Set dropdown to first element in list. (ANYWHERE)
         self.sub_body_part.set(list_of_choices[0])
 
 
@@ -483,18 +490,9 @@ class SebzesButton(Button):
 
         is_from_behind = self.body_frame.is_from_behind()
         main_part, sub_parts = self.body_frame.get_targeted()
-        key_word_args = {}
 
-        if is_from_behind:
-            key_word_args['from_behind'] = True
-
-        if main_part:
-            key_word_args['main_part'] = main_part
-
-        if sub_parts:
-            key_word_args['sub_part'] = sub_parts
-
-        body_parts_list = pick_sub_parts(**key_word_args)
+        body_parts_list = pick_sub_parts(from_behind=is_from_behind,
+                                         main_part=main_part, sub_part=sub_parts)
 
         attacking_weapon = self.weapon_frame.get_weapon()
         success, attacked = self.choose_frame.get_selected()
@@ -531,15 +529,10 @@ class TulutesBox(Checkbutton):
         self.state = self.tick.get()
         Checkbutton.__init__(self, master, text=TULUTES_TEXT,
                              variable=self.tick,
-                             command=self.print_on_change)
+                             command=self.save_state)
 
-    def print_on_change(self, *_args):
+    def save_state(self, *_args):
         self.state = self.tick.get()
-
-        if self.state:
-            print('Selected')
-        else:
-            print('Unselected')
 
     def get_tulutes(self):
         return self.tick.get()
