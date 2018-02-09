@@ -1,3 +1,7 @@
+"""
+Tests for choosing penalty.
+"""
+
 import pytest
 
 from magus_kalkulator import magus_constants as mgc
@@ -8,7 +12,7 @@ from magus_kalkulator.torso_table import TORZS_TABLA, TORZS_THRESHOLDS
 from magus_kalkulator.head_table import FEJ_TABLA, FEJ_THRESHOLDS
 from magus_kalkulator.limbs_table import VEGTAG_TABLA, VEGTAG_THRESHOLDS
 
-test_data_penalty = [
+TEST_DATA_PENALTY = [
     (TORZS_TABLA, mgc.SLASH, mgc.CHEST, 1, ['gyv', 'zh', 'gyf', 'k6']),
     (FEJ_TABLA, mgc.THRUST, mgc.FACE, 0, 'nincs hatrany'),
     (VEGTAG_TABLA, mgc.BLUDGEON, mgc.RARM, 4, 'maradando benulas'),
@@ -18,7 +22,8 @@ test_data_penalty = [
 ]
 
 
-@pytest.mark.parametrize('table,wp_type,target,index,expected', test_data_penalty)
+@pytest.mark.parametrize('table,wp_type,target,index,expected',
+                         TEST_DATA_PENALTY)
 def test_pick_penalty(table, wp_type, target, index, expected):
     """
     Expects the correct penalties to be chosen.
@@ -27,12 +32,12 @@ def test_pick_penalty(table, wp_type, target, index, expected):
     assert result == expected
 
 
-test_data_threshold = [
+TEST_DATA_THRESHOLD = [
     (13, 17, 2)
 ]
 
 
-@pytest.mark.parametrize('max_ep,threshold,expected', test_data_threshold)
+@pytest.mark.parametrize('max_ep,threshold,expected', TEST_DATA_THRESHOLD)
 def test_get_threshold(max_ep, threshold, expected):
     """
     Expects the correct penalties to be chosen.
@@ -41,7 +46,7 @@ def test_get_threshold(max_ep, threshold, expected):
     assert result == expected
 
 
-test_data_seriousness = [
+TEST_DATA_SERIOUSNESS = [
     (1, 13, FEJ_THRESHOLDS, 0),
     (3, 13, FEJ_THRESHOLDS, 1),
     (4, 13, FEJ_THRESHOLDS, 2),
@@ -60,7 +65,7 @@ test_data_seriousness = [
 
 
 @pytest.mark.parametrize('damage,max_ep,thresholds,expected',
-                         test_data_seriousness)
+                         TEST_DATA_SERIOUSNESS)
 def test_calculate_seriousness(damage, max_ep, thresholds, expected):
     """
     Expects the correct penalties to be chosen.
