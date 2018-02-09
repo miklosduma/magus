@@ -1,3 +1,7 @@
+"""
+Main module for individual character class and characters master class.
+"""
+
 from __future__ import print_function
 
 
@@ -64,7 +68,7 @@ class Karakterek:
         """
         try:
             return self.karakterek[name]
-        except KeyError as error:
+        except KeyError:
             return 'Nincs ilyen karakter!'
 
     def delete_karakter(self, name):

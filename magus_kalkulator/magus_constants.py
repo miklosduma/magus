@@ -1,3 +1,7 @@
+"""
+Generic constants.
+"""
+
 # Head parts
 HEAD = 'Fej'
 
