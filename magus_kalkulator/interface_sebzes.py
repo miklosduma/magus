@@ -243,7 +243,10 @@ class DamageFrame(ttk.LabelFrame):
         """
         ttk.LabelFrame.__init__(self, master, text=DAMAGE_TEXT)
         self.damage = CharacterValueField(self, validate_integer)
-        self.tulutes = TulutesBox(self)
+        self.critical_state = IntVar()
+        self.critical_state.set(0)
+        self.tulutes = Checkbutton(self, text=TULUTES_TEXT,
+                                   variable=self.critical_state)
         self.damage.grid(row=0, column=0)
         self.tulutes.grid(row=0, column=1)
 
@@ -264,7 +267,7 @@ class DamageFrame(ttk.LabelFrame):
         """
         Checks whether the critical tick-box is checked.
         """
-        return self.tulutes.get_tulutes()
+        return self.critical_state.get()
 
 
 class PiercingFrame(ttk.LabelFrame):
@@ -297,7 +300,12 @@ class ChooseBodyPartFrame(ttk.LabelFrame):
         ttk.LabelFrame.__init__(self, master, text=HIT_LABEL)
 
         self.main_body_frame = ChooseMainBodyPartFrame(self)
-        self.from_behind_box = FromBehind(self)
+        self.behind_state = IntVar()
+        self.behind_state.set(0)
+        self.from_behind_box = Checkbutton(self, text=FROM_BACK_LABEL,
+                                           variable=self.behind_state,
+                                           command=self.set_state)
+
         self.from_behind_box.grid(row=0, column=0, sticky=(N, W))
 
         self.main_body_frame.grid(row=1, column=0)
@@ -321,28 +329,6 @@ class ChooseBodyPartFrame(ttk.LabelFrame):
 
         return main_part, sub_part
 
-    def is_from_behind(self):
-        """
-        Gets the state of the from-behind tick-box.
-        """
-        return self.from_behind_box.get_from_behind()
-
-
-class FromBehind(Checkbutton):
-    """
-    Tick-box for attacks from behind.
-    """
-    def __init__(self, master):
-        """
-        Initialise tick-box.
-        """
-        self.main_body_frame = master.main_body_frame
-        self.tick = IntVar()
-        self.tick.set(0)
-        self.state = self.tick.get()
-        Checkbutton.__init__(self, master, text=FROM_BACK_LABEL,
-                             variable=self.tick, command=self.set_state)
-
     def set_state(self, *_args):
         """
         Set the state based on tick-box being selected or not.
@@ -351,13 +337,12 @@ class FromBehind(Checkbutton):
         the front or vice versa.
         """
         self.main_body_frame.main_body_part.set(ANYWHERE)
-        self.state = self.tick.get()
 
-    def get_from_behind(self):
+    def is_from_behind(self):
         """
-        Returns state of tick-box.
+        Gets the state of the from-behind tick-box.
         """
-        return self.tick.get()
+        return self.behind_state.get()
 
 
 class ChooseMainBodyPartFrame(ttk.LabelFrame):
@@ -558,32 +543,7 @@ class SebzesButton(Button):
         self.messages.write_message(msg)
 
 
-class TulutesBox(Checkbutton):
-    """
-    Tick-box for critical hits.
-    """
-    def __init__(self, master):
-        """
-        Init button.
-        """
-        self.tick = IntVar()
-        self.tick.set(0)
-        self.state = self.tick.get()
-        Checkbutton.__init__(self, master, text=TULUTES_TEXT,
-                             variable=self.tick,
-                             command=self.save_state)
 
-    def save_state(self, *_args):
-        """
-        Saves state.
-        """
-        self.state = self.tick.get()
-
-    def get_tulutes(self):
-        """
-        Gets currently selected value.
-        """
-        return self.tick.get()
 
 
 class AtutesMenu(OptionMenu):
