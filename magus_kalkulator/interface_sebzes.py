@@ -599,8 +599,7 @@ class SebzesButton(Button):
             self.messages.write_message(attacked)
             return
 
-        max_ep = self.karakterek.get_karakter(attacked).max_ep
-        sfe = self.karakterek.get_karakter(attacked).sfe
+        character = self.karakterek.get_karakter(attacked)
 
         success, result = self.main_panel.damage_frame.get_damage()
 
@@ -608,13 +607,11 @@ class SebzesButton(Button):
             self.messages.write_message(result)
             return
 
-        damage = result
-
         tulutes = self.main_panel.damage_frame.is_critical()
         atutes = self.main_panel.piercing_frame.get_piercing()
 
-        penalty = return_penalty(sfe, damage, body_parts_list, max_ep,
-                                 attacking_weapon,
+        penalty = return_penalty(character.sfe, result, body_parts_list,
+                                 character.max_ep, attacking_weapon,
                                  tulutes=tulutes, atutes=atutes)
         msg = format_damage_msg(penalty)
         self.messages.write_message(msg)
