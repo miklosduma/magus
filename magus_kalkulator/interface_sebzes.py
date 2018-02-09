@@ -150,7 +150,7 @@ class CharacterPanel(ttk.PanedWindow):
         self.choose_frame = ChooseCharacterFrame(self, self.master.karakterek)
         self.weapon_frame = WeaponTypeFrame(self)
         self.damage_frame = DamageFrame(self)
-        self.piercing_frame = PiercingFrame(self)
+        self.piercing_frame = PiercingFrame(self, ATUTES_VALUES)
         self.body_parts_frame = ChooseBodyPartFrame(self)
 
         organize_rows_to_left([self.choose_frame, self.weapon_frame,
@@ -274,19 +274,21 @@ class PiercingFrame(ttk.LabelFrame):
     """
     Frame comprising the armour-piercing value drop-down.
     """
-    def __init__(self, master):
+    def __init__(self, master, piercing_values):
         """
         Initialises frame.
         """
         ttk.LabelFrame.__init__(self, master, text=ATUTES_TEXT)
-        self.piercing_menu = AtutesMenu(self, *ATUTES_VALUES)
+        self.piercing = IntVar()
+        self.piercing.set(piercing_values[0])
+        self.piercing_menu = OptionMenu(self, self.piercing, *piercing_values)
         self.piercing_menu.grid()
 
     def get_piercing(self):
         """
         Retrieves value of AP drop-down.
         """
-        return self.piercing_menu.get_atutes()
+        return self.piercing.get()
 
 
 class ChooseBodyPartFrame(ttk.LabelFrame):
@@ -541,25 +543,3 @@ class SebzesButton(Button):
                                  tulutes=tulutes, atutes=atutes)
         msg = format_damage_msg(penalty)
         self.messages.write_message(msg)
-
-
-
-
-
-class AtutesMenu(OptionMenu):
-    """
-    Armour piercing menu.
-    """
-    def __init__(self, master, *options):
-        """
-        Init menu.
-        """
-        self.atutes = IntVar()
-        self.atutes.set(options[0])
-        OptionMenu.__init__(self, master, self.atutes, *options)
-
-    def get_atutes(self):
-        """
-        Retrieve current value of AP drop-down.
-        """
-        return self.atutes.get()
