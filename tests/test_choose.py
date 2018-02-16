@@ -74,15 +74,45 @@ def test_calculate_seriousness(damage, max_ep, thresholds, expected):
     assert result == expected
 
 
-test_data_penalty = [
-    (3, 13, mgc.THRUST, mgc.RARM, mgc.RARM, ['mv', 'tb*', 'mf']),
-    (7, 14, mgc.SLASH, mgc.TORSO, mgc.CHEST, ['mv', 'jh', 'mf']),
-    (11, 15, mgc.THRUST, mgc.HEAD, mgc.SKULL, 'halal')
+TEST_DATA_PENALTY_MAP = [
+
+    {
+        'damage': 3,
+        'max_ep': 13,
+        'wtype': mgc.THRUST,
+        'mainpart': mgc.RARM,
+        'subpart': mgc.RARM,
+        'expected': ['mv', 'tb*', 'mf']},
+
+    {
+        'damage': 7,
+        'max_ep': 14,
+        'wtype': mgc.SLASH,
+        'mainpart': mgc.TORSO,
+        'subpart': mgc.CHEST,
+        'expected': ['mv', 'jh', 'mf']},
+
+    {
+        'damage': 11,
+        'max_ep': 15,
+        'wtype': mgc.THRUST,
+        'mainpart': mgc.HEAD,
+        'subpart': mgc.SKULL,
+        'expected': 'halal'}
 ]
 
 
-@pytest.mark.parametrize('damage,max_ep,wtype,mainpart,subpart,expected',
-                         test_data_penalty)
-def test_calculate_penalty(damage, max_ep, wtype, mainpart, subpart, expected):
+@pytest.mark.parametrize('data_map',
+                         TEST_DATA_PENALTY_MAP)
+def test_calculate_penalty(data_map):
+    """
+    Tests full round penalty calculation.
+    """
+    damage = data_map['damage']
+    max_ep = data_map['max_ep']
+    wtype = data_map['wtype']
+    mainpart = data_map['mainpart']
+    subpart = data_map['subpart']
+
     result = calculate_penalty(damage, max_ep, wtype, mainpart, subpart)
-    assert result == expected
+    assert result == data_map['expected']

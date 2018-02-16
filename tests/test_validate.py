@@ -1,9 +1,13 @@
+"""
+Tests field validation for strings and integers.
+"""
+
 import pytest
 from magus_kalkulator.validate import (validate_integer, validate_string,
                                        FieldValidationError)
 
 
-test_data_validate_int = [
+TEST_DATA_VALIDATE_INT = [
     ('foo', {}, 'Nem szam: foo'),
     (-1, {}, 'Adj meg egy szamot 0 es 99 kozott!'),
     ('0', {'min_val': 1}, 'Adj meg egy szamot 1 es 99 kozott!'),
@@ -15,8 +19,11 @@ test_data_validate_int = [
 
 
 @pytest.mark.parametrize('value,kwargs,expected',
-                         test_data_validate_int)
+                         TEST_DATA_VALIDATE_INT)
 def test_validate_int(value, expected, kwargs):
+    """
+    Tests integer type field validation.
+    """
     try:
         result = validate_integer(value, **kwargs)
         assert result == expected
@@ -25,7 +32,7 @@ def test_validate_int(value, expected, kwargs):
         assert error.message == expected
 
 
-test_data_validate_string = [
+TEST_DATA_VALIDATE_STRING = [
     ('foo', {}, 'foo'),
     ('', {}, 'Tolts ki minden mezot!'),
     ('b', {'min_length': 1}, 'b'),
@@ -37,8 +44,11 @@ test_data_validate_string = [
 
 
 @pytest.mark.parametrize('value,kwargs,expected',
-                         test_data_validate_string)
+                         TEST_DATA_VALIDATE_STRING)
 def test_validate_str(value, expected, kwargs):
+    """
+    Tests string type field validation.
+    """
     try:
         result = validate_string(value, **kwargs)
         assert result == expected

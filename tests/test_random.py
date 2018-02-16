@@ -1,3 +1,7 @@
+"""
+Tests random selection of body parts.
+"""
+
 from magus_kalkulator.random_body import pick_sub_parts
 
 

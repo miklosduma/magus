@@ -1,3 +1,7 @@
+"""
+Tests creation and modification of characters.
+"""
+
 from magus_kalkulator.karakterek import Karakter, Karakterek
 
 
@@ -5,26 +9,26 @@ def test_new_karakter_no_fp():
     """
     Tests creation of new character.
     """
-    foo = Karakter('Foo', 13, 3)
-    assert foo.name == 'Foo'
-    assert foo.max_ep == 13
-    assert foo.akt_ep == 13
-    assert foo.sfe == 3
-    assert not foo.akt_fp
-    assert not foo.max_fp
+    vimes = Karakter('Vimes', 13, 3)
+    assert vimes.name == 'Vimes'
+    assert vimes.max_ep == 13
+    assert vimes.akt_ep == 13
+    assert vimes.sfe == 3
+    assert not vimes.akt_fp
+    assert not vimes.max_fp
 
 
 def test_new_karakter_fp():
     """
     Tests creation of new character.
     """
-    bar = Karakter('Bar', 15, 0, fp=33)
-    assert bar.name == 'Bar'
-    assert bar.max_ep == 15
-    assert bar.akt_ep == 15
-    assert bar.sfe == 0
-    assert bar.akt_fp == 33
-    assert bar.max_fp == 33
+    granny = Karakter('Granny', 15, 0, fp=33)
+    assert granny.name == 'Granny'
+    assert granny.max_ep == 15
+    assert granny.akt_ep == 15
+    assert granny.sfe == 0
+    assert granny.akt_fp == 33
+    assert granny.max_fp == 33
 
 
 def test_karakterek():

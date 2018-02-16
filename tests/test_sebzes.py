@@ -1,9 +1,13 @@
+"""
+Tests damage calculation.
+"""
+
 import pytest
 from magus_kalkulator.sebzes import calculate_damage, return_penalty
 from magus_kalkulator import magus_constants as mgc
 
 
-test_data_calculate = [
+TEST_DATA_CALCULATE = [
     (7, 13, 2, True, (8, 16)),
     (3, 21, 1, False, (3, 19)),
     (3, 2, 1, False, (0, 0)),
@@ -11,7 +15,7 @@ test_data_calculate = [
     (0, 7, 2, False, (1, 7))
 ]
 
-test_sfe_map = {
+TEST_SFE_MAP = {
     'Bboka': 4, 'Jfelkar': 4, 'Jlabszar': 4, 'Bkulcs': 4, 'Jlabfej': 4,
     'Has': 4, 'Jvall': 4, 'Jkonyok': 4, 'Bcomb': 4, 'Nyak': 4, 'Jkezfej': 4,
     'Jterd': 4, 'Bcsuklo': 4, 'Bkonyok': 4, 'Balkar': 4, 'Jkulcs': 4,
@@ -22,14 +26,22 @@ test_sfe_map = {
 
 
 @pytest.mark.parametrize('sfe,damage,atutes,tulutes,expected',
-                         test_data_calculate)
+                         TEST_DATA_CALCULATE)
 def test_calculate_damage(sfe, damage, atutes, tulutes, expected):
+    """
+    Tests damage calculation using sfe, damage, etc and a randomly-picked
+    body part.
+    """
     result = calculate_damage(sfe, damage, atutes, tulutes=tulutes)
     assert result == expected
 
 
 def test_return_penalty():
-    result = return_penalty(test_sfe_map, 21,
+    """
+    Tests the penalty returned on hitting a specific body part
+    with pre-specified damage.
+    """
+    result = return_penalty(TEST_SFE_MAP, 21,
                             ('Fej', 'Koponya', 'Koponya'),
                             14, mgc.THRUST, atutes=3)
     expected_keys = ['ep_loss', 'fp_loss', 'hit_target', 'penalty']
