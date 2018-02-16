@@ -55,11 +55,12 @@ def get_sfe_per_part(sfe_map, bp_list):
     return sfe
 
 
-def return_penalty(sfe, damage, body_parts_list, max_ep, wtype,
-                   tulutes=False, atutes=0):
+def return_penalty(sfe, damage, body_parts_list, max_ep, wtype, **kwargs):
     """
     Gets the penalty associated with a damage.
     """
+    tulutes = kwargs.get('tulutes', False)
+    atutes = kwargs.get('atutes', 0)
     sfe = get_sfe_per_part(sfe, body_parts_list)
     main_part, penalty_part, sfe_part = body_parts_list
     ep_loss, fp_loss = calculate_damage(sfe, damage, atutes, tulutes=tulutes)
