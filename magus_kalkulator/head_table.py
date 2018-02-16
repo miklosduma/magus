@@ -35,6 +35,7 @@ FEJ_TABLA = {
             "halal"
         ]
     },
+
     mgc.THRUST:
     {
         mgc.FACE:
