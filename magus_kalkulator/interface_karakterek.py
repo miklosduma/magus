@@ -274,7 +274,7 @@ class ButtonsFrame(ttk.LabelFrame):
 
         # Add new character. Addition fails if character already exists.
         success, msg = self.master.karakterek.add_karakter(
-            name, max_ep, sfe_map, fp=max_fp)
+            name, max_ep, sfe_map, max_fp=max_fp)
 
         if not success:
             msg = ALREADY_ADDED.format(name)

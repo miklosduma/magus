@@ -22,7 +22,7 @@ def test_new_karakter_fp():
     """
     Tests creation of new character.
     """
-    granny = Karakter('Granny', 15, 0, fp=33)
+    granny = Karakter('Granny', 15, 0, max_fp=33)
     assert granny.name == 'Granny'
     assert granny.max_ep == 15
     assert granny.akt_ep == 15
@@ -54,7 +54,7 @@ def test_karakterek():
     assert sam.sfe == 5
 
     # Add second character with fp
-    karakterek.add_karakter('Esme', 13, 0, fp=44)
+    karakterek.add_karakter('Esme', 13, 0, max_fp=44)
     esme = karakterek.get_karakter('Esme')
     assert esme.name == 'Esme'
     assert esme.akt_fp == 44

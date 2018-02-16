@@ -9,7 +9,7 @@ class Karakter:
     """
     Class for adding individual characters.
     """
-    def __init__(self, name, ep, sfe, fp=None):
+    def __init__(self, name, max_ep, sfe, max_fp=None):
         """
         Initialising new character.
             - name:
@@ -26,10 +26,10 @@ class Karakter:
                 to set akt_fp. Undeads and similar have no FP
         """
         self.name = name
-        self.max_ep = ep
-        self.akt_ep = ep
-        self.max_fp = fp
-        self.akt_fp = fp
+        self.max_ep = max_ep
+        self.akt_ep = max_ep
+        self.max_fp = max_fp
+        self.akt_fp = max_fp
         self.sfe = sfe
 
 
@@ -43,7 +43,7 @@ class Karakterek:
         """
         self.karakterek = {}
 
-    def add_karakter(self, name, ep, sfe, fp=None):
+    def add_karakter(self, name, max_ep, sfe, max_fp=None):
         """
         Adds a new character to the characters map.
         The param 'name' is also used as the key of the new
@@ -57,7 +57,7 @@ class Karakterek:
             return False, 'Karakter mar letezik!'
 
         # Create new character and add to characters map using name as key
-        self.karakter = Karakter(name, ep, sfe, fp)
+        self.karakter = Karakter(name, max_ep, sfe, max_fp)
         self.karakterek[self.karakter.name] = self.karakter
         return True, 'Karakter hozzaadva!'
 
