@@ -57,8 +57,8 @@ class Karakterek:
             return False, 'Karakter mar letezik!'
 
         # Create new character and add to characters map using name as key
-        self.karakter = Karakter(name, max_ep, sfe, max_fp)
-        self.karakterek[self.karakter.name] = self.karakter
+        karakter = Karakter(name, max_ep, sfe, max_fp)
+        self.karakterek[karakter.name] = karakter
         return True, 'Karakter hozzaadva!'
 
     def get_karakter(self, name):
