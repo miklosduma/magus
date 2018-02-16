@@ -28,7 +28,7 @@ pep:
 .PHONY: pylint
 pylint:
 	python3 -m pylint tests/*.py
-	python3 -m pylint magus_kalkulator/*.py --disable=too-many-ancestors
+	python3 -m pylint magus_kalkulator/*.py --disable=too-many-ancestors --disable=too-few-public-methods
 	
 
 	
