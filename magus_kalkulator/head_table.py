@@ -13,24 +13,24 @@ FEJ_TABLA = {
         mgc.FACE:
         [
             "nincs hatrany",
-            ["gyv", "zh", "mf", "k6"],
-            ["mv", "jh", "mf"],
-            ["mv(b)", "vh", "hf"],
+            ["gyv", mgc.SLIGHT_HANDICAP, "mf", "k6"],
+            ["mv", mgc.SEVERE_HANDICAP, "mf"],
+            ["mv(b)", mgc.CRITICAL_HANDICAP, "hf"],
             "halal"
         ],
         mgc.NECK:
         [
             "nincs hatrany",
-            ["mv", "zh", "gyf", "k6"],
-            ["hv", "vh", "mf"],
+            ["mv", mgc.SLIGHT_HANDICAP, "gyf", "k6"],
+            ["hv", mgc.CRITICAL_HANDICAP, "mf"],
             ["hv", "tb", "mf"],
             "halal"
         ],
         mgc.SKULL:
         [
             "nincs hatrany",
-            ["gyv", "zh", "gyf", "k6"],
-            ["mv", "jh", "mf"],
+            ["gyv", mgc.SLIGHT_HANDICAP, "gyf", "k6"],
+            ["mv", mgc.SEVERE_HANDICAP, "mf"],
             ["mv(b)", "ajulas"],
             "halal"
         ]
@@ -41,25 +41,25 @@ FEJ_TABLA = {
         mgc.FACE:
         [
             "nincs hatrany",
-            ["gyv", "zh", "gyf", "k6"],
-            ["gyv", "jh", "mf"],
-            ["gyv(b)", "vh", "hf"],
+            ["gyv", mgc.SLIGHT_HANDICAP, "gyf", "k6"],
+            ["gyv", mgc.SEVERE_HANDICAP, "mf"],
+            ["gyv(b)", mgc.CRITICAL_HANDICAP, "hf"],
             "halal"
         ],
         mgc.NECK:
         [
             "nincs hatrany",
-            ["mv", "zh", "k6"],
-            ["mv", "jh"],
+            ["mv", mgc.SLIGHT_HANDICAP, "k6"],
+            ["mv", mgc.SEVERE_HANDICAP],
             ["hv", "tb"],
             "halal"
         ],
         mgc.SKULL:
         [
             "nincs hatrany",
-            ["gyv", "zh", "gyf", "k6"],
-            ["gyv", "jh", "mf"],
-            ["mv(b)", "vh", "hf"],
+            ["gyv", mgc.SLIGHT_HANDICAP, "gyf", "k6"],
+            ["gyv", mgc.SEVERE_HANDICAP, "mf"],
+            ["mv(b)", mgc.CRITICAL_HANDICAP, "hf"],
             "halal"
         ]
     },
@@ -69,24 +69,24 @@ FEJ_TABLA = {
         mgc.FACE:
         [
             "nincs hatrany",
-            ["gyv", "jh", "mf", "k6"],
-            ["gyv", "kabulat", "zh", "mf"],
+            ["gyv", mgc.SEVERE_HANDICAP, "mf", "k6"],
+            ["gyv", "kabulat", mgc.SLIGHT_HANDICAP, "mf"],
             ["mv(b)", "ajulas"],
             "halal"
         ],
         mgc.NECK:
         [
             "nincs hatrany",
-            ["zh", "rosszullet"],
-            ["kabulat", "zh", "mf"],
-            ["mv(b)", "vh", "mf"],
+            [mgc.SLIGHT_HANDICAP, "rosszullet"],
+            ["kabulat", mgc.SLIGHT_HANDICAP, "mf"],
+            ["mv(b)", mgc.CRITICAL_HANDICAP, "mf"],
             "halal"
         ],
         mgc.SKULL:
         [
             "nincs hatrany",
-            ["zh", "gyf"],
-            ["kabulat", "zh", "mf"],
+            [mgc.SLIGHT_HANDICAP, "gyf"],
+            ["kabulat", mgc.SLIGHT_HANDICAP, "mf"],
             ["mv(b)", "ajulas"],
             "halal"
         ]
@@ -96,24 +96,24 @@ FEJ_TABLA = {
         mgc.FACE:
         [
             "nincs hatrany",
-            ["gyv", "jh", "mf", "k6"],
-            ["mv", "kabulat", "zh", "mf"],
+            ["gyv", mgc.SEVERE_HANDICAP, "mf", "k6"],
+            ["mv", "kabulat", mgc.SLIGHT_HANDICAP, "mf"],
             ["mv(b)", "ajulas"],
             "halal"
         ],
         mgc.NECK:
         [
             "nincs hatrany",
-            ["gyv", "zh", "gyf", "k6"],
-            ["mv", "kabulat", "zh", "mf"],
+            ["gyv", mgc.SLIGHT_HANDICAP, "gyf", "k6"],
+            ["mv", "kabulat", mgc.SLIGHT_HANDICAP, "mf"],
             ["hv", "tb", "hf"],
             "halal"
         ],
         mgc.SKULL:
         [
             "nincs hatrany",
-            ["gyv", "zh", "gyf", "k6"],
-            ["gyv", "kabulat", "zh", "mf"],
+            ["gyv", mgc.SLIGHT_HANDICAP, "gyf", "k6"],
+            ["gyv", "kabulat", mgc.SLIGHT_HANDICAP, "mf"],
             ["mv(b)", "ajulas"],
             "halal"
         ]
@@ -123,24 +123,24 @@ FEJ_TABLA = {
         mgc.FACE:
         [
             "nincs hatrany",
-            ["gyv", "zh", "mf", "k6"],
-            ["gyv", "kabulat", "zh", "mf"],
-            ["mv", "vh", "hf"],
+            ["gyv", mgc.SLIGHT_HANDICAP, "mf", "k6"],
+            ["gyv", "kabulat", mgc.SLIGHT_HANDICAP, "mf"],
+            ["mv", mgc.CRITICAL_HANDICAP, "hf"],
             "halal"
         ],
         mgc.NECK:
         [
             "nincs hatrany",
-            ["gyv", "zh", "gyf", "k6"],
-            ["mv", "kabulat", "zh", "mf"],
+            ["gyv", mgc.SLIGHT_HANDICAP, "gyf", "k6"],
+            ["mv", "kabulat", mgc.SLIGHT_HANDICAP, "mf"],
             ["hv", "tb", "mf"],
             "halal"
         ],
         mgc.SKULL:
         [
             "nincs hatrany",
-            ["gyv", "zh", "gyf", "k6"],
-            ["gyv", "kabulat", "zh", "mf"],
+            ["gyv", mgc.SLIGHT_HANDICAP, "gyf", "k6"],
+            ["gyv", "kabulat", mgc.SLIGHT_HANDICAP, "mf"],
             ["mv(b)", "ajulas"],
             "halal"
         ]

@@ -12,7 +12,7 @@ VEGTAG_TABLA = {
     {
         mgc.RLEG:
         [
-            'nincs hatrany',
+            mgc.NULL_HANDICAP,
             ['gyv', '80%'],
             ['gyf', 'rb*', 'gyf', '60%'],
             ['mv', 'tb*', '30%'],
@@ -20,7 +20,7 @@ VEGTAG_TABLA = {
         ],
         mgc.LLEG:
         [
-            'nincs hatrany',
+            mgc.NULL_HANDICAP,
             ['gyv', '80%'],
             ['gyf', 'rb*', 'gyf', '60%'],
             ['mv', 'tb*', '30%'],
@@ -28,7 +28,7 @@ VEGTAG_TABLA = {
         ],
         mgc.RARM:
         [
-            'nincs hatrany',
+            mgc.NULL_HANDICAP,
             'gyv',
             ['gyv', 'rb*', 'gyf'],
             ['mv', 'tb*', 'mf'],
@@ -37,7 +37,7 @@ VEGTAG_TABLA = {
 
         mgc.LARM:
         [
-            'nincs hatrany',
+            mgc.NULL_HANDICAP,
             'gyv',
             ['gyv', 'rb*', 'gyf'],
             ['mv', 'tb*', 'mf'],
@@ -48,7 +48,7 @@ VEGTAG_TABLA = {
     {
         mgc.RLEG:
         [
-            'nincs hatrany',
+            mgc.NULL_HANDICAP,
             ['k6', '80%'],
             ['gyv', 'rb*', '60%'],
             ['gyv', 'tb*', 'mf', '40%'],
@@ -56,7 +56,7 @@ VEGTAG_TABLA = {
         ],
         mgc.LLEG:
         [
-            'nincs hatrany',
+            mgc.NULL_HANDICAP,
             ['k6', '80%'],
             ['gyv', 'rb*', '60%'],
             ['gyv', 'tb*', 'mf', '40%'],
@@ -64,8 +64,8 @@ VEGTAG_TABLA = {
         ],
         mgc.RARM:
         [
-            'nincs hatrany',
-            ['gyv', 'zh*'],
+            mgc.NULL_HANDICAP,
+            ['gyv', mgc.SLIGHT_HANDICAP_1],
             ['gyv', 'rb*', 'gyf'],
             ['mv', 'tb*', 'mf'],
             'csonkolas'
@@ -73,8 +73,8 @@ VEGTAG_TABLA = {
 
         mgc.LARM:
         [
-            'nincs hatrany',
-            ['gyv', 'zh*'],
+            mgc.NULL_HANDICAP,
+            ['gyv', mgc.SLIGHT_HANDICAP_1],
             ['gyv', 'rb*', 'gyf'],
             ['mv', 'tb*', 'mf'],
             'csonkolas'
@@ -85,24 +85,24 @@ VEGTAG_TABLA = {
     {
         mgc.RLEG:
         [
-            'nincs hatrany',
-            ['zh', '80%'],
+            mgc.NULL_HANDICAP,
+            [mgc.SLIGHT_HANDICAP, '80%'],
             ['gyf', 'rb*', '50%'],
             ['tb*', 'mf', '30%'],
             'maradando benulas'
         ],
         mgc.LLEG:
         [
-            'nincs hatrany',
-            ['zh', '80%'],
+            mgc.NULL_HANDICAP,
+            [mgc.SLIGHT_HANDICAP, '80%'],
             ['gyf', 'rb*', '50%'],
             ['tb*', 'mf', '30%'],
             'maradando benulas'
         ],
         mgc.RARM:
         [
-            'nincs hatrany',
-            'zh*',
+            mgc.NULL_HANDICAP,
+            mgc.SLIGHT_HANDICAP_1,
             ['rb*', 'gyf'],
             ['gyv', 'tb*', 'mf'],
             'maradando benulas'
@@ -110,8 +110,8 @@ VEGTAG_TABLA = {
 
         mgc.LARM:
         [
-            'nincs hatrany',
-            'zh*',
+            mgc.NULL_HANDICAP,
+            mgc.SLIGHT_HANDICAP_1,
             ['rb*', 'gyf'],
             ['gyv', 'tb*', 'mf'],
             'maradando benulas'
@@ -121,7 +121,7 @@ VEGTAG_TABLA = {
     {
         mgc.RLEG:
         [
-            'nincs hatrany',
+            mgc.NULL_HANDICAP,
             ['gyv', '90%'],
             ['gyv', 'rb*', 'gyf', '60%'],
             ['mv', 'tb*', 'gyf', '30%'],
@@ -129,7 +129,7 @@ VEGTAG_TABLA = {
         ],
         mgc.LLEG:
         [
-            'nincs hatrany',
+            mgc.NULL_HANDICAP,
             ['gyv', '90%'],
             ['gyv', 'rb*', 'gyf', '60%'],
             ['mv', 'tb*', 'gyf', '30%'],
@@ -137,7 +137,7 @@ VEGTAG_TABLA = {
         ],
         mgc.RARM:
         [
-            'nincs hatrany',
+            mgc.NULL_HANDICAP,
             ['gyv', 'k6'],
             ['gyv', 'rb*', 'gyf'],
             ['mv', 'tb*', 'mf'],
@@ -146,7 +146,7 @@ VEGTAG_TABLA = {
 
         mgc.LARM:
         [
-            'nincs hatrany',
+            mgc.NULL_HANDICAP,
             ['gyv', 'k6'],
             ['gyv', 'rb*', 'gyf'],
             ['mv', 'tb*', 'mf'],
@@ -157,7 +157,7 @@ VEGTAG_TABLA = {
     {
         mgc.RLEG:
         [
-            'nincs hatrany',
+            mgc.NULL_HANDICAP,
             ['k6', '90%'],
             ['gyv', 'rb*', 'gyf', '50%'],
             ['mv', 'tb*', 'mf', '30%'],
@@ -165,7 +165,7 @@ VEGTAG_TABLA = {
         ],
         mgc.LLEG:
         [
-            'nincs hatrany',
+            mgc.NULL_HANDICAP,
             ['k6', '90%'],
             ['gyv', 'rb*', 'gyf', '50%'],
             ['mv', 'tb*', 'mf', '30%'],
@@ -173,8 +173,8 @@ VEGTAG_TABLA = {
         ],
         mgc.RARM:
         [
-            'nincs hatrany',
-            ['gyv', 'zh*'],
+            mgc.NULL_HANDICAP,
+            ['gyv', mgc.SLIGHT_HANDICAP_1],
             ['gyv', 'rb*', 'gyf'],
             ['mv', 'tb*', 'mf'],
             'csonkolas'
@@ -182,8 +182,8 @@ VEGTAG_TABLA = {
 
         mgc.LARM:
         [
-            'nincs hatrany',
-            ['gyv', 'zh*'],
+            mgc.NULL_HANDICAP,
+            ['gyv', mgc.SLIGHT_HANDICAP_1],
             ['gyv', 'rb*', 'gyf'],
             ['mv', 'tb*', 'mf'],
             'csonkolas'

@@ -135,3 +135,13 @@ SLASH = 'Vagas'
 BLUDGEON = 'Zuzas'
 BITE = 'Harapas'
 CLAW = 'Karmolas'
+
+# Penalties
+HANDICAP = 'Hatrany'
+NULL_HANDICAP = 'Nincs hatrany'
+SLIGHT_HANDICAP = 'Zavaro hatrany'
+SLIGHT_HANDICAP_1 = 'Zavaro hatrany az adott oldalon'
+SEVERE_HANDICAP = 'Jelentos hatrany'
+SEVERE_HANDICAP_1 = 'Jelentos hatrany az adott oldalon'
+CRITICAL_HANDICAP = 'Vegzetes hatrany'
+
