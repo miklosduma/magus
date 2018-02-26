@@ -28,7 +28,7 @@ ANYWHERE = 'Barhol'
 MAIN_PART_LABEL = 'Fo testresz'
 SUB_PART_LABEL = 'Al testresz'
 
-MSG_TAB = 2
+MSG_TAB = 4
 
 NO_CHARACTER = 'Valassz karaktert!'
 
@@ -104,23 +104,14 @@ def format_list_msg(key, list_value):
     Formats a key/value pair where the value
     is a list.
 
-    The values are all inserted on a new line,
-    positioned relative to the key.
+    Each list element is placed on a new line, they are
+    all indented by a specified tab.
     """
+    separator = '\n'
+    for _i in range(0, MSG_TAB):
+        separator += ' '
 
-    # Position is calculated based on length of the key,
-    # +2 because of a colon, and mandatory space.
-    position = len(key) + 2
-
-    # Add space characters based on position.
-    space_chars = ''
-
-    for _i in range(0, position):
-        space_chars += ' '
-
-    # Separator is new line + spaces.
-    separator = '\n{}'.format(space_chars)
-    return separator.join(list_value)
+    return '{}{}'.format(separator, separator.join(list_value))
 
 
 def format_damage_msg(penalty_dict):
