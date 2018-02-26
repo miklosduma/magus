@@ -99,7 +99,7 @@ BODY_LISTS_DICT_BEHIND = {
 }
 
 
-def format_list_msg(key, list_value):
+def format_list_msg(list_value):
     """
     Formats a key/value pair where the value
     is a list.
@@ -127,7 +127,7 @@ def format_damage_msg(penalty_dict):
         key = KEY_TEXT_DICT[key]
 
         if isinstance(value, list):
-            value = format_list_msg(key, value)
+            value = format_list_msg(value)
 
         msg += '{}: {}\n'.format(key, value)
 
