@@ -144,4 +144,3 @@ SLIGHT_HANDICAP_1 = 'Zavaro hatrany az adott oldalon'
 SEVERE_HANDICAP = 'Jelentos hatrany'
 SEVERE_HANDICAP_1 = 'Jelentos hatrany az adott oldalon'
 CRITICAL_HANDICAP = 'Vegzetes hatrany'
-

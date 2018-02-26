@@ -28,6 +28,8 @@ ANYWHERE = 'Barhol'
 MAIN_PART_LABEL = 'Fo testresz'
 SUB_PART_LABEL = 'Al testresz'
 
+MSG_TAB = 2
+
 NO_CHARACTER = 'Valassz karaktert!'
 
 # Types of attacking weapons. Used when calculating the damage
@@ -97,6 +99,30 @@ BODY_LISTS_DICT_BEHIND = {
 }
 
 
+def format_list_msg(key, list_value):
+    """
+    Formats a key/value pair where the value
+    is a list.
+
+    The values are all inserted on a new line,
+    positioned relative to the key.
+    """
+
+    # Position is calculated based on length of the key,
+    # +2 because of a colon, and mandatory space.
+    position = len(key) + 2
+
+    # Add space characters based on position.
+    space_chars = ''
+
+    for _i in range(0, position):
+        space_chars += ' '
+
+    # Separator is new line + spaces.
+    separator = '\n{}'.format(space_chars)
+    return separator.join(list_value)
+
+
 def format_damage_msg(penalty_dict):
     """
     Formats message returned on
@@ -106,10 +132,13 @@ def format_damage_msg(penalty_dict):
 
     for key, value in sorted(penalty_dict.items()):
 
-        if isinstance(value, list):
-            value = ', '.join(value)
+        # Replace actual key with key text.
+        key = KEY_TEXT_DICT[key]
 
-        msg += '{}: {}\n'.format(KEY_TEXT_DICT[key], value)
+        if isinstance(value, list):
+            value = format_list_msg(key, value)
+
+        msg += '{}: {}\n'.format(key, value)
 
     return msg.strip()
 

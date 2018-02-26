@@ -13,7 +13,8 @@ from magus_kalkulator.head_table import FEJ_TABLA, FEJ_THRESHOLDS
 from magus_kalkulator.limbs_table import VEGTAG_TABLA, VEGTAG_THRESHOLDS
 
 TEST_DATA_PENALTY = [
-    (TORZS_TABLA, mgc.SLASH, mgc.CHEST, 1, ['gyv', mgc.SLIGHT_HANDICAP, 'gyf', 'k6']),
+    (TORZS_TABLA, mgc.SLASH, mgc.CHEST, 1, ['gyv', mgc.SLIGHT_HANDICAP,
+                                            'gyf', 'k6']),
     (FEJ_TABLA, mgc.THRUST, mgc.FACE, 0, 'nincs hatrany'),
     (VEGTAG_TABLA, mgc.BLUDGEON, mgc.RARM, 4, 'maradando benulas'),
     (VEGTAG_TABLA, 'Foo', mgc.RARM, 4, ('key_error', 'Foo')),
