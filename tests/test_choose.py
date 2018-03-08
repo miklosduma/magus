@@ -16,7 +16,7 @@ TEST_DATA_PENALTY = [
     (TORZS_TABLA, mgc.SLASH, mgc.CHEST, 1, [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP,
                                             mgc.SLIGHT_PAIN, mgc.EXTRA_K6]),
     (FEJ_TABLA, mgc.THRUST, mgc.FACE, 0, mgc.NULL_HANDICAP),
-    (VEGTAG_TABLA, mgc.BLUDGEON, mgc.RARM, 4, 'maradando benulas'),
+    (VEGTAG_TABLA, mgc.BLUDGEON, mgc.RARM, 4, mgc.LIMB_PARALYSIS),
     (VEGTAG_TABLA, 'Foo', mgc.RARM, 4, ('key_error', 'Foo')),
     (TORZS_TABLA, mgc.SLASH, mgc.CHEST, 5, ('index_error',
                                             'list index out of range'))
@@ -99,7 +99,7 @@ TEST_DATA_PENALTY_MAP = [
         'wtype': mgc.THRUST,
         'mainpart': mgc.HEAD,
         'subpart': mgc.SKULL,
-        'expected': 'halal'}
+        'expected': mgc.DEATH}
 ]
 
 

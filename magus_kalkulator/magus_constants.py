@@ -165,3 +165,46 @@ SEVERE_PAIN = 'Heves fajdalom'
 # Extra damage
 EXTRA_K6 = '+k6 fp veszteseg'
 EXTRA_K10 = '+k10 fp veszteseg'
+
+# Speed reductions
+REDUCE_10 = 'Haladasi sebesseg 10%'
+REDUCE_20 = 'Haladasi sebesseg 20%'
+REDUCE_30 = 'Haladasi sebesseg 30%'
+REDUCE_40 = 'Haladasi sebesseg 40%'
+REDUCE_50 = 'Haladasi sebesseg 50%'
+REDUCE_60 = 'Haladasi sebesseg 60%'
+REDUCE_70 = 'Haladasi sebesseg 70%'
+REDUCE_80 = 'Haladasi sebesseg 80%'
+REDUCE_90 = 'Haladasi sebesseg 90%'
+
+# Extra conditions
+NAUSEA = 'Rosszullet'
+DAZE = 'Kabulat'
+DAZE_1_SLIGHT_HANDICAP = '1 kor kabulat utan zavaro hatrany'
+DAZE_2_SLIGHT_HANDICAP = '2 kor kabulat utan zavaro hatrany'
+FAINTING = 'Ajulas'
+DEATH = 'Halal'
+MAIMING = 'Csonkolas'
+LIMB_PARALYSIS = 'Vegtag maradando benulasa'
+
+# Diseases
+DISEASE = 'Betegseg'
+HEART_FAILURE = 'Szivbenulas'
+LUNG_ATROPHY = 'Tudosorvadas'
+GUT_ATROPHY = 'Belsorvadas'
+
+
+DISEASE_MAP = {
+    BREASTBONE: '{}, {}'.format(HEART_FAILURE, LUNG_ATROPHY),
+    SPINE_LOWER: '{}, {}'.format(HEART_FAILURE, LUNG_ATROPHY),
+    SPINE_UPPER: '{}, {}'.format(HEART_FAILURE, LUNG_ATROPHY),
+    LBACK: '{}, {}'.format(HEART_FAILURE, LUNG_ATROPHY),
+    HEART: HEART_FAILURE,
+    LSHOULDERBLADE: HEART_FAILURE,
+    LUNGS: LUNG_ATROPHY,
+    RSHOULDERBLADE: LUNG_ATROPHY,
+    RBACK: LUNG_ATROPHY,
+    CARDIA: GUT_ATROPHY,
+    STOMACH: GUT_ATROPHY,
+    RWAIST: GUT_ATROPHY,
+    LWAIST: GUT_ATROPHY}

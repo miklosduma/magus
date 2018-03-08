@@ -558,8 +558,9 @@ class SebzesButton(Button):
         tulutes = self.main_panel.damage_frame.is_critical()
         atutes = self.main_panel.piercing_frame.get_piercing()
 
-        penalty = return_penalty(character.sfe, result, body_parts_list,
+        result = return_penalty(character.sfe, result, body_parts_list,
                                  character.max_ep, attacking_weapon,
                                  tulutes=tulutes, atutes=atutes)
-        msg = format_damage_msg(penalty)
+
+        msg = format_damage_msg(result)
         self.messages.write_message(msg)

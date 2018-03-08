@@ -16,7 +16,7 @@ FEJ_TABLA = {
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.MODERATE_PAIN, mgc.EXTRA_K6],
             [mgc.MODERATE_BLEEDING, mgc.SEVERE_HANDICAP, mgc.MODERATE_PAIN],
             [mgc.MODERATE_BLEEDING_INT, mgc.CRITICAL_HANDICAP, mgc.SEVERE_PAIN],
-            "halal"
+            mgc.DEATH
         ],
         mgc.NECK:
         [
@@ -24,15 +24,15 @@ FEJ_TABLA = {
             [mgc.MODERATE_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.SLIGHT_PAIN, mgc.EXTRA_K6],
             [mgc.SEVERE_BLEEDING, mgc.CRITICAL_HANDICAP, mgc.MODERATE_PAIN],
             [mgc.SEVERE_BLEEDING, mgc.NUMBNESS, mgc.MODERATE_PAIN],
-            "halal"
+            mgc.DEATH
         ],
         mgc.SKULL:
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.SLIGHT_PAIN, mgc.EXTRA_K6],
             [mgc.MODERATE_BLEEDING, mgc.SEVERE_HANDICAP, mgc.MODERATE_PAIN],
-            [mgc.MODERATE_BLEEDING_INT, "ajulas"],
-            "halal"
+            [mgc.MODERATE_BLEEDING_INT, mgc.FAINTING],
+            mgc.DEATH
         ]
     },
 
@@ -44,7 +44,7 @@ FEJ_TABLA = {
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.SLIGHT_PAIN, mgc.EXTRA_K6],
             [mgc.SLIGHT_BLEEDING, mgc.SEVERE_HANDICAP, mgc.MODERATE_PAIN],
             [mgc.SLIGHT_BLEEDING_INT, mgc.CRITICAL_HANDICAP, mgc.SEVERE_PAIN],
-            "halal"
+            mgc.DEATH
         ],
         mgc.NECK:
         [
@@ -52,7 +52,7 @@ FEJ_TABLA = {
             [mgc.MODERATE_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.EXTRA_K6],
             [mgc.MODERATE_BLEEDING, mgc.SEVERE_HANDICAP],
             [mgc.SEVERE_BLEEDING, mgc.NUMBNESS],
-            "halal"
+            mgc.DEATH
         ],
         mgc.SKULL:
         [
@@ -60,7 +60,7 @@ FEJ_TABLA = {
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.SLIGHT_PAIN, mgc.EXTRA_K6],
             [mgc.SLIGHT_BLEEDING, mgc.SEVERE_HANDICAP, mgc.MODERATE_PAIN],
             [mgc.MODERATE_BLEEDING_INT, mgc.CRITICAL_HANDICAP, mgc.SEVERE_PAIN],
-            "halal"
+            mgc.DEATH
         ]
     },
 
@@ -70,25 +70,25 @@ FEJ_TABLA = {
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SEVERE_HANDICAP, mgc.MODERATE_PAIN, mgc.EXTRA_K6],
-            [mgc.SLIGHT_BLEEDING, "kabulat", mgc.SLIGHT_HANDICAP, mgc.MODERATE_PAIN],
-            [mgc.MODERATE_BLEEDING_INT, "ajulas"],
-            "halal"
+            [mgc.SLIGHT_BLEEDING, mgc.DAZE, mgc.SLIGHT_HANDICAP, mgc.MODERATE_PAIN],
+            [mgc.MODERATE_BLEEDING_INT, mgc.FAINTING],
+            mgc.DEATH
         ],
         mgc.NECK:
         [
             mgc.NULL_HANDICAP,
-            [mgc.SLIGHT_HANDICAP, "rosszullet"],
-            ["kabulat", mgc.SLIGHT_HANDICAP, mgc.MODERATE_PAIN],
+            [mgc.SLIGHT_HANDICAP, mgc.NAUSEA],
+            [mgc.DAZE, mgc.SLIGHT_HANDICAP, mgc.MODERATE_PAIN],
             [mgc.MODERATE_BLEEDING_INT, mgc.CRITICAL_HANDICAP, mgc.MODERATE_PAIN],
-            "halal"
+            mgc.DEATH
         ],
         mgc.SKULL:
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_HANDICAP, mgc.SLIGHT_PAIN],
-            ["kabulat", mgc.SLIGHT_HANDICAP, mgc.MODERATE_PAIN],
-            [mgc.MODERATE_BLEEDING_INT, "ajulas"],
-            "halal"
+            [mgc.DAZE, mgc.SLIGHT_HANDICAP, mgc.MODERATE_PAIN],
+            [mgc.MODERATE_BLEEDING_INT, mgc.FAINTING],
+            mgc.DEATH
         ]
     },
     mgc.CLAW:
@@ -97,25 +97,25 @@ FEJ_TABLA = {
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SEVERE_HANDICAP, mgc.MODERATE_PAIN, mgc.EXTRA_K6],
-            [mgc.MODERATE_BLEEDING, "kabulat", mgc.SLIGHT_HANDICAP, mgc.MODERATE_PAIN],
-            [mgc.MODERATE_BLEEDING_INT, "ajulas"],
-            "halal"
+            [mgc.MODERATE_BLEEDING, mgc.DAZE, mgc.SLIGHT_HANDICAP, mgc.MODERATE_PAIN],
+            [mgc.MODERATE_BLEEDING_INT, mgc.FAINTING],
+            mgc.DEATH
         ],
         mgc.NECK:
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.SLIGHT_PAIN, mgc.EXTRA_K6],
-            [mgc.MODERATE_BLEEDING, "kabulat", mgc.SLIGHT_HANDICAP, mgc.MODERATE_PAIN],
+            [mgc.MODERATE_BLEEDING, mgc.DAZE, mgc.SLIGHT_HANDICAP, mgc.MODERATE_PAIN],
             [mgc.SEVERE_BLEEDING, mgc.NUMBNESS, mgc.SEVERE_PAIN],
-            "halal"
+            mgc.DEATH
         ],
         mgc.SKULL:
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.SLIGHT_PAIN, mgc.EXTRA_K6],
-            [mgc.SLIGHT_BLEEDING, "kabulat", mgc.SLIGHT_HANDICAP, mgc.MODERATE_PAIN],
-            [mgc.MODERATE_BLEEDING_INT, "ajulas"],
-            "halal"
+            [mgc.SLIGHT_BLEEDING, mgc.DAZE, mgc.SLIGHT_HANDICAP, mgc.MODERATE_PAIN],
+            [mgc.MODERATE_BLEEDING_INT, mgc.FAINTING],
+            mgc.DEATH
         ]
     },
     mgc.BITE:
@@ -124,25 +124,25 @@ FEJ_TABLA = {
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.MODERATE_PAIN, mgc.EXTRA_K6],
-            [mgc.SLIGHT_BLEEDING, "kabulat", mgc.SLIGHT_HANDICAP, mgc.MODERATE_PAIN],
+            [mgc.SLIGHT_BLEEDING, mgc.DAZE, mgc.SLIGHT_HANDICAP, mgc.MODERATE_PAIN],
             [mgc.MODERATE_BLEEDING, mgc.CRITICAL_HANDICAP, mgc.SEVERE_PAIN],
-            "halal"
+            mgc.DEATH
         ],
         mgc.NECK:
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.SLIGHT_PAIN, mgc.EXTRA_K6],
-            [mgc.MODERATE_BLEEDING, "kabulat", mgc.SLIGHT_HANDICAP, mgc.MODERATE_PAIN],
+            [mgc.MODERATE_BLEEDING, mgc.DAZE, mgc.SLIGHT_HANDICAP, mgc.MODERATE_PAIN],
             [mgc.SEVERE_BLEEDING, mgc.NUMBNESS, mgc.MODERATE_PAIN],
-            "halal"
+            mgc.DEATH
         ],
         mgc.SKULL:
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.SLIGHT_PAIN, mgc.EXTRA_K6],
-            [mgc.SLIGHT_BLEEDING, "kabulat", mgc.SLIGHT_HANDICAP, mgc.MODERATE_PAIN],
-            [mgc.MODERATE_BLEEDING_INT, "ajulas"],
-            "halal"
+            [mgc.SLIGHT_BLEEDING, mgc.DAZE, mgc.SLIGHT_HANDICAP, mgc.MODERATE_PAIN],
+            [mgc.MODERATE_BLEEDING_INT, mgc.FAINTING],
+            mgc.DEATH
         ]
     }
 }

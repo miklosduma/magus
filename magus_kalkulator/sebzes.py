@@ -7,6 +7,7 @@ from __future__ import division
 import math
 
 from magus_kalkulator.choose import calculate_penalty
+import magus_kalkulator.magus_constants as mgc
 
 
 def calculate_damage(sfe, damage, atutes, tulutes=False):
@@ -55,6 +56,22 @@ def get_sfe_per_part(sfe_map, bp_list):
     return sfe
 
 
+def add_disease(penalties, sub_body_part):
+
+    penalties = [x for x in penalties if x != mgc.DISEASE]
+
+    # It may happen that depending on the damage and main part
+    # a disease is possible but the sub part hit does not have
+    # any sickness associated with it, in this case the disease
+    # is only deleted from the penalties
+    try:
+        disease = mgc.DISEASE_MAP[sub_body_part]
+        return penalties + [disease]
+
+    except KeyError:
+        return penalties
+
+
 def return_penalty(sfe, damage, body_parts_list, max_ep, wtype, **kwargs):
     """
     Gets the penalty associated with a damage.
@@ -64,9 +81,13 @@ def return_penalty(sfe, damage, body_parts_list, max_ep, wtype, **kwargs):
     sfe = get_sfe_per_part(sfe, body_parts_list)
     main_part, penalty_part, sfe_part = body_parts_list
     ep_loss, fp_loss = calculate_damage(sfe, damage, atutes, tulutes=tulutes)
-    result = calculate_penalty(ep_loss, max_ep, wtype, main_part, penalty_part)
+    penalties = calculate_penalty(ep_loss, max_ep, wtype, main_part, penalty_part)
+
+    if mgc.DISEASE in penalties:
+        penalties = add_disease(penalties, sfe_part)
+
     return {
         'ep_loss': ep_loss,
         'fp_loss': fp_loss,
         'hit_target': [main_part, penalty_part, sfe_part],
-        'penalty': result}
+        'penalty': penalties}
