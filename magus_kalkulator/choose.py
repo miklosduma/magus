@@ -36,7 +36,8 @@ REPLACEMENTS_MINOR = {
 
 REPLACEMENTS_MAJOR = {
     mgc.SPINE: [
-        [mgc.SHOULDERBLADE, mgc.RSHOULDERBLADE], [mgc.SHOULDERBLADE, mgc.LSHOULDERBLADE],
+        [mgc.SHOULDERBLADE, mgc.RSHOULDERBLADE],
+        [mgc.SHOULDERBLADE, mgc.LSHOULDERBLADE],
         [mgc.BACK, mgc.RBACK], [mgc.BACK, mgc.LBACK],
         [mgc.WAIST, mgc.RWAIST], [mgc.WAIST, mgc.LWAIST],
         [mgc.BUTTOCKS, mgc.RBUTTOCKS], [mgc.BUTTOCKS, mgc.LBUTTOCKS]]}
@@ -117,11 +118,13 @@ def replace_smallest_part(body_part):
 
 def replace_sub_part(body_part):
     [subpart, smallestpart] = random.choice(REPLACEMENTS_MAJOR[body_part])
-    print('Replacing {} with {} and {}'.format(body_part, subpart, smallestpart))
+    print('Replacing {} with {} and {}'.format(body_part,
+                                               subpart,
+                                               smallestpart))
     return subpart, smallestpart
 
 
-def calculate_penalty(ep_damage, max_ep, wtype, mainpart, subpart, smallest_part):
+def calculate_penalty(ep_damage, max_ep, wtype, bodyparts):
     """
     Calculates the penalty based on:
         - max_ep:
@@ -130,11 +133,10 @@ def calculate_penalty(ep_damage, max_ep, wtype, mainpart, subpart, smallest_part
             The suffered EP damage
         - wtype:
             The type of attacking weapon
-        - mainpart:
-            E.g. Torzs/Jlab/Fej
-        - subpart:
-            E.g. Halantek/Gyomorszaj/etc
+        - bodyparts:
+            A tuple of body parts (e.g. Torso/Back/Right Back)
     """
+    mainpart, subpart, smallest_part = bodyparts
     thresholds = THRESHOLDS_PER_PART[mainpart]
     rank = calculate_seriousness(ep_damage, max_ep, thresholds)
 

@@ -559,8 +559,8 @@ class SebzesButton(Button):
         atutes = self.main_panel.piercing_frame.get_piercing()
 
         result = return_penalty(character.sfe, result, body_parts_list,
-                                 character.max_ep, attacking_weapon,
-                                 tulutes=tulutes, atutes=atutes)
+                                character.max_ep, attacking_weapon,
+                                tulutes=tulutes, atutes=atutes)
 
         msg = format_damage_msg(result)
         self.messages.write_message(msg)

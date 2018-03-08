@@ -86,8 +86,10 @@ def return_penalty(sfe, damage, body_parts_list, max_ep, wtype, **kwargs):
     sfe = get_sfe_per_part(sfe, body_parts_list)
     main_part, penalty_part, sfe_part = body_parts_list
     ep_loss, fp_loss = calculate_damage(sfe, damage, atutes, tulutes=tulutes)
-    rank, penalties, sfe_part = calculate_penalty(ep_loss, max_ep,
-                                                  wtype, main_part, penalty_part, sfe_part)
+    rank, penalties, sfe_part = calculate_penalty(ep_loss,
+                                                  max_ep,
+                                                  wtype,
+                                                  body_parts_list)
 
     if mgc.DISEASE in penalties:
         penalties = add_disease(penalties, sfe_part, rank)

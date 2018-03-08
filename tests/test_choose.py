@@ -83,6 +83,7 @@ TEST_DATA_PENALTY_MAP = [
         'wtype': mgc.THRUST,
         'mainpart': mgc.RARM,
         'subpart': mgc.RARM,
+        'smallest': mgc.RLOWERARM,
         'expected': [mgc.MODERATE_BLEEDING, mgc.NUMBNESS_1, mgc.MODERATE_PAIN]},
 
     {
@@ -91,6 +92,7 @@ TEST_DATA_PENALTY_MAP = [
         'wtype': mgc.SLASH,
         'mainpart': mgc.TORSO,
         'subpart': mgc.CHEST,
+        'smallest': mgc.HEART,
         'expected': [mgc.MODERATE_BLEEDING, mgc.SEVERE_HANDICAP, mgc.MODERATE_PAIN]},
 
     {
@@ -99,6 +101,7 @@ TEST_DATA_PENALTY_MAP = [
         'wtype': mgc.THRUST,
         'mainpart': mgc.HEAD,
         'subpart': mgc.SKULL,
+        'smallest': mgc.FOREHEAD,
         'expected': mgc.DEATH}
 ]
 
@@ -114,6 +117,8 @@ def test_calculate_penalty(data_map):
     wtype = data_map['wtype']
     mainpart = data_map['mainpart']
     subpart = data_map['subpart']
+    smallest = data_map['smallest']
+    bodyparts = (mainpart, subpart, smallest)
 
-    result = calculate_penalty(damage, max_ep, wtype, mainpart, subpart)
-    assert result == data_map['expected']
+    rank, penalty, smallest_part = calculate_penalty(damage, max_ep, wtype, bodyparts)
+    assert penalty == data_map['expected']

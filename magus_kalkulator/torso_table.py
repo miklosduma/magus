@@ -13,23 +13,40 @@ TORZS_TABLA = {
         mgc.COLLARBONE:
         [
             mgc.NULL_HANDICAP,
-            [mgc.MODERATE_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.EXTRA_K6],
-            [mgc.MODERATE_BLEEDING, mgc.PARTIAL_NUMBNESS_1, mgc.MODERATE_PAIN],
-            [mgc.SEVERE_BLEEDING, mgc.NUMBNESS_1, mgc.SEVERE_HANDICAP],
+            [mgc.MODERATE_BLEEDING,
+             mgc.SLIGHT_HANDICAP,
+             mgc.EXTRA_K6],
+            [mgc.MODERATE_BLEEDING,
+             mgc.PARTIAL_NUMBNESS_1,
+             mgc.MODERATE_PAIN],
+            [mgc.SEVERE_BLEEDING,
+             mgc.NUMBNESS_1,
+             mgc.SEVERE_HANDICAP],
             mgc.DEATH
         ],
         mgc.CHEST:
         [
             mgc.NULL_HANDICAP,
-            [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.SLIGHT_PAIN, mgc.EXTRA_K6],
-            [mgc.MODERATE_BLEEDING, mgc.SEVERE_HANDICAP, mgc.MODERATE_PAIN],
-            [mgc.SEVERE_BLEEDING, mgc.CRITICAL_HANDICAP, mgc.MODERATE_PAIN, mgc.DISEASE],
+            [mgc.SLIGHT_BLEEDING,
+             mgc.SLIGHT_HANDICAP,
+             mgc.SLIGHT_PAIN,
+             mgc.EXTRA_K6],
+            [mgc.MODERATE_BLEEDING,
+             mgc.SEVERE_HANDICAP,
+             mgc.MODERATE_PAIN],
+            [mgc.SEVERE_BLEEDING,
+             mgc.CRITICAL_HANDICAP,
+             mgc.MODERATE_PAIN,
+             mgc.DISEASE],
             mgc.DEATH
         ],
         mgc.STOMACH:
         [
             mgc.NULL_HANDICAP,
-            [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.SLIGHT_PAIN, mgc.EXTRA_K6],
+            [mgc.SLIGHT_BLEEDING,
+             mgc.SLIGHT_HANDICAP,
+             mgc.SLIGHT_PAIN,
+             mgc.EXTRA_K6],
             [mgc.MODERATE_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.MODERATE_PAIN, mgc.DISEASE],
             [mgc.SEVERE_BLEEDING, mgc.CRITICAL_HANDICAP, mgc.SEVERE_PAIN, mgc.DISEASE],
             mgc.DEATH
