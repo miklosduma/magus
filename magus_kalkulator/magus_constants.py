@@ -152,3 +152,8 @@ MODERATE_BLEEDING = 'Mersekelt verzes'
 MODERATE_BLEEDING_INT = 'Mersekelt belso verzes'
 SEVERE_BLEEDING = 'Heves verzes'
 SEVERE_BLEEDING_INT = 'Heves belso verzes'
+
+# Pain
+SLIGHT_PAIN = 'Gyenge fajdalom'
+MODERATE_PAIN = 'Mersekelt fajdalom'
+SEVERE_PAIN = 'Heves fajdalom'

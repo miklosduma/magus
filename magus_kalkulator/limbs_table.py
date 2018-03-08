@@ -14,7 +14,7 @@ VEGTAG_TABLA = {
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, '80%'],
-            ['gyf', 'rb*', 'gyf', '60%'],
+            [mgc.SLIGHT_PAIN, 'rb*', mgc.SLIGHT_PAIN, '60%'],
             [mgc.MODERATE_BLEEDING, 'tb*', '30%'],
             'csonkolas'
         ],
@@ -22,7 +22,7 @@ VEGTAG_TABLA = {
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, '80%'],
-            ['gyf', 'rb*', 'gyf', '60%'],
+            [mgc.SLIGHT_PAIN, 'rb*', mgc.SLIGHT_PAIN, '60%'],
             [mgc.MODERATE_BLEEDING, 'tb*', '30%'],
             'csonkolas'
         ],
@@ -30,8 +30,8 @@ VEGTAG_TABLA = {
         [
             mgc.NULL_HANDICAP,
             mgc.SLIGHT_BLEEDING,
-            [mgc.SLIGHT_BLEEDING, 'rb*', 'gyf'],
-            [mgc.MODERATE_BLEEDING, 'tb*', 'mf'],
+            [mgc.SLIGHT_BLEEDING, 'rb*', mgc.SLIGHT_PAIN],
+            [mgc.MODERATE_BLEEDING, 'tb*', mgc.MODERATE_PAIN],
             'csonkolas'
         ],
 
@@ -39,8 +39,8 @@ VEGTAG_TABLA = {
         [
             mgc.NULL_HANDICAP,
             mgc.SLIGHT_BLEEDING,
-            [mgc.SLIGHT_BLEEDING, 'rb*', 'gyf'],
-            [mgc.MODERATE_BLEEDING, 'tb*', 'mf'],
+            [mgc.SLIGHT_BLEEDING, 'rb*', mgc.SLIGHT_PAIN],
+            [mgc.MODERATE_BLEEDING, 'tb*', mgc.MODERATE_PAIN],
             'csonkolas'
         ]
     },
@@ -51,7 +51,7 @@ VEGTAG_TABLA = {
             mgc.NULL_HANDICAP,
             ['k6', '80%'],
             [mgc.SLIGHT_BLEEDING, 'rb*', '60%'],
-            [mgc.SLIGHT_BLEEDING, 'tb*', 'mf', '40%'],
+            [mgc.SLIGHT_BLEEDING, 'tb*', mgc.MODERATE_PAIN, '40%'],
             'maradando benulas'
         ],
         mgc.LLEG:
@@ -59,15 +59,15 @@ VEGTAG_TABLA = {
             mgc.NULL_HANDICAP,
             ['k6', '80%'],
             [mgc.SLIGHT_BLEEDING, 'rb*', '60%'],
-            [mgc.SLIGHT_BLEEDING, 'tb*', 'mf', '40%'],
+            [mgc.SLIGHT_BLEEDING, 'tb*', mgc.MODERATE_PAIN, '40%'],
             'maradando benulas'
         ],
         mgc.RARM:
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP_1],
-            [mgc.SLIGHT_BLEEDING, 'rb*', 'gyf'],
-            [mgc.MODERATE_BLEEDING, 'tb*', 'mf'],
+            [mgc.SLIGHT_BLEEDING, 'rb*', mgc.SLIGHT_PAIN],
+            [mgc.MODERATE_BLEEDING, 'tb*', mgc.MODERATE_PAIN],
             'csonkolas'
         ],
 
@@ -75,8 +75,8 @@ VEGTAG_TABLA = {
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP_1],
-            [mgc.SLIGHT_BLEEDING, 'rb*', 'gyf'],
-            [mgc.MODERATE_BLEEDING, 'tb*', 'mf'],
+            [mgc.SLIGHT_BLEEDING, 'rb*', mgc.SLIGHT_PAIN],
+            [mgc.MODERATE_BLEEDING, 'tb*', mgc.MODERATE_PAIN],
             'csonkolas'
         ]
     },
@@ -87,24 +87,24 @@ VEGTAG_TABLA = {
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_HANDICAP, '80%'],
-            ['gyf', 'rb*', '50%'],
-            ['tb*', 'mf', '30%'],
+            [mgc.SLIGHT_PAIN, 'rb*', '50%'],
+            ['tb*', mgc.MODERATE_PAIN, '30%'],
             'maradando benulas'
         ],
         mgc.LLEG:
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_HANDICAP, '80%'],
-            ['gyf', 'rb*', '50%'],
-            ['tb*', 'mf', '30%'],
+            [mgc.SLIGHT_PAIN, 'rb*', '50%'],
+            ['tb*', mgc.MODERATE_PAIN, '30%'],
             'maradando benulas'
         ],
         mgc.RARM:
         [
             mgc.NULL_HANDICAP,
             mgc.SLIGHT_HANDICAP_1,
-            ['rb*', 'gyf'],
-            [mgc.SLIGHT_BLEEDING, 'tb*', 'mf'],
+            ['rb*', mgc.SLIGHT_PAIN],
+            [mgc.SLIGHT_BLEEDING, 'tb*', mgc.MODERATE_PAIN],
             'maradando benulas'
         ],
 
@@ -112,8 +112,8 @@ VEGTAG_TABLA = {
         [
             mgc.NULL_HANDICAP,
             mgc.SLIGHT_HANDICAP_1,
-            ['rb*', 'gyf'],
-            [mgc.SLIGHT_BLEEDING, 'tb*', 'mf'],
+            ['rb*', mgc.SLIGHT_PAIN],
+            [mgc.SLIGHT_BLEEDING, 'tb*', mgc.MODERATE_PAIN],
             'maradando benulas'
         ]
     },
@@ -123,24 +123,24 @@ VEGTAG_TABLA = {
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, '90%'],
-            [mgc.SLIGHT_BLEEDING, 'rb*', 'gyf', '60%'],
-            [mgc.MODERATE_BLEEDING, 'tb*', 'gyf', '30%'],
+            [mgc.SLIGHT_BLEEDING, 'rb*', mgc.SLIGHT_PAIN, '60%'],
+            [mgc.MODERATE_BLEEDING, 'tb*', mgc.SLIGHT_PAIN, '30%'],
             'maradando benulas'
         ],
         mgc.LLEG:
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, '90%'],
-            [mgc.SLIGHT_BLEEDING, 'rb*', 'gyf', '60%'],
-            [mgc.MODERATE_BLEEDING, 'tb*', 'gyf', '30%'],
+            [mgc.SLIGHT_BLEEDING, 'rb*', mgc.SLIGHT_PAIN, '60%'],
+            [mgc.MODERATE_BLEEDING, 'tb*', mgc.SLIGHT_PAIN, '30%'],
             'maradando benulas'
         ],
         mgc.RARM:
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, 'k6'],
-            [mgc.SLIGHT_BLEEDING, 'rb*', 'gyf'],
-            [mgc.MODERATE_BLEEDING, 'tb*', 'mf'],
+            [mgc.SLIGHT_BLEEDING, 'rb*', mgc.SLIGHT_PAIN],
+            [mgc.MODERATE_BLEEDING, 'tb*', mgc.MODERATE_PAIN],
             'maradando benulas'
         ],
 
@@ -148,8 +148,8 @@ VEGTAG_TABLA = {
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, 'k6'],
-            [mgc.SLIGHT_BLEEDING, 'rb*', 'gyf'],
-            [mgc.MODERATE_BLEEDING, 'tb*', 'mf'],
+            [mgc.SLIGHT_BLEEDING, 'rb*', mgc.SLIGHT_PAIN],
+            [mgc.MODERATE_BLEEDING, 'tb*', mgc.MODERATE_PAIN],
             'maradando benulas'
         ]
     },
@@ -159,24 +159,24 @@ VEGTAG_TABLA = {
         [
             mgc.NULL_HANDICAP,
             ['k6', '90%'],
-            [mgc.SLIGHT_BLEEDING, 'rb*', 'gyf', '50%'],
-            [mgc.MODERATE_BLEEDING, 'tb*', 'mf', '30%'],
+            [mgc.SLIGHT_BLEEDING, 'rb*', mgc.SLIGHT_PAIN, '50%'],
+            [mgc.MODERATE_BLEEDING, 'tb*', mgc.MODERATE_PAIN, '30%'],
             'csonkolas'
         ],
         mgc.LLEG:
         [
             mgc.NULL_HANDICAP,
             ['k6', '90%'],
-            [mgc.SLIGHT_BLEEDING, 'rb*', 'gyf', '50%'],
-            [mgc.MODERATE_BLEEDING, 'tb*', 'mf', '30%'],
+            [mgc.SLIGHT_BLEEDING, 'rb*', mgc.SLIGHT_PAIN, '50%'],
+            [mgc.MODERATE_BLEEDING, 'tb*', mgc.MODERATE_PAIN, '30%'],
             'csonkolas'
         ],
         mgc.RARM:
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP_1],
-            [mgc.SLIGHT_BLEEDING, 'rb*', 'gyf'],
-            [mgc.MODERATE_BLEEDING, 'tb*', 'mf'],
+            [mgc.SLIGHT_BLEEDING, 'rb*', mgc.SLIGHT_PAIN],
+            [mgc.MODERATE_BLEEDING, 'tb*', mgc.MODERATE_PAIN],
             'csonkolas'
         ],
 
@@ -184,8 +184,8 @@ VEGTAG_TABLA = {
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP_1],
-            [mgc.SLIGHT_BLEEDING, 'rb*', 'gyf'],
-            [mgc.MODERATE_BLEEDING, 'tb*', 'mf'],
+            [mgc.SLIGHT_BLEEDING, 'rb*', mgc.SLIGHT_PAIN],
+            [mgc.MODERATE_BLEEDING, 'tb*', mgc.MODERATE_PAIN],
             'csonkolas'
         ]
     }

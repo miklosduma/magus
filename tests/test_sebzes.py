@@ -57,4 +57,4 @@ def test_return_penalty():
     penalty = result['penalty']
 
     assert isinstance(penalty, list)
-    assert penalty == [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP, 'gyf', 'k6']
+    assert penalty == [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.SLIGHT_PAIN, 'k6']

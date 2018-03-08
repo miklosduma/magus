@@ -14,7 +14,7 @@ from magus_kalkulator.limbs_table import VEGTAG_TABLA, VEGTAG_THRESHOLDS
 
 TEST_DATA_PENALTY = [
     (TORZS_TABLA, mgc.SLASH, mgc.CHEST, 1, [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP,
-                                            'gyf', 'k6']),
+                                            mgc.SLIGHT_PAIN, 'k6']),
     (FEJ_TABLA, mgc.THRUST, mgc.FACE, 0, mgc.NULL_HANDICAP),
     (VEGTAG_TABLA, mgc.BLUDGEON, mgc.RARM, 4, 'maradando benulas'),
     (VEGTAG_TABLA, 'Foo', mgc.RARM, 4, ('key_error', 'Foo')),
@@ -83,7 +83,7 @@ TEST_DATA_PENALTY_MAP = [
         'wtype': mgc.THRUST,
         'mainpart': mgc.RARM,
         'subpart': mgc.RARM,
-        'expected': [mgc.MODERATE_BLEEDING, 'tb*', 'mf']},
+        'expected': [mgc.MODERATE_BLEEDING, 'tb*', mgc.MODERATE_PAIN]},
 
     {
         'damage': 7,
@@ -91,7 +91,7 @@ TEST_DATA_PENALTY_MAP = [
         'wtype': mgc.SLASH,
         'mainpart': mgc.TORSO,
         'subpart': mgc.CHEST,
-        'expected': [mgc.MODERATE_BLEEDING, mgc.SEVERE_HANDICAP, 'mf']},
+        'expected': [mgc.MODERATE_BLEEDING, mgc.SEVERE_HANDICAP, mgc.MODERATE_PAIN]},
 
     {
         'damage': 11,
