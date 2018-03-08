@@ -144,3 +144,11 @@ SLIGHT_HANDICAP_1 = 'Zavaro hatrany az adott oldalon'
 SEVERE_HANDICAP = 'Jelentos hatrany'
 SEVERE_HANDICAP_1 = 'Jelentos hatrany az adott oldalon'
 CRITICAL_HANDICAP = 'Vegzetes hatrany'
+
+# Bleeding
+SLIGHT_BLEEDING = 'Gyenge verzes'
+SLIGHT_BLEEDING_INT = 'Gyenge belso verzes'
+MODERATE_BLEEDING = 'Mersekelt verzes'
+MODERATE_BLEEDING_INT = 'Mersekelt belso verzes'
+SEVERE_BLEEDING = 'Heves verzes'
+SEVERE_BLEEDING_INT = 'Heves belso verzes'
