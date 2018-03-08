@@ -56,7 +56,7 @@ def get_sfe_per_part(sfe_map, bp_list):
     return sfe
 
 
-def add_disease(penalties, sub_body_part):
+def add_disease(penalties, sub_body_part, rank):
 
     penalties = [x for x in penalties if x != mgc.DISEASE]
 
@@ -66,6 +66,11 @@ def add_disease(penalties, sub_body_part):
     # is only deleted from the penalties
     try:
         disease = mgc.DISEASE_MAP[sub_body_part]
+
+        # E.g. in the case of a rank2 damage, disease has level0
+        disease_level_prefix =  mgc.DISEASE_LEVEL.format(rank - 2)
+        disease = '{} {}'.format(disease_level_prefix, disease)
+
         return penalties + [disease]
 
     except KeyError:
@@ -81,10 +86,10 @@ def return_penalty(sfe, damage, body_parts_list, max_ep, wtype, **kwargs):
     sfe = get_sfe_per_part(sfe, body_parts_list)
     main_part, penalty_part, sfe_part = body_parts_list
     ep_loss, fp_loss = calculate_damage(sfe, damage, atutes, tulutes=tulutes)
-    penalties = calculate_penalty(ep_loss, max_ep, wtype, main_part, penalty_part)
+    rank, penalties = calculate_penalty(ep_loss, max_ep, wtype, main_part, penalty_part)
 
     if mgc.DISEASE in penalties:
-        penalties = add_disease(penalties, sfe_part)
+        penalties = add_disease(penalties, sfe_part, rank)
 
     return {
         'ep_loss': ep_loss,

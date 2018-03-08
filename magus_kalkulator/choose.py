@@ -101,4 +101,5 @@ def calculate_penalty(ep_damage, max_ep, wtype, mainpart, subpart):
     thresholds = THRESHOLDS_PER_PART[mainpart]
     rank = calculate_seriousness(ep_damage, max_ep, thresholds)
     table = TABLE_PER_PART[mainpart]
-    return pick_penalty(table, wtype, subpart, rank)
+    penalty = pick_penalty(table, wtype, subpart, rank)
+    return rank, penalty

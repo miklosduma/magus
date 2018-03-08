@@ -189,9 +189,10 @@ LIMB_PARALYSIS = 'Vegtag maradando benulasa'
 
 # Diseases
 DISEASE = 'Betegseg'
-HEART_FAILURE = 'Szivbenulas'
-LUNG_ATROPHY = 'Tudosorvadas'
-GUT_ATROPHY = 'Belsorvadas'
+DISEASE_LEVEL = '{}. szintu'
+HEART_FAILURE = 'szivbenulas'
+LUNG_ATROPHY = 'tudosorvadas'
+GUT_ATROPHY = 'belsorvadas'
 
 
 DISEASE_MAP = {
