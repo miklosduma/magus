@@ -161,3 +161,7 @@ SEVERE_BLEEDING_INT = 'Heves belso verzes'
 SLIGHT_PAIN = 'Gyenge fajdalom'
 MODERATE_PAIN = 'Mersekelt fajdalom'
 SEVERE_PAIN = 'Heves fajdalom'
+
+# Extra damage
+EXTRA_K6 = '+k6 fp veszteseg'
+EXTRA_K10 = '+k10 fp veszteseg'

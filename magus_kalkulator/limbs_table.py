@@ -49,7 +49,7 @@ VEGTAG_TABLA = {
         mgc.RLEG:
         [
             mgc.NULL_HANDICAP,
-            ['k6', '80%'],
+            [mgc.EXTRA_K6, '80%'],
             [mgc.SLIGHT_BLEEDING, mgc.PARTIAL_NUMBNESS_1, '60%'],
             [mgc.SLIGHT_BLEEDING, mgc.NUMBNESS_1, mgc.MODERATE_PAIN, '40%'],
             'maradando benulas'
@@ -57,7 +57,7 @@ VEGTAG_TABLA = {
         mgc.LLEG:
         [
             mgc.NULL_HANDICAP,
-            ['k6', '80%'],
+            [mgc.EXTRA_K6, '80%'],
             [mgc.SLIGHT_BLEEDING, mgc.PARTIAL_NUMBNESS_1, '60%'],
             [mgc.SLIGHT_BLEEDING, mgc.NUMBNESS_1, mgc.MODERATE_PAIN, '40%'],
             'maradando benulas'
@@ -138,7 +138,7 @@ VEGTAG_TABLA = {
         mgc.RARM:
         [
             mgc.NULL_HANDICAP,
-            [mgc.SLIGHT_BLEEDING, 'k6'],
+            [mgc.SLIGHT_BLEEDING, mgc.EXTRA_K6],
             [mgc.SLIGHT_BLEEDING, mgc.PARTIAL_NUMBNESS_1, mgc.SLIGHT_PAIN],
             [mgc.MODERATE_BLEEDING, mgc.NUMBNESS_1, mgc.MODERATE_PAIN],
             'maradando benulas'
@@ -147,7 +147,7 @@ VEGTAG_TABLA = {
         mgc.LARM:
         [
             mgc.NULL_HANDICAP,
-            [mgc.SLIGHT_BLEEDING, 'k6'],
+            [mgc.SLIGHT_BLEEDING, mgc.EXTRA_K6],
             [mgc.SLIGHT_BLEEDING, mgc.PARTIAL_NUMBNESS_1, mgc.SLIGHT_PAIN],
             [mgc.MODERATE_BLEEDING, mgc.NUMBNESS_1, mgc.MODERATE_PAIN],
             'maradando benulas'
@@ -158,7 +158,7 @@ VEGTAG_TABLA = {
         mgc.RLEG:
         [
             mgc.NULL_HANDICAP,
-            ['k6', '90%'],
+            [mgc.EXTRA_K6, '90%'],
             [mgc.SLIGHT_BLEEDING, mgc.PARTIAL_NUMBNESS_1, mgc.SLIGHT_PAIN, '50%'],
             [mgc.MODERATE_BLEEDING, mgc.NUMBNESS_1, mgc.MODERATE_PAIN, '30%'],
             'csonkolas'
@@ -166,7 +166,7 @@ VEGTAG_TABLA = {
         mgc.LLEG:
         [
             mgc.NULL_HANDICAP,
-            ['k6', '90%'],
+            [mgc.EXTRA_K6, '90%'],
             [mgc.SLIGHT_BLEEDING, mgc.PARTIAL_NUMBNESS_1, mgc.SLIGHT_PAIN, '50%'],
             [mgc.MODERATE_BLEEDING, mgc.NUMBNESS_1, mgc.MODERATE_PAIN, '30%'],
             'csonkolas'
