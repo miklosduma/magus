@@ -12,7 +12,7 @@ FEJ_TABLA = {
     {
         mgc.FACE:
         [
-            "nincs hatrany",
+            mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP, "mf", "k6"],
             [mgc.MODERATE_BLEEDING, mgc.SEVERE_HANDICAP, "mf"],
             [mgc.MODERATE_BLEEDING_INT, mgc.CRITICAL_HANDICAP, "hf"],
@@ -20,7 +20,7 @@ FEJ_TABLA = {
         ],
         mgc.NECK:
         [
-            "nincs hatrany",
+            mgc.NULL_HANDICAP,
             [mgc.MODERATE_BLEEDING, mgc.SLIGHT_HANDICAP, "gyf", "k6"],
             [mgc.SEVERE_BLEEDING, mgc.CRITICAL_HANDICAP, "mf"],
             [mgc.SEVERE_BLEEDING, "tb", "mf"],
@@ -28,7 +28,7 @@ FEJ_TABLA = {
         ],
         mgc.SKULL:
         [
-            "nincs hatrany",
+            mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP, "gyf", "k6"],
             [mgc.MODERATE_BLEEDING, mgc.SEVERE_HANDICAP, "mf"],
             [mgc.MODERATE_BLEEDING_INT, "ajulas"],
@@ -40,7 +40,7 @@ FEJ_TABLA = {
     {
         mgc.FACE:
         [
-            "nincs hatrany",
+            mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP, "gyf", "k6"],
             [mgc.SLIGHT_BLEEDING, mgc.SEVERE_HANDICAP, "mf"],
             [mgc.SLIGHT_BLEEDING_INT, mgc.CRITICAL_HANDICAP, "hf"],
@@ -48,7 +48,7 @@ FEJ_TABLA = {
         ],
         mgc.NECK:
         [
-            "nincs hatrany",
+            mgc.NULL_HANDICAP,
             [mgc.MODERATE_BLEEDING, mgc.SLIGHT_HANDICAP, "k6"],
             [mgc.MODERATE_BLEEDING, mgc.SEVERE_HANDICAP],
             [mgc.SEVERE_BLEEDING, "tb"],
@@ -56,7 +56,7 @@ FEJ_TABLA = {
         ],
         mgc.SKULL:
         [
-            "nincs hatrany",
+            mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP, "gyf", "k6"],
             [mgc.SLIGHT_BLEEDING, mgc.SEVERE_HANDICAP, "mf"],
             [mgc.MODERATE_BLEEDING_INT, mgc.CRITICAL_HANDICAP, "hf"],
@@ -68,7 +68,7 @@ FEJ_TABLA = {
     {
         mgc.FACE:
         [
-            "nincs hatrany",
+            mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SEVERE_HANDICAP, "mf", "k6"],
             [mgc.SLIGHT_BLEEDING, "kabulat", mgc.SLIGHT_HANDICAP, "mf"],
             [mgc.MODERATE_BLEEDING_INT, "ajulas"],
@@ -76,7 +76,7 @@ FEJ_TABLA = {
         ],
         mgc.NECK:
         [
-            "nincs hatrany",
+            mgc.NULL_HANDICAP,
             [mgc.SLIGHT_HANDICAP, "rosszullet"],
             ["kabulat", mgc.SLIGHT_HANDICAP, "mf"],
             [mgc.MODERATE_BLEEDING_INT, mgc.CRITICAL_HANDICAP, "mf"],
@@ -84,7 +84,7 @@ FEJ_TABLA = {
         ],
         mgc.SKULL:
         [
-            "nincs hatrany",
+            mgc.NULL_HANDICAP,
             [mgc.SLIGHT_HANDICAP, "gyf"],
             ["kabulat", mgc.SLIGHT_HANDICAP, "mf"],
             [mgc.MODERATE_BLEEDING_INT, "ajulas"],
@@ -95,7 +95,7 @@ FEJ_TABLA = {
     {
         mgc.FACE:
         [
-            "nincs hatrany",
+            mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SEVERE_HANDICAP, "mf", "k6"],
             [mgc.MODERATE_BLEEDING, "kabulat", mgc.SLIGHT_HANDICAP, "mf"],
             [mgc.MODERATE_BLEEDING_INT, "ajulas"],
@@ -103,7 +103,7 @@ FEJ_TABLA = {
         ],
         mgc.NECK:
         [
-            "nincs hatrany",
+            mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP, "gyf", "k6"],
             [mgc.MODERATE_BLEEDING, "kabulat", mgc.SLIGHT_HANDICAP, "mf"],
             [mgc.SEVERE_BLEEDING, "tb", "hf"],
@@ -111,7 +111,7 @@ FEJ_TABLA = {
         ],
         mgc.SKULL:
         [
-            "nincs hatrany",
+            mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP, "gyf", "k6"],
             [mgc.SLIGHT_BLEEDING, "kabulat", mgc.SLIGHT_HANDICAP, "mf"],
             [mgc.MODERATE_BLEEDING_INT, "ajulas"],
@@ -122,7 +122,7 @@ FEJ_TABLA = {
     {
         mgc.FACE:
         [
-            "nincs hatrany",
+            mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP, "mf", "k6"],
             [mgc.SLIGHT_BLEEDING, "kabulat", mgc.SLIGHT_HANDICAP, "mf"],
             [mgc.MODERATE_BLEEDING, mgc.CRITICAL_HANDICAP, "hf"],
@@ -130,7 +130,7 @@ FEJ_TABLA = {
         ],
         mgc.NECK:
         [
-            "nincs hatrany",
+            mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP, "gyf", "k6"],
             [mgc.MODERATE_BLEEDING, "kabulat", mgc.SLIGHT_HANDICAP, "mf"],
             [mgc.SEVERE_BLEEDING, "tb", "mf"],
@@ -138,7 +138,7 @@ FEJ_TABLA = {
         ],
         mgc.SKULL:
         [
-            "nincs hatrany",
+            mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP, "gyf", "k6"],
             [mgc.SLIGHT_BLEEDING, "kabulat", mgc.SLIGHT_HANDICAP, "mf"],
             [mgc.MODERATE_BLEEDING_INT, "ajulas"],
