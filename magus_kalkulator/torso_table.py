@@ -354,7 +354,7 @@ TORZS_TABLA = {
         mgc.SPINE:
         [
             mgc.NULL_HANDICAP,
-            ["ervenytelen", "ujradobas"],
+            ["ervenytelen"],
             [mgc.SLIGHT_BLEEDING_INT, mgc.SEVERE_HANDICAP, mgc.MODERATE_PAIN, mgc.EXTRA_K6],
             [mgc.MODERATE_BLEEDING_INT, mgc.DISEASE, mgc.SEVERE_HANDICAP, mgc.PARTIAL_NUMBNESS, mgc.SEVERE_PAIN],
             mgc.DEATH
