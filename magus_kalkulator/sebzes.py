@@ -68,7 +68,7 @@ def add_disease(penalties, sub_body_part, rank):
         disease = mgc.DISEASE_MAP[sub_body_part]
 
         # E.g. in the case of a rank2 damage, disease has level0
-        disease_level_prefix =  mgc.DISEASE_LEVEL.format(rank - 2)
+        disease_level_prefix = mgc.DISEASE_LEVEL.format(rank - 2)
         disease = '{} {}'.format(disease_level_prefix, disease)
 
         return penalties + [disease]

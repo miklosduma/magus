@@ -13,8 +13,10 @@ from magus_kalkulator.head_table import FEJ_TABLA, FEJ_THRESHOLDS
 from magus_kalkulator.limbs_table import VEGTAG_TABLA, VEGTAG_THRESHOLDS
 
 TEST_DATA_PENALTY = [
-    (TORZS_TABLA, mgc.SLASH, mgc.CHEST, 1, [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP,
-                                            mgc.SLIGHT_PAIN, mgc.EXTRA_K6]),
+    (TORZS_TABLA, mgc.SLASH, mgc.CHEST, 1, [mgc.SLIGHT_BLEEDING,
+                                            mgc.SLIGHT_HANDICAP,
+                                            mgc.SLIGHT_PAIN,
+                                            mgc.EXTRA_K6]),
     (FEJ_TABLA, mgc.THRUST, mgc.FACE, 0, mgc.NULL_HANDICAP),
     (VEGTAG_TABLA, mgc.BLUDGEON, mgc.RARM, 4, mgc.LIMB_PARALYSIS),
     (VEGTAG_TABLA, 'Foo', mgc.RARM, 4, ('key_error', 'Foo')),
@@ -84,7 +86,9 @@ TEST_DATA_PENALTY_MAP = [
         'mainpart': mgc.RARM,
         'subpart': mgc.RARM,
         'smallest': mgc.RLOWERARM,
-        'expected': [mgc.MODERATE_BLEEDING, mgc.NUMBNESS_1, mgc.MODERATE_PAIN]},
+        'expected': [mgc.MODERATE_BLEEDING,
+                     mgc.NUMBNESS_1,
+                     mgc.MODERATE_PAIN]},
 
     {
         'damage': 7,
@@ -93,7 +97,9 @@ TEST_DATA_PENALTY_MAP = [
         'mainpart': mgc.TORSO,
         'subpart': mgc.CHEST,
         'smallest': mgc.HEART,
-        'expected': [mgc.MODERATE_BLEEDING, mgc.SEVERE_HANDICAP, mgc.MODERATE_PAIN]},
+        'expected': [mgc.MODERATE_BLEEDING,
+                     mgc.SEVERE_HANDICAP,
+                     mgc.MODERATE_PAIN]},
 
     {
         'damage': 11,
@@ -120,5 +126,8 @@ def test_calculate_penalty(data_map):
     smallest = data_map['smallest']
     bodyparts = (mainpart, subpart, smallest)
 
-    rank, penalty, smallest_part = calculate_penalty(damage, max_ep, wtype, bodyparts)
+    _rank, penalty, _smallest_part = calculate_penalty(damage,
+                                                       max_ep,
+                                                       wtype,
+                                                       bodyparts)
     assert penalty == data_map['expected']
