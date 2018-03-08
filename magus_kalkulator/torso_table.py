@@ -14,8 +14,8 @@ TORZS_TABLA = {
         [
             mgc.NULL_HANDICAP,
             [mgc.MODERATE_BLEEDING, mgc.SLIGHT_HANDICAP, "k6"],
-            [mgc.MODERATE_BLEEDING, "rb*", mgc.MODERATE_PAIN],
-            [mgc.SEVERE_BLEEDING, "tb*", mgc.SEVERE_HANDICAP],
+            [mgc.MODERATE_BLEEDING, mgc.PARTIAL_NUMBNESS_1, mgc.MODERATE_PAIN],
+            [mgc.SEVERE_BLEEDING, mgc.NUMBNESS_1, mgc.SEVERE_HANDICAP],
             "halal"
         ],
         mgc.CHEST:
@@ -38,8 +38,8 @@ TORZS_TABLA = {
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_HANDICAP, mgc.SLIGHT_PAIN],
-            [mgc.MODERATE_BLEEDING, "rb*", mgc.MODERATE_PAIN],
-            [mgc.MODERATE_BLEEDING, "beteg", mgc.SEVERE_HANDICAP, "rb*", mgc.MODERATE_PAIN],
+            [mgc.MODERATE_BLEEDING, mgc.PARTIAL_NUMBNESS_1, mgc.MODERATE_PAIN],
+            [mgc.MODERATE_BLEEDING, "beteg", mgc.SEVERE_HANDICAP, mgc.PARTIAL_NUMBNESS_1, mgc.MODERATE_PAIN],
             "halal"
         ],
         mgc.BACK:
@@ -64,15 +64,15 @@ TORZS_TABLA = {
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP, "50%"],
             [mgc.MODERATE_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.SLIGHT_PAIN, "30%"],
-            [mgc.SEVERE_BLEEDING, mgc.SLIGHT_HANDICAP, "tb*", "10%"],
+            [mgc.SEVERE_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.NUMBNESS_1, "10%"],
             "halal"
         ],
         mgc.SPINE:
         [
             mgc.NULL_HANDICAP,
             [mgc.MODERATE_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.SLIGHT_PAIN, "k6"],
-            [mgc.MODERATE_BLEEDING, "rb**", mgc.MODERATE_PAIN],
-            [mgc.SEVERE_BLEEDING, "tb", mgc.SEVERE_PAIN],
+            [mgc.MODERATE_BLEEDING, mgc.PARTIAL_NUMBNESS, mgc.MODERATE_PAIN],
+            [mgc.SEVERE_BLEEDING, mgc.NUMBNESS, mgc.SEVERE_PAIN],
             "halal"
         ]
     },
@@ -82,8 +82,8 @@ TORZS_TABLA = {
         [
             mgc.NULL_HANDICAP,
             [mgc.MODERATE_BLEEDING, mgc.SLIGHT_HANDICAP_1, "k6"],
-            [mgc.MODERATE_BLEEDING, "rb*", mgc.SLIGHT_PAIN],
-            [mgc.SEVERE_BLEEDING, "tb*", mgc.MODERATE_PAIN],
+            [mgc.MODERATE_BLEEDING, mgc.PARTIAL_NUMBNESS_1, mgc.SLIGHT_PAIN],
+            [mgc.SEVERE_BLEEDING, mgc.NUMBNESS_1, mgc.MODERATE_PAIN],
             "halal"
         ],
         mgc.CHEST:
@@ -139,8 +139,8 @@ TORZS_TABLA = {
         [
             mgc.NULL_HANDICAP,
             [mgc.MODERATE_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.SLIGHT_PAIN, "k6"],
-            [mgc.MODERATE_BLEEDING, "rb**", mgc.MODERATE_PAIN],
-            [mgc.SEVERE_BLEEDING, "tb", mgc.SEVERE_PAIN],
+            [mgc.MODERATE_BLEEDING, mgc.PARTIAL_NUMBNESS, mgc.MODERATE_PAIN],
+            [mgc.SEVERE_BLEEDING, mgc.NUMBNESS, mgc.SEVERE_PAIN],
             "halal"
         ]
     },
@@ -151,9 +151,9 @@ TORZS_TABLA = {
         mgc.COLLARBONE:
         [
             mgc.NULL_HANDICAP,
-            ["rb*", mgc.SLIGHT_PAIN, "k6"],
-            [mgc.SLIGHT_BLEEDING, "rb*", mgc.MODERATE_PAIN],
-            [mgc.SEVERE_BLEEDING, "tb*", mgc.SEVERE_PAIN],
+            [mgc.PARTIAL_NUMBNESS_1, mgc.SLIGHT_PAIN, "k6"],
+            [mgc.SLIGHT_BLEEDING, mgc.PARTIAL_NUMBNESS_1, mgc.MODERATE_PAIN],
+            [mgc.SEVERE_BLEEDING, mgc.NUMBNESS_1, mgc.SEVERE_PAIN],
             "halal"
         ],
 
@@ -178,8 +178,8 @@ TORZS_TABLA = {
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_PAIN],
-            [mgc.SLIGHT_BLEEDING, "rb*", mgc.MODERATE_PAIN],
-            [mgc.MODERATE_BLEEDING, mgc.SLIGHT_HANDICAP, "tb*", mgc.MODERATE_PAIN],
+            [mgc.SLIGHT_BLEEDING, mgc.PARTIAL_NUMBNESS_1, mgc.MODERATE_PAIN],
+            [mgc.MODERATE_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.NUMBNESS_1, mgc.MODERATE_PAIN],
             "halal"
         ],
         mgc.BACK:
@@ -203,16 +203,16 @@ TORZS_TABLA = {
         [
             mgc.NULL_HANDICAP,
             [mgc.MODERATE_PAIN, "80%"],
-            [mgc.SLIGHT_HANDICAP, "rb*", mgc.MODERATE_PAIN, "30%"],
-            [mgc.MODERATE_BLEEDING, mgc.SLIGHT_HANDICAP, "tb*", mgc.SEVERE_PAIN],
+            [mgc.SLIGHT_HANDICAP, mgc.PARTIAL_NUMBNESS_1, mgc.MODERATE_PAIN, "30%"],
+            [mgc.MODERATE_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.NUMBNESS_1, mgc.SEVERE_PAIN],
             "halal"
         ],
         mgc.SPINE:
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_HANDICAP, mgc.MODERATE_PAIN, "k6"],
-            ["rb**", mgc.MODERATE_PAIN],
-            ["tb", mgc.SEVERE_PAIN],
+            [mgc.PARTIAL_NUMBNESS, mgc.MODERATE_PAIN],
+            [mgc.NUMBNESS, mgc.SEVERE_PAIN],
             "halal"
         ]
 
@@ -224,8 +224,8 @@ TORZS_TABLA = {
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.SLIGHT_PAIN, "k6"],
-            [mgc.MODERATE_BLEEDING, "rb*", mgc.MODERATE_PAIN],
-            [mgc.SEVERE_BLEEDING, mgc.SLIGHT_HANDICAP, "tb*", mgc.MODERATE_PAIN],
+            [mgc.MODERATE_BLEEDING, mgc.PARTIAL_NUMBNESS_1, mgc.MODERATE_PAIN],
+            [mgc.SEVERE_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.NUMBNESS_1, mgc.MODERATE_PAIN],
             "halal"
         ],
 
@@ -250,8 +250,8 @@ TORZS_TABLA = {
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_HANDICAP, mgc.SLIGHT_PAIN],
-            [mgc.SLIGHT_BLEEDING, "rb*", mgc.MODERATE_PAIN],
-            [mgc.MODERATE_BLEEDING, mgc.SEVERE_HANDICAP, "rb*", mgc.MODERATE_PAIN],
+            [mgc.SLIGHT_BLEEDING, mgc.PARTIAL_NUMBNESS_1, mgc.MODERATE_PAIN],
+            [mgc.MODERATE_BLEEDING, mgc.SEVERE_HANDICAP, mgc.PARTIAL_NUMBNESS_1, mgc.MODERATE_PAIN],
             "halal"
         ],
         mgc.BACK:
@@ -276,15 +276,15 @@ TORZS_TABLA = {
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_PAIN, "80%"],
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.MODERATE_PAIN, "50%"],
-            [mgc.MODERATE_BLEEDING, mgc.SLIGHT_HANDICAP, "tb*", mgc.MODERATE_PAIN, "20%"],
+            [mgc.MODERATE_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.NUMBNESS_1, mgc.MODERATE_PAIN, "20%"],
             "halal"
         ],
         mgc.SPINE:
         [
             mgc.NULL_HANDICAP,
             [mgc.MODERATE_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.SLIGHT_PAIN, "k6"],
-            [mgc.MODERATE_BLEEDING, "rb**", mgc.MODERATE_PAIN],
-            [mgc.SEVERE_BLEEDING, "tb", mgc.SEVERE_PAIN],
+            [mgc.MODERATE_BLEEDING, mgc.PARTIAL_NUMBNESS, mgc.MODERATE_PAIN],
+            [mgc.SEVERE_BLEEDING, mgc.NUMBNESS, mgc.SEVERE_PAIN],
             "halal"
         ]
 
@@ -296,8 +296,8 @@ TORZS_TABLA = {
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP_1, mgc.SLIGHT_PAIN, "k6"],
-            [mgc.MODERATE_BLEEDING, "rb*", mgc.SLIGHT_PAIN, "k6"],
-            [mgc.SEVERE_BLEEDING, mgc.SLIGHT_HANDICAP, "tb*", mgc.MODERATE_PAIN],
+            [mgc.MODERATE_BLEEDING, mgc.PARTIAL_NUMBNESS_1, mgc.SLIGHT_PAIN, "k6"],
+            [mgc.SEVERE_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.NUMBNESS_1, mgc.MODERATE_PAIN],
             "halal"
         ],
 
@@ -322,8 +322,8 @@ TORZS_TABLA = {
         [
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP_1, mgc.SLIGHT_PAIN, "k6"],
-            [mgc.MODERATE_BLEEDING, "rb*", mgc.SLIGHT_PAIN, "k6"],
-            [mgc.SEVERE_BLEEDING, mgc.SLIGHT_HANDICAP, "tb*", mgc.MODERATE_PAIN],
+            [mgc.MODERATE_BLEEDING, mgc.PARTIAL_NUMBNESS_1, mgc.SLIGHT_PAIN, "k6"],
+            [mgc.SEVERE_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.NUMBNESS_1, mgc.MODERATE_PAIN],
             "halal"
         ],
         mgc.BACK:
@@ -348,7 +348,7 @@ TORZS_TABLA = {
             mgc.NULL_HANDICAP,
             [mgc.SLIGHT_BLEEDING, mgc.SLIGHT_HANDICAP, "k6", "70%"],
             [mgc.SLIGHT_BLEEDING, mgc.SEVERE_HANDICAP, mgc.MODERATE_PAIN, "60%"],
-            [mgc.MODERATE_BLEEDING, mgc.SLIGHT_HANDICAP, "tb*", mgc.MODERATE_PAIN, "10%"],
+            [mgc.MODERATE_BLEEDING, mgc.SLIGHT_HANDICAP, mgc.NUMBNESS_1, mgc.MODERATE_PAIN, "10%"],
             "halal"
         ],
         mgc.SPINE:
@@ -356,7 +356,7 @@ TORZS_TABLA = {
             mgc.NULL_HANDICAP,
             ["ervenytelen", "ujradobas"],
             [mgc.SLIGHT_BLEEDING_INT, mgc.SEVERE_HANDICAP, mgc.MODERATE_PAIN, "k6"],
-            [mgc.MODERATE_BLEEDING_INT, "beteg", mgc.SEVERE_HANDICAP, "rb**", mgc.SEVERE_PAIN],
+            [mgc.MODERATE_BLEEDING_INT, "beteg", mgc.SEVERE_HANDICAP, mgc.PARTIAL_NUMBNESS, mgc.SEVERE_PAIN],
             "halal"
         ]
 

@@ -83,7 +83,7 @@ TEST_DATA_PENALTY_MAP = [
         'wtype': mgc.THRUST,
         'mainpart': mgc.RARM,
         'subpart': mgc.RARM,
-        'expected': [mgc.MODERATE_BLEEDING, 'tb*', mgc.MODERATE_PAIN]},
+        'expected': [mgc.MODERATE_BLEEDING, mgc.NUMBNESS_1, mgc.MODERATE_PAIN]},
 
     {
         'damage': 7,
