@@ -9,7 +9,8 @@ from magus_kalkulator.sebzes import return_penalty
 from magus_kalkulator.random_body import pick_sub_parts
 from magus_kalkulator.validate import validate_integer, FieldValidationError
 from magus_kalkulator.interface_elements import (CharacterValueField,
-                                                 organize_rows_to_left)
+                                                 organize_rows_to_left,
+                                                 ChooseCharacterFrame)
 
 from magus_kalkulator import magus_constants as mgc
 
@@ -29,8 +30,6 @@ MAIN_PART_LABEL = 'Fo testresz'
 SUB_PART_LABEL = 'Al testresz'
 
 MSG_TAB = 4
-
-NO_CHARACTER = 'Valassz karaktert!'
 
 # Types of attacking weapons. Used when calculating the damage
 WEAPON_TYPES = [mgc.THRUST, mgc.SLASH, mgc.BLUDGEON, mgc.BITE, mgc.CLAW]
@@ -155,6 +154,9 @@ class SebzesPage(ttk.Frame):
         organize_rows_to_left([self.main_panel,
                                self.sebzes_button], DAMAGE_PAGE_COLUMN)
 
+    def reset(self):
+        self.main_panel.reset()
+
 
 class CharacterPanel(ttk.PanedWindow):
     """
@@ -177,59 +179,12 @@ class CharacterPanel(ttk.PanedWindow):
                                self.damage_frame, self.piercing_frame,
                                self.body_parts_frame], 0)
 
-
-class ChooseCharacterFrame(ttk.LabelFrame):
-    """
-    Frame comprising character-selection drop-down.
-    """
-    def __init__(self, master, karakterek):
-        """
-        Initialise character-selection frame.
-        """
-        self.master = master
-        ttk.LabelFrame.__init__(self, master, text=SELECT_CHARACTER)
-        self.karakterek = karakterek
-        self.variable = StringVar()
-        self.variable.set('')
-        self.character_menu = OptionMenu(self, self.variable, *[''])
-        self.character_menu.bind('<Button-1>', self._update)
-        self.character_menu.config(width=10)
-        self.character_menu.grid()
-
-    def get_selected(self):
-        """
-        Return latest value.
-        """
-        character = self.variable.get()
-
-        if character:
-            return True, character
-
-        return False, NO_CHARACTER
-
-    def _width_match_longest(self, opt_list):
-        """
-        Width of menu list must match longest menu item.
-        """
-
-        if opt_list:
-            lengths = [len(x) for x in opt_list]
-            self.character_menu.config(width=max(lengths) + 2)
-
-    def _update(self, _event):
-        """
-        When clicking the drop-down, get the name of
-        all characters currently in memory.
-        """
-        menu = self.character_menu.children['menu']
-        menu.delete(0, 'end')
-        new_choices = self.karakterek.get_all_karakters()
-
-        self._width_match_longest(new_choices)
-
-        for value in new_choices:
-            menu.add_command(label=value,
-                             command=lambda v=value: self.variable.set(v))
+    def reset(self):
+        self.choose_frame.reset()
+        self.weapon_frame.reset()
+        self.damage_frame.reset()
+        self.piercing_frame.reset()
+        self.body_parts_frame.reset()
 
 
 class WeaponTypeFrame(ttk.LabelFrame):
@@ -252,6 +207,9 @@ class WeaponTypeFrame(ttk.LabelFrame):
         """
         return self.selected_weapon.get_weapon_type()
 
+    def reset(self):
+        self.selected_weapon.set(WEAPON_TYPES[0])
+
 
 class DamageFrame(ttk.LabelFrame):
     """
@@ -269,6 +227,10 @@ class DamageFrame(ttk.LabelFrame):
                                    variable=self.critical_state)
         self.damage.grid(row=0, column=0)
         self.tulutes.grid(row=0, column=1)
+
+    def reset(self):
+        self.critical_state.set(0)
+        self.damage.reset()
 
     def get_damage(self):
         """
@@ -300,7 +262,8 @@ class PiercingFrame(ttk.LabelFrame):
         """
         ttk.LabelFrame.__init__(self, master, text=ATUTES_TEXT)
         self.piercing = IntVar()
-        self.piercing.set(piercing_values[0])
+        self.piercing_values = piercing_values
+        self.reset()
         self.piercing_menu = OptionMenu(self, self.piercing, *piercing_values)
         self.piercing_menu.grid()
 
@@ -309,6 +272,9 @@ class PiercingFrame(ttk.LabelFrame):
         Retrieves value of AP drop-down.
         """
         return self.piercing.get()
+
+    def reset(self):
+        self.piercing.set(self.piercing_values[0])
 
 
 class ChooseBodyPartFrame(ttk.LabelFrame):
@@ -358,13 +324,16 @@ class ChooseBodyPartFrame(ttk.LabelFrame):
         can become invalid once the attack comes from behind not from
         the front or vice versa.
         """
-        self.main_body_frame.main_body_part.set(ANYWHERE)
+        self.reset()
 
     def is_from_behind(self):
         """
         Gets the state of the from-behind tick-box.
         """
         return self.behind_state.get()
+
+    def reset(self):
+        self.main_body_frame.main_body_part.set(ANYWHERE)
 
 
 class ChooseMainBodyPartFrame(ttk.LabelFrame):

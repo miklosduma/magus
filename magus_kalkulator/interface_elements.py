@@ -2,12 +2,14 @@
 Generic, reusable interface elements and constants.
 """
 
-from tkinter import Entry, StringVar, W, N, ttk, Label
+from tkinter import Entry, StringVar, W, N, ttk, Label, OptionMenu
 from magus_kalkulator.validate import FieldValidationError, validate_integer
 
 FIELD_WIDTH = 10
 FIELD_COLOR = 'white'
 FIELD_COLOR_ERROR = 'red'
+SELECT_CHARACTER = 'Valaszz karaktert'
+NO_CHARACTER = 'Valassz karaktert!'
 
 
 def organize_rows_to_left(list_of_elements, column, start_row=0):
@@ -99,6 +101,9 @@ class CharacterValueField(Entry):
             self.config(bg=FIELD_COLOR_ERROR)
             raise
 
+    def reset(self):
+        self.value.set('')
+
 
 class SfePartFrame(ttk.LabelFrame):
     """
@@ -173,3 +178,61 @@ class SfePartFrame(ttk.LabelFrame):
             if key in self.body_parts:
                 total = self.sfe_field.value.get()
                 value.value.set(total)
+
+
+class ChooseCharacterFrame(ttk.LabelFrame):
+    """
+    Frame comprising character-selection drop-down.
+    """
+    def __init__(self, master, karakterek):
+        """
+        Initialise character-selection frame.
+        """
+        self.master = master
+        ttk.LabelFrame.__init__(self, master, text=SELECT_CHARACTER)
+        self.karakterek = karakterek
+        self.variable = StringVar()
+        self.variable.set('')
+        self.character_menu = OptionMenu(self, self.variable, *[''])
+        self.character_menu.bind('<Button-1>', self._update)
+        self.character_menu.config(width=10)
+        self.character_menu.grid()
+
+    def get_selected(self):
+        """
+        Return latest value.
+        """
+        character = self.variable.get()
+
+        if character:
+            return True, character
+
+        return False, NO_CHARACTER
+
+    def _width_match_longest(self, opt_list):
+        """
+        Width of menu list must match longest menu item.
+        """
+
+        if opt_list:
+            lengths = [len(x) for x in opt_list]
+            self.character_menu.config(width=max(lengths) + 2)
+
+    def _update(self, _event):
+        """
+        When clicking the drop-down, get the name of
+        all characters currently in memory.
+        """
+        menu = self.character_menu.children['menu']
+        menu.delete(0, 'end')
+        new_choices = self.karakterek.get_all_karakters()
+
+        self._width_match_longest(new_choices)
+
+        for value in new_choices:
+            menu.add_command(label=value,
+                             command=lambda v=value: self.variable.set(v))
+
+    def reset(self):
+        self.variable.set('')
+

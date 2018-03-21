@@ -17,6 +17,7 @@ from tkinter import ttk, Text, END, DISABLED, NORMAL, N
 from magus_kalkulator.karakterek import Karakterek
 from magus_kalkulator.interface_sebzes import SebzesPage
 from magus_kalkulator.interface_karakterek import KarakterPage
+from magus_kalkulator.interface_manage import ManagementPage
 
 
 WINDOW_WIDTH = 800
@@ -99,8 +100,16 @@ class MyTabs(ttk.Notebook):
         # Initialize tabs
         self.karakter_page = KarakterPage(self, master_gui, TAB_PANEL_WIDTH)
         self.sebzes_page = SebzesPage(self, master_gui, TAB_PANEL_WIDTH)
+        self.manage_page = ManagementPage(self, master_gui, TAB_PANEL_WIDTH)
         self.add(self.karakter_page, text=KARAKTER_PAGE_TITLE)
         self.add(self.sebzes_page, text=SEBZES_PAGE_TITLE)
+        self.add(self.manage_page, text="Kezeles")
+        self.bind("<<NotebookTabChanged>>", self.on_change)
+
+    def on_change(self, _event):
+        self.karakter_page.reset()
+        self.sebzes_page.reset()
+        self.manage_page.reset()
 
 
 class GuiMessage(Text):

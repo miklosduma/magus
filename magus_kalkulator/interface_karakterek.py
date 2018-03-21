@@ -118,6 +118,9 @@ class KarakterPage(ttk.Frame):
         self.panels = KarakterPanels(self, width)
         self.panels.grid(column=0, row=0, columnspan=8)
 
+    def reset(self):
+        self.panels.reset()
+
 
 class KarakterPanels(ttk.PanedWindow):
     """
@@ -136,6 +139,11 @@ class KarakterPanels(ttk.PanedWindow):
         self.add(self.sfe_frame)
         self.add(self.buttons_frame)
 
+    def reset(self):
+        self.name_frame.reset()
+        self.ep_fp_frame.reset()
+        self.sfe_frame.reset()
+
 
 class NameFrame(ttk.LabelFrame):
     """
@@ -148,6 +156,9 @@ class NameFrame(ttk.LabelFrame):
 
         self.name_field = CharacterValueField(self, validate_string)
         organize_rows_to_left([self.name_field], NAME_COLUMN)
+
+    def reset(self):
+        self.name_field.reset()
 
 
 class EpFpFrame(ttk.LabelFrame):
@@ -166,6 +177,10 @@ class EpFpFrame(ttk.LabelFrame):
 
         organize_rows_to_left([self.ep_label, self.ep_field], EP_FIELDS_COLUMN)
         organize_rows_to_left([self.fp_label, self.fp_field], FP_FIELDS_COLUMN)
+
+    def reset(self):
+        self.ep_field.reset()
+        self.fp_field.reset()
 
 
 class SfeFrame(ttk.LabelFrame):
@@ -197,6 +212,9 @@ class SfeFrame(ttk.LabelFrame):
                                self.kar_sfe,
                                self.lab_sfe],
                               1, SFE_FIELDS_COLUMN, PART_SFE_COLUMN_SPAN)
+
+    def reset(self):
+        self.sfe_field.reset()
 
     def retrieve_sfe_map(self):
         """
