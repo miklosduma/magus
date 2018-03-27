@@ -26,14 +26,14 @@ def organize_rows_to_left(list_of_elements, column, start_row=0):
     return start_row
 
 
-def reset_children(parent):
+def on_all_children(method, parent):
     """
-    Calls the "reset" method on all children
-    of the parent element, who has such a method.
+    Calls the specified method on all child widgets
+    of parent if the widgets have that method.
     """
     for child in parent.winfo_children():
-        if hasattr(child, 'reset'):
-            child.reset()
+        if hasattr(child, method):
+            getattr(child, method)()
 
 
 def place_next_in_columns(frames, row, column, columnspan):
@@ -109,7 +109,7 @@ class CharacterValueField(Entry):
             self.config(bg=FIELD_COLOR_ERROR)
             raise
 
-    def reset(self):
+    def reset_fld(self):
         """
         Cleans the field's value by setting
         it to an empty string.
@@ -245,7 +245,7 @@ class ChooseCharacterFrame(ttk.LabelFrame):
             menu.add_command(label=value,
                              command=lambda v=value: self.variable.set(v))
 
-    def reset(self):
+    def reset_frame(self):
         """
         Cleans the field's value by setting
         it to an empty string.

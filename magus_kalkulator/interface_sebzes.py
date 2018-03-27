@@ -11,7 +11,7 @@ from magus_kalkulator.validate import validate_integer, FieldValidationError
 from magus_kalkulator.interface_elements import (CharacterValueField,
                                                  organize_rows_to_left,
                                                  ChooseCharacterFrame,
-                                                 reset_children)
+                                                 on_all_children)
 
 from magus_kalkulator import magus_constants as mgc
 
@@ -155,11 +155,11 @@ class SebzesPage(ttk.Frame):
         organize_rows_to_left([self.main_panel,
                                self.sebzes_button], DAMAGE_PAGE_COLUMN)
 
-    def reset(self):
+    def reset_page(self):
         """
         Resets all child widgets of the page.
         """
-        reset_children(self)
+        on_all_children('reset_panel', self)
 
 
 class CharacterPanel(ttk.PanedWindow):
@@ -183,11 +183,11 @@ class CharacterPanel(ttk.PanedWindow):
                                self.damage_frame, self.piercing_frame,
                                self.body_parts_frame], 0)
 
-    def reset(self):
+    def reset_panel(self):
         """
         Resets all child widgets of the panel.
         """
-        reset_children(self)
+        on_all_children('reset_frame', self)
 
 
 class WeaponTypeFrame(ttk.LabelFrame):
@@ -211,12 +211,11 @@ class WeaponTypeFrame(ttk.LabelFrame):
         """
         return self.selected_weapon.get()
 
-    def reset(self):
+    def reset_frame(self):
         """
         Resets all child widgets of the frame.
         """
         self.selected_weapon.set(WEAPON_TYPES[0])
-        reset_children(self)
 
 
 class DamageFrame(ttk.LabelFrame):
@@ -236,11 +235,11 @@ class DamageFrame(ttk.LabelFrame):
         self.damage.grid(row=0, column=0)
         self.tulutes.grid(row=0, column=1)
 
-    def reset(self):
+    def reset_frame(self):
         """
         Resets all child widgets of the frame.
         """
-        reset_children(self)
+        self.damage.reset_fld()
         self.critical_state.set(0)
 
     def get_damage(self):
@@ -274,7 +273,7 @@ class PiercingFrame(ttk.LabelFrame):
         ttk.LabelFrame.__init__(self, master, text=ATUTES_TEXT)
         self.piercing = IntVar()
         self.piercing_values = piercing_values
-        self.reset()
+        self.piercing.set(self.piercing_values[0])
         self.piercing_menu = OptionMenu(self, self.piercing, *piercing_values)
         self.piercing_menu.grid()
 
@@ -284,7 +283,7 @@ class PiercingFrame(ttk.LabelFrame):
         """
         return self.piercing.get()
 
-    def reset(self):
+    def reset_frame(self):
         """
         Resets the piercing value to 0.
         """
@@ -338,7 +337,7 @@ class ChooseBodyPartFrame(ttk.LabelFrame):
         can become invalid once the attack comes from behind not from
         the front or vice versa.
         """
-        self.main_body_frame.reset()
+        self.main_body_frame.reset_frame()
 
     def is_from_behind(self):
         """
@@ -346,13 +345,13 @@ class ChooseBodyPartFrame(ttk.LabelFrame):
         """
         return self.behind_state.get()
 
-    def reset(self):
+    def reset_frame(self):
         """
         Resets the child widgets of the element and
         also sets the from behind checkbox to False.
         """
         self.behind_state.set(0)
-        reset_children(self)
+        on_all_children('reset_frame', self)
 
 
 class ChooseMainBodyPartFrame(ttk.LabelFrame):
@@ -373,7 +372,7 @@ class ChooseMainBodyPartFrame(ttk.LabelFrame):
                                             mgc.LLEG])
         self.main_body_parts.grid()
 
-    def reset(self):
+    def reset_frame(self):
         """
         Sets the main body part selection drop-down to
         anywhere, triggering the same change in the sub drop-down too.
@@ -523,4 +522,4 @@ class SebzesButton(Button):
 
         msg = format_damage_msg(result)
         self.messages.write_message(msg)
-        self.master.reset()
+        self.master.reset_page()

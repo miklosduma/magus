@@ -18,7 +18,7 @@ from magus_kalkulator.karakterek import Karakterek
 from magus_kalkulator.interface_sebzes import SebzesPage
 from magus_kalkulator.interface_karakterek import KarakterPage
 from magus_kalkulator.interface_manage import ManagementPage
-from magus_kalkulator.interface_elements import reset_children
+from magus_kalkulator.interface_elements import on_all_children
 
 
 WINDOW_WIDTH = 800
@@ -111,7 +111,7 @@ class MyTabs(ttk.Notebook):
         """
         Resets all tabs on changing tabs.
         """
-        reset_children(self)
+        on_all_children('reset_page', self)
 
 
 class GuiMessage(Text):

@@ -10,7 +10,7 @@ from magus_kalkulator.interface_elements import (CharacterValueField,
                                                  SfePartFrame,
                                                  organize_rows_to_left,
                                                  place_next_in_columns,
-                                                 reset_children)
+                                                 on_all_children)
 import magus_kalkulator.magus_constants as mgc
 
 KARAKTER_PANEL_COLUMN = 0
@@ -119,11 +119,11 @@ class KarakterPage(ttk.Frame):
         self.panels = KarakterPanels(self, width)
         self.panels.grid(column=0, row=0, columnspan=8)
 
-    def reset(self):
+    def reset_page(self):
         """
         Resets all the child widgets of the page.
         """
-        reset_children(self)
+        on_all_children('reset_panel', self)
 
 
 class KarakterPanels(ttk.PanedWindow):
@@ -143,11 +143,11 @@ class KarakterPanels(ttk.PanedWindow):
         self.add(self.sfe_frame)
         self.add(self.buttons_frame)
 
-    def reset(self):
+    def reset_panel(self):
         """
         Resets all the child widgets of the panel.
         """
-        reset_children(self)
+        on_all_children('reset_frame', self)
 
 
 class NameFrame(ttk.LabelFrame):
@@ -162,11 +162,11 @@ class NameFrame(ttk.LabelFrame):
         self.name_field = CharacterValueField(self, validate_string)
         organize_rows_to_left([self.name_field], NAME_COLUMN)
 
-    def reset(self):
+    def reset_frame(self):
         """
         Resets all the child widgets of the frame.
         """
-        reset_children(self)
+        on_all_children('reset_fld', self)
 
 
 class EpFpFrame(ttk.LabelFrame):
@@ -186,11 +186,11 @@ class EpFpFrame(ttk.LabelFrame):
         organize_rows_to_left([self.ep_label, self.ep_field], EP_FIELDS_COLUMN)
         organize_rows_to_left([self.fp_label, self.fp_field], FP_FIELDS_COLUMN)
 
-    def reset(self):
+    def reset_frame(self):
         """
         Resets all the child widgets of the frame.
         """
-        reset_children(self)
+        on_all_children('reset_fld', self)
 
 
 class SfeFrame(ttk.LabelFrame):
@@ -223,11 +223,14 @@ class SfeFrame(ttk.LabelFrame):
                                self.lab_sfe],
                               1, SFE_FIELDS_COLUMN, PART_SFE_COLUMN_SPAN)
 
-    def reset(self):
+    def reset_frame(self):
         """
         Resets all the child widgets of the frame.
+
+        Only resets one field, but that triggers the
+        resetting of all other fields.
         """
-        reset_children(self)
+        self.sfe_field.reset_fld()
 
     def retrieve_sfe_map(self):
         """
