@@ -523,3 +523,4 @@ class SebzesButton(Button):
 
         msg = format_damage_msg(result)
         self.messages.write_message(msg)
+        self.master.reset()
