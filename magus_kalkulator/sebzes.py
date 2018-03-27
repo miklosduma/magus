@@ -57,6 +57,10 @@ def get_sfe_per_part(sfe_map, bp_list):
 
 
 def add_disease(penalties, sub_body_part, rank):
+    """
+    Calculates the type of disease if the penalty
+    contains the chance for a disease.
+    """
 
     penalties = [x for x in penalties if x != mgc.DISEASE]
 

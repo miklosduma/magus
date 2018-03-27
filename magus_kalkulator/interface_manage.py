@@ -1,6 +1,11 @@
+"""
+Character management. E.g deleting/updating characters.
+"""
+
 from tkinter import ttk, VERTICAL, Button
 
-from magus_kalkulator.interface_elements import organize_rows_to_left, ChooseCharacterFrame
+from magus_kalkulator.interface_elements import organize_rows_to_left, \
+    ChooseCharacterFrame, reset_children
 
 
 class ManagementPage(ttk.Frame):
@@ -8,6 +13,9 @@ class ManagementPage(ttk.Frame):
     Adding characters main page.
     """
     def __init__(self, master, master_gui, width):
+        """
+        Initialise management page.
+        """
         self.master = master
         self.karakterek = master_gui.karakterek
         self.messages = master_gui.messages
@@ -20,6 +28,9 @@ class ManagementPage(ttk.Frame):
         organize_rows_to_left([self.main_panel, self.del_button], 0)
 
     def del_character(self, *_args):
+        """
+        Deletes the selected character.
+        """
         success, selected = self.main_panel.choose_frame.get_selected()
 
         if success:
@@ -30,7 +41,10 @@ class ManagementPage(ttk.Frame):
             self.messages.write_message(selected)
 
     def reset(self):
-        self.main_panel.choose_frame.variable.set('')
+        """
+        Resets all child widgets of the frame.
+        """
+        reset_children(self)
 
 
 class CharacterPanel(ttk.PanedWindow):
@@ -46,3 +60,9 @@ class CharacterPanel(ttk.PanedWindow):
 
         self.choose_frame = ChooseCharacterFrame(self, self.master.karakterek)
         organize_rows_to_left([self.choose_frame], 0)
+
+    def reset(self):
+        """
+        Resets all child widgets of this panel.
+        """
+        reset_children(self)

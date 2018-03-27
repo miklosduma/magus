@@ -26,6 +26,16 @@ def organize_rows_to_left(list_of_elements, column, start_row=0):
     return start_row
 
 
+def reset_children(parent):
+    """
+    Calls the "reset" method on all children
+    of the parent element, who has such a method.
+    """
+    for child in parent.winfo_children():
+        if hasattr(child, 'reset'):
+            child.reset()
+
+
 def place_next_in_columns(frames, row, column, columnspan):
     """
     Places the specified frame elements.
@@ -84,8 +94,6 @@ class CharacterValueField(Entry):
         if color == FIELD_COLOR_ERROR:
             self.config(bg=FIELD_COLOR)
 
-        print(self.value.get())
-
     def get_validated(self, **kwargs):
         """
         Calls assigned validator function on the
@@ -102,6 +110,10 @@ class CharacterValueField(Entry):
             raise
 
     def reset(self):
+        """
+        Cleans the field's value by setting
+        it to an empty string.
+        """
         self.value.set('')
 
 
@@ -234,5 +246,8 @@ class ChooseCharacterFrame(ttk.LabelFrame):
                              command=lambda v=value: self.variable.set(v))
 
     def reset(self):
+        """
+        Cleans the field's value by setting
+        it to an empty string.
+        """
         self.variable.set('')
-

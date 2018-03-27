@@ -99,6 +99,11 @@ def calculate_seriousness(damage, max_ep, thresholds):
 
 
 def is_part_valid(wtype, bodypart, rank):
+    """
+    Checks against exceptions such as rank 1 bite damages
+    to the spine. It returns False if the targeted body part
+    is invalid in the given damage/weapon type category.
+    """
 
     if wtype != mgc.BITE:
         return True
@@ -110,6 +115,11 @@ def is_part_valid(wtype, bodypart, rank):
 
 
 def replace_smallest_part(body_part):
+    """
+    In case of an invalid hit, replaces the body part
+    with a neighbour body part. (Replaces smallest body
+    parts , e.g. temple)
+    """
     replacements = REPLACEMENTS_MINOR[body_part]
     new_part = random.choice(replacements)
     print('Replacing {} with {}'.format(body_part, new_part))
@@ -117,6 +127,11 @@ def replace_smallest_part(body_part):
 
 
 def replace_sub_part(body_part):
+    """
+    In case of an invalid hit, replaces the body part
+    with a neighbour body part. (Replaces sub body
+    part, e.g. skull)
+    """
     [subpart, smallestpart] = random.choice(REPLACEMENTS_MAJOR[body_part])
     print('Replacing {} with {} and {}'.format(body_part,
                                                subpart,

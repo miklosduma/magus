@@ -9,7 +9,8 @@ from magus_kalkulator.validate import (validate_integer, validate_string,
 from magus_kalkulator.interface_elements import (CharacterValueField,
                                                  SfePartFrame,
                                                  organize_rows_to_left,
-                                                 place_next_in_columns)
+                                                 place_next_in_columns,
+                                                 reset_children)
 import magus_kalkulator.magus_constants as mgc
 
 KARAKTER_PANEL_COLUMN = 0
@@ -119,7 +120,10 @@ class KarakterPage(ttk.Frame):
         self.panels.grid(column=0, row=0, columnspan=8)
 
     def reset(self):
-        self.panels.reset()
+        """
+        Resets all the child widgets of the page.
+        """
+        reset_children(self)
 
 
 class KarakterPanels(ttk.PanedWindow):
@@ -140,9 +144,10 @@ class KarakterPanels(ttk.PanedWindow):
         self.add(self.buttons_frame)
 
     def reset(self):
-        self.name_frame.reset()
-        self.ep_fp_frame.reset()
-        self.sfe_frame.reset()
+        """
+        Resets all the child widgets of the panel.
+        """
+        reset_children(self)
 
 
 class NameFrame(ttk.LabelFrame):
@@ -158,7 +163,10 @@ class NameFrame(ttk.LabelFrame):
         organize_rows_to_left([self.name_field], NAME_COLUMN)
 
     def reset(self):
-        self.name_field.reset()
+        """
+        Resets all the child widgets of the frame.
+        """
+        reset_children(self)
 
 
 class EpFpFrame(ttk.LabelFrame):
@@ -179,8 +187,10 @@ class EpFpFrame(ttk.LabelFrame):
         organize_rows_to_left([self.fp_label, self.fp_field], FP_FIELDS_COLUMN)
 
     def reset(self):
-        self.ep_field.reset()
-        self.fp_field.reset()
+        """
+        Resets all the child widgets of the frame.
+        """
+        reset_children(self)
 
 
 class SfeFrame(ttk.LabelFrame):
@@ -214,7 +224,10 @@ class SfeFrame(ttk.LabelFrame):
                               1, SFE_FIELDS_COLUMN, PART_SFE_COLUMN_SPAN)
 
     def reset(self):
-        self.sfe_field.reset()
+        """
+        Resets all the child widgets of the frame.
+        """
+        reset_children(self)
 
     def retrieve_sfe_map(self):
         """
@@ -299,8 +312,6 @@ class ButtonsFrame(ttk.LabelFrame):
 
         else:
             msg = SUCCESS
-            new_char = self.master.karakterek.get_karakter(name)
-            print(new_char.max_ep, new_char.max_fp, new_char.sfe)
 
         self.master.messages.write_message(msg)
 

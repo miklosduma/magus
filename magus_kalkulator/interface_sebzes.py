@@ -10,7 +10,8 @@ from magus_kalkulator.random_body import pick_sub_parts
 from magus_kalkulator.validate import validate_integer, FieldValidationError
 from magus_kalkulator.interface_elements import (CharacterValueField,
                                                  organize_rows_to_left,
-                                                 ChooseCharacterFrame)
+                                                 ChooseCharacterFrame,
+                                                 reset_children)
 
 from magus_kalkulator import magus_constants as mgc
 
@@ -155,7 +156,10 @@ class SebzesPage(ttk.Frame):
                                self.sebzes_button], DAMAGE_PAGE_COLUMN)
 
     def reset(self):
-        self.main_panel.reset()
+        """
+        Resets all child widgets of the page.
+        """
+        reset_children(self)
 
 
 class CharacterPanel(ttk.PanedWindow):
@@ -180,11 +184,10 @@ class CharacterPanel(ttk.PanedWindow):
                                self.body_parts_frame], 0)
 
     def reset(self):
-        self.choose_frame.reset()
-        self.weapon_frame.reset()
-        self.damage_frame.reset()
-        self.piercing_frame.reset()
-        self.body_parts_frame.reset()
+        """
+        Resets all child widgets of the panel.
+        """
+        reset_children(self)
 
 
 class WeaponTypeFrame(ttk.LabelFrame):
@@ -196,7 +199,8 @@ class WeaponTypeFrame(ttk.LabelFrame):
         Initialises weapon-type frame.
         """
         ttk.LabelFrame.__init__(self, master, text=SELECT_WEAPON)
-        self.selected_weapon = WeaponString(self, WEAPON_TYPES)
+        self.selected_weapon = StringVar()
+        self.selected_weapon.set(WEAPON_TYPES[0])
         self.weapon_menu = OptionMenu(self, self.selected_weapon,
                                       *WEAPON_TYPES)
         self.weapon_menu.grid()
@@ -205,10 +209,14 @@ class WeaponTypeFrame(ttk.LabelFrame):
         """
         Returns selected weapon.
         """
-        return self.selected_weapon.get_weapon_type()
+        return self.selected_weapon.get()
 
     def reset(self):
+        """
+        Resets all child widgets of the frame.
+        """
         self.selected_weapon.set(WEAPON_TYPES[0])
+        reset_children(self)
 
 
 class DamageFrame(ttk.LabelFrame):
@@ -229,8 +237,11 @@ class DamageFrame(ttk.LabelFrame):
         self.tulutes.grid(row=0, column=1)
 
     def reset(self):
+        """
+        Resets all child widgets of the frame.
+        """
+        reset_children(self)
         self.critical_state.set(0)
-        self.damage.reset()
 
     def get_damage(self):
         """
@@ -274,6 +285,9 @@ class PiercingFrame(ttk.LabelFrame):
         return self.piercing.get()
 
     def reset(self):
+        """
+        Resets the piercing value to 0.
+        """
         self.piercing.set(self.piercing_values[0])
 
 
@@ -324,7 +338,7 @@ class ChooseBodyPartFrame(ttk.LabelFrame):
         can become invalid once the attack comes from behind not from
         the front or vice versa.
         """
-        self.reset()
+        self.main_body_frame.reset()
 
     def is_from_behind(self):
         """
@@ -333,7 +347,12 @@ class ChooseBodyPartFrame(ttk.LabelFrame):
         return self.behind_state.get()
 
     def reset(self):
-        self.main_body_frame.main_body_part.set(ANYWHERE)
+        """
+        Resets the child widgets of the element and
+        also sets the from behind checkbox to False.
+        """
+        self.behind_state.set(0)
+        reset_children(self)
 
 
 class ChooseMainBodyPartFrame(ttk.LabelFrame):
@@ -353,6 +372,13 @@ class ChooseMainBodyPartFrame(ttk.LabelFrame):
                                             mgc.RARM, mgc.LARM, mgc.RLEG,
                                             mgc.LLEG])
         self.main_body_parts.grid()
+
+    def reset(self):
+        """
+        Sets the main body part selection drop-down to
+        anywhere, triggering the same change in the sub drop-down too.
+        """
+        self.main_body_part.set(ANYWHERE)
 
 
 class ChooseSubBodyPartFrame(ttk.LabelFrame):
@@ -419,7 +445,6 @@ class ChooseSubBodyPartFrame(ttk.LabelFrame):
             # Sub parts are a list of lists with two elements
             # E.g. [['Mellkas', 'sziv'],..]. Save choices to state
             self.selected_sub_parts = sub_parts
-            print(self.selected_sub_parts)
 
             # Only use the second element of sub body part for options
             choices = [ANYWHERE] + [x[1] for x in sub_parts]
@@ -445,41 +470,6 @@ class ChooseSubBodyPartFrame(ttk.LabelFrame):
 
         # Set dropdown to first element in list. (ANYWHERE)
         self.sub_body_part.set(list_of_choices[0])
-
-
-class WeaponString(StringVar):
-    """
-    Variable for attacking weapon.
-    """
-    def __init__(self, master, weapon_types):
-        """
-        Initialise variable for attacking
-        weapon.
-        """
-        StringVar.__init__(self, master)
-        self.weapon_types = weapon_types
-        self.initial = weapon_types[0]
-        self.set_weapon_type(self.initial)
-        self.trace('w', self.print_on_change)
-
-    def set_weapon_type(self, value):
-        """
-        Sets value of variable to latest selected
-        value.
-        """
-        self.set(value)
-
-    def get_weapon_type(self):
-        """
-        Returns currently selected weapon.
-        """
-        return self.get()
-
-    def print_on_change(self, *_args):
-        """
-        Prints value on changes.
-        """
-        print(self.get_weapon_type())
 
 
 class SebzesButton(Button):
