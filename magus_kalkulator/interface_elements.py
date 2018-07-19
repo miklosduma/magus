@@ -2,8 +2,11 @@
 Generic, reusable interface elements and constants.
 """
 
+import json
+
 from tkinter import Entry, StringVar, W, N, ttk, Label, OptionMenu
 from magus_kalkulator.validate import FieldValidationError, validate_integer
+from magus_kalkulator.karakterek import char_obj_to_dict
 
 FIELD_WIDTH = 10
 FIELD_COLOR = 'white'
@@ -34,6 +37,23 @@ def on_all_children(method, parent):
     for child in parent.winfo_children():
         if hasattr(child, method):
             getattr(child, method)()
+
+
+def save_characters(characters):
+    """
+    Retrieves all stored characters and saves them
+    to file.
+    """
+    master_dict = dict()
+    for name, char_obj in characters.items():
+        char_dict = char_obj_to_dict(char_obj)
+        master_dict[name] = char_dict
+
+    with open('my_autosave.json', 'w') as backup:
+        if master_dict:
+            backup.write(json.dumps(master_dict, indent=4))
+        else:
+            backup.write('')
 
 
 def place_next_in_columns(frames, row, column, columnspan):

@@ -5,6 +5,13 @@ Main module for individual character class and characters master class.
 from __future__ import print_function
 
 
+def char_obj_to_dict(char_obj):
+    char_dict = dict()
+    for attr, value in char_obj.__dict__.items():
+        char_dict[attr] = value
+    return char_dict
+
+
 class Karakter:
     """
     Class for adding individual characters.

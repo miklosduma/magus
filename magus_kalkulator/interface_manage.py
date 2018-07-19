@@ -5,7 +5,7 @@ Character management. E.g deleting/updating characters.
 from tkinter import ttk, VERTICAL, Button
 
 from magus_kalkulator.interface_elements import organize_rows_to_left, \
-    ChooseCharacterFrame, on_all_children
+    ChooseCharacterFrame, on_all_children, save_characters
 
 
 class ManagementPage(ttk.Frame):
@@ -36,6 +36,9 @@ class ManagementPage(ttk.Frame):
         if success:
             self.karakterek.delete_karakter(selected)
             self.main_panel.choose_frame.variable.set('')
+
+            # Update characters kept in memory
+            save_characters(self.karakterek.karakterek)
 
         else:
             self.messages.write_message(selected)

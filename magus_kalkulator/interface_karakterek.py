@@ -10,7 +10,8 @@ from magus_kalkulator.interface_elements import (CharacterValueField,
                                                  SfePartFrame,
                                                  organize_rows_to_left,
                                                  place_next_in_columns,
-                                                 on_all_children)
+                                                 on_all_children,
+                                                 save_characters)
 import magus_kalkulator.magus_constants as mgc
 
 KARAKTER_PANEL_COLUMN = 0
@@ -315,6 +316,9 @@ class ButtonsFrame(ttk.LabelFrame):
 
         else:
             msg = SUCCESS
+
+            # Autosave current characters in memory
+            save_characters(self.master.karakterek.karakterek)
 
         self.master.messages.write_message(msg)
 
