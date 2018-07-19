@@ -103,3 +103,4 @@ ENV/
 # Misc
 .DS_Store
 .idea
+autosave.json

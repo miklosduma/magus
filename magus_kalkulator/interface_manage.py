@@ -2,10 +2,10 @@
 Character management. E.g deleting/updating characters.
 """
 
-from tkinter import ttk, VERTICAL, Button
+from tkinter import ttk, VERTICAL, Button, filedialog
 
 from magus_kalkulator.interface_elements import organize_rows_to_left, \
-    ChooseCharacterFrame, on_all_children, save_characters
+    ChooseCharacterFrame, on_all_children, save_characters, load_characters
 
 
 class ManagementPage(ttk.Frame):
@@ -24,8 +24,18 @@ class ManagementPage(ttk.Frame):
         self.del_button = Button(self, text='Torles')
         self.del_button.bind('<Button-1>', self.del_character)
 
+        self.load_button = Button(self, text='Load')
+        self.load_button.bind('<Button-1>', self.load_char)
+
         # Place elements on grid
-        organize_rows_to_left([self.main_panel, self.del_button], 0)
+        organize_rows_to_left([self.main_panel, self.del_button,
+                               self.load_button], 0)
+
+    def load_char(self, *_args):
+        file_path = filedialog.askopenfilename()
+        if file_path:
+            print(load_characters(file_path))
+
 
     def del_character(self, *_args):
         """

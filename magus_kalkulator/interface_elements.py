@@ -49,11 +49,19 @@ def save_characters(characters):
         char_dict = char_obj_to_dict(char_obj)
         master_dict[name] = char_dict
 
-    with open('my_autosave.json', 'w') as backup:
+    with open('saves/autosave.json', 'w') as backup:
         if master_dict:
             backup.write(json.dumps(master_dict, indent=4))
         else:
             backup.write('')
+
+
+def load_characters(path_to_backup):
+    with open(path_to_backup, 'r') as content:
+        try:
+            return json.loads(content.read())
+        except:
+            pass
 
 
 def place_next_in_columns(frames, row, column, columnspan):
