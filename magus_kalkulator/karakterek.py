@@ -91,3 +91,6 @@ class Karakterek:
         in memory.
         """
         return self.karakterek.keys()
+
+    def delete_all_characters(self):
+        self.karakterek = {}

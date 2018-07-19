@@ -32,10 +32,32 @@ class ManagementPage(ttk.Frame):
                                self.load_button], 0)
 
     def load_char(self, *_args):
-        file_path = filedialog.askopenfilename()
-        if file_path:
-            print(load_characters(file_path))
+        """
+        Replaces the characters storage with the content of a file.
+        Cleans all currently stored characters.
+        """
 
+        # Propmts the user to pick a backup file in the saves directory.
+        file_path = filedialog.askopenfilename(initialdir='saves')
+        if not file_path:
+            return
+
+
+        # The characters are saved as json, load them.
+        saved_chars = load_characters(file_path)
+
+        if not saved_chars:
+            return
+
+        # Get rid of all currently saved characters.
+        self.karakterek.delete_all_characters()
+
+        # Load each saved character into memory.
+        for char_name, char_values in saved_chars.items():
+            self.karakterek.add_karakter(char_name,
+                                         char_values['max_ep'],
+                                         char_values['sfe'],
+                                         max_fp=char_values['max_fp'])
 
     def del_character(self, *_args):
         """
