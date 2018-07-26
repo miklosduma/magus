@@ -39,7 +39,7 @@ def on_all_children(method, parent):
             getattr(child, method)()
 
 
-def save_characters(characters):
+def save_characters(characters, filename='saves/autosave.json'):
     """
     Retrieves all stored characters and saves them
     to file.
@@ -49,9 +49,10 @@ def save_characters(characters):
         char_dict = char_obj_to_dict(char_obj)
         master_dict[name] = char_dict
 
-    with open('saves/autosave.json', 'w') as backup:
+    with open(filename, 'w') as backup:
         if master_dict:
             backup.write(json.dumps(master_dict, indent=4))
+
         else:
             backup.write('')
 
