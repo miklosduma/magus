@@ -12,7 +12,7 @@ style.theme_create("yummy", parent="alt", settings={
 style.theme_use("yummy")
 """
 
-from tkinter import ttk, Text, END, DISABLED, NORMAL, N
+from tkinter import ttk, Text, END, DISABLED, NORMAL, N, mainloop, Tk
 
 from magus_kalkulator.karakterek import Karakterek
 from magus_kalkulator.interface_sebzes import SebzesPage
@@ -46,6 +46,16 @@ MESSAGES_ROW = TABS_ROW
 MESSAGES_ROWSPAN = TABS_ROW_SPAN
 
 START_INDEX = 1.0
+
+
+def fire_up_interface():
+    """
+    Starts the GUI when called from
+    the command-line.
+    """
+    root = Tk()
+    MagusGUI(root)
+    mainloop()
 
 
 class MagusGUI:
