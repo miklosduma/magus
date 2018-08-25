@@ -25,8 +25,8 @@ SFE_FIELDS_COLUMN = EP_FIELDS_COLUMN
 PART_SFE_COLUMN_SPAN = 5
 
 EP_FRAME_TITLE = 'Eletero'
-EP_LABEL = 'Max EP'
-FP_LABEL = 'Max FP'
+EP_LABEL = 'EP'
+FP_LABEL = 'FP'
 NEV_LABEL = 'Nev'
 
 SFE_FRAME_TITLE = 'SFE'
@@ -178,20 +178,46 @@ class EpFpFrame(ttk.LabelFrame):
     def __init__(self, master):
         self.master = master
         ttk.LabelFrame.__init__(self, master, text=EP_FRAME_TITLE)
-        self.ep_label = Label(self, text=EP_LABEL)
-        self.ep_field = CharacterValueField(self, validate_integer)
 
-        self.fp_label = Label(self, text=FP_LABEL)
-        self.fp_field = CharacterValueField(self, validate_integer)
+        self.ep_field = CharacterValueField(self, validate_integer,
+                                            width=3, name='max_ep')
+        self.akt_ep_field = CharacterValueField(self, validate_integer,
+                                                width=3)
+        self.ep_field.value.trace('w', self._set_actual)
 
-        organize_rows_to_left([self.ep_label, self.ep_field], EP_FIELDS_COLUMN)
-        organize_rows_to_left([self.fp_label, self.fp_field], FP_FIELDS_COLUMN)
+        self.fp_field = CharacterValueField(self, validate_integer,
+                                            width=3, name='max_fp')
+        self.akt_fp_field = CharacterValueField(self, validate_integer,
+                                                width=3)
+        self.fp_field.value.trace('w', self._set_actual)
+
+        Label(self, text=EP_LABEL).grid(column=0, row=0)
+        self.ep_field.grid(column=1, row=0)
+        Label(self, text='/').grid(column=2, row=0)
+        self.akt_ep_field.grid(column=3, row=0)
+
+        Label(self, text=FP_LABEL).grid(row=1, column=0)
+        self.fp_field.grid(row=1, column=1)
+        Label(self, text='/').grid(column=2, row=1)
+        self.akt_fp_field.grid(column=3, row=1)
 
     def reset_frame(self):
         """
         Resets all the child widgets of the frame.
         """
         on_all_children('reset_fld', self)
+
+    def _set_actual(self, name, _i, _mode):
+        """
+        Sets the actual FP and EP values based on the maximum.
+        """
+        if name == 'max_ep':
+            if self.ep_field.value:
+                self.akt_ep_field.value.set(self.ep_field.value.get())
+
+        elif name == 'max_fp':
+            if self.fp_field.value:
+                self.akt_fp_field.value.set(self.fp_field.value.get())
 
 
 class SfeFrame(ttk.LabelFrame):

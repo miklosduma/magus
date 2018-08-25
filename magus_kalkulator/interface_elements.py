@@ -93,14 +93,18 @@ class CharacterValueField(Entry):
     """
     Basic field type used to store character values.
     """
-    def __init__(self, master, validate_fun, width=FIELD_WIDTH):
+    def __init__(self, master, validate_fun, width=FIELD_WIDTH, name=None):
         """
         Initialise input field.
          - validate_fun:
             A function used to validate the field's input value.
         """
-        # Varible for entered value
-        self.value = StringVar(master)
+        # Variable for entered value
+        if name:
+            self.value = StringVar(master, name=name)
+        else:
+            self.value = StringVar(master)
+
         self.value.set('')
         self.value.trace('w', self._follow_changes)
         self.validator = validate_fun
