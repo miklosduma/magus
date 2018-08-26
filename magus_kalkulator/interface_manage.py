@@ -97,7 +97,7 @@ class ManagementPage(ttk.Frame):
         success, selected = self.main_panel.choose_frame.get_selected()
 
         if success:
-            self.characters.delete_karakter(selected)
+            self.characters.delete_character(selected)
             self.main_panel.choose_frame.variable.set('')
 
             # Update characters kept in memory

@@ -118,13 +118,19 @@ class KarakterPage(ttk.Frame):
         self.messages = master_gui.messages
         ttk.Frame.__init__(self, master, width=width)
         self.panels = KarakterPanels(self, width)
-        self.panels.grid(column=0, row=0, columnspan=8)
+        self.panels.grid(column=0, row=1, columnspan=8)
+        self.add_button = Button(self, text=ADD_BUTTON)
+        self.add_button.bind('<Button-1>', self.panels.add_character)
+        self.get_button = Button(self, text=GET_BUTTON)
+        self.get_button.bind('<Button-1>', self.panels.get_characters)
+        self.add_button.grid(column=0, row=2, sticky=W)
+        self.get_button.grid(column=0, row=2, sticky=E)
 
     def reset_page(self):
         """
         Resets all the child widgets of the page.
         """
-        on_all_children('reset_panel', self)
+        self.panels.reset_panel()
 
 
 class KarakterPanels(ttk.PanedWindow):
@@ -138,17 +144,87 @@ class KarakterPanels(ttk.PanedWindow):
         self.name_frame = NameFrame(self)
         self.ep_fp_frame = EpFpFrame(self)
         self.sfe_frame = SfeFrame(self)
-        self.buttons_frame = ButtonsFrame(self)
         self.add(self.name_frame)
         self.add(self.ep_fp_frame)
         self.add(self.sfe_frame)
-        self.add(self.buttons_frame)
 
     def reset_panel(self):
         """
         Resets all the child widgets of the panel.
         """
         on_all_children('reset_frame', self)
+
+    def get_characters(self, *_args):
+        """
+        Function executed on clicking Get button.
+        Lists all characters already added.
+        """
+        all_characters = self.characters.get_character_names()
+
+        if not all_characters:
+            msg = NO_CHARACTERS
+
+        else:
+            msg = CHARACTERS_ADDED.format(
+                '\n'.join(all_characters))
+
+        self.messages.write_message(msg)
+
+    def add_character(self, *_args):
+        """
+        Function executed on clicking Add button.
+
+        Either adds a new character or returns error
+        message if validation fails or character already
+        exists.
+        """
+        # Get name, ep and fp fields
+        try:
+            name = self.name_frame.name_field.get_validated()
+            max_ep = self.ep_fp_frame.ep_field.get_validated(
+                min_val=1)
+            max_fp = self.ep_fp_frame.fp_field.get_validated(
+                min_val=1)
+            act_ep = self.ep_fp_frame.akt_ep_field.get_validated(
+                min_val=1)
+            act_fp = self.ep_fp_frame.akt_fp_field.get_validated(
+                min_val=1)
+
+            sfe_map = self.sfe_frame.retrieve_sfe_map()
+
+        except FieldValidationError as error:
+            self.messages.write_message(error.message)
+            return
+
+        # Add exceptional sfe values to map using specified key
+        sfe_map = copy_value_to_keys(sfe_map, mgc.CHEST, mgc.RCOLLARBONE,
+                                     mgc.LCOLLARBONE)
+        sfe_map = insert_torso_back_armour(sfe_map)
+
+        character_values = {
+            mgc.NAME: name,
+            mgc.MAX_EP: max_ep,
+            mgc.ACT_EP: act_ep,
+
+            mgc.MAX_FP: max_fp,
+            mgc.ACT_FP: act_fp,
+
+            mgc.SFE: sfe_map}
+
+        # Add new character. Addition fails if character already exists.
+        success, msg = self.characters.add_character(
+            name, character_values)
+
+        if not success:
+            msg = ALREADY_ADDED.format(name)
+
+        else:
+            msg = SUCCESS
+
+            # Autosave current characters in memory
+            save_characters(self.characters.character_maps)
+
+        self.messages.write_message(msg)
 
 
 class NameFrame(ttk.LabelFrame):
@@ -277,82 +353,6 @@ class SfeFrame(ttk.LabelFrame):
 
         except FieldValidationError:
             raise
-
-
-class ButtonsFrame(ttk.LabelFrame):
-    """
-    Part of characters panel. Contains buttons.
-    """
-    def __init__(self, master):
-        ttk.LabelFrame.__init__(self, master, text=BUTTONS_FRAME_TITLE)
-        self.master = master
-        self.add_button = Button(self, text=ADD_BUTTON)
-        self.add_button.bind('<Button-1>', self.add_character)
-        self.get_button = Button(self, text=GET_BUTTON)
-        self.get_button.bind('<Button-1>', self.get_characters)
-        self.add_button.grid(column=0, row=0, sticky=W)
-        self.get_button.grid(column=1, row=0, sticky=E)
-
-    def get_characters(self, _event):
-        """
-        Function executed on clicking Get button.
-        Lists all characters already added.
-        """
-        all_characters = self.master.characters.get_character_names()
-
-        if not all_characters:
-            msg = NO_CHARACTERS
-
-        else:
-            msg = CHARACTERS_ADDED.format(
-                '\n'.join(all_characters))
-
-        self.master.messages.write_message(msg)
-
-    def add_character(self, _event):
-        """
-        Function executed on clicking Add button.
-
-        Either adds a new character or returns error
-        message if validation fails or character already
-        exists.
-        """
-        # Get name, ep and fp fields
-        try:
-            name = self.master.name_frame.name_field.get_validated()
-            max_ep = self.master.ep_fp_frame.ep_field.get_validated(min_val=1)
-            max_fp = self.master.ep_fp_frame.fp_field.get_validated(min_val=1)
-            sfe_map = self.master.sfe_frame.retrieve_sfe_map()
-
-        except FieldValidationError as error:
-            self.master.messages.write_message(error.message)
-            return
-
-        # Add exceptional sfe values to map using specified key
-        sfe_map = copy_value_to_keys(sfe_map, mgc.CHEST, mgc.RCOLLARBONE,
-                                     mgc.LCOLLARBONE)
-        sfe_map = insert_torso_back_armour(sfe_map)
-
-        character_values = {
-            mgc.NAME: name,
-            mgc.MAX_EP: max_ep,
-            mgc.MAX_FP: max_fp,
-            mgc.SFE: sfe_map}
-
-        # Add new character. Addition fails if character already exists.
-        success, msg = self.master.characters.add_character(
-            name, character_values)
-
-        if not success:
-            msg = ALREADY_ADDED.format(name)
-
-        else:
-            msg = SUCCESS
-
-            # Autosave current characters in memory
-            save_characters(self.master.characters.character_maps)
-
-        self.master.messages.write_message(msg)
 
 
 class SfePartFrameLimb(SfePartFrame):
