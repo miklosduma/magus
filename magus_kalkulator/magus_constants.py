@@ -2,6 +2,14 @@
 Generic constants.
 """
 
+# Character keys
+MAX_EP = 'max_ep'
+ACT_EP = 'act_ep'
+MAX_FP = 'max_fp'
+ACT_FP = 'act_fp'
+SFE = 'sfe'
+NAME = 'name'
+
 # Head parts
 HEAD = 'Fej'
 

@@ -14,7 +14,7 @@ style.theme_use("yummy")
 
 from tkinter import ttk, Text, END, DISABLED, NORMAL, N, mainloop, Tk
 
-from magus_kalkulator.karakterek import Karakterek
+from magus_kalkulator.karakterek import Characters
 from magus_kalkulator.interface_sebzes import SebzesPage
 from magus_kalkulator.interface_karakterek import KarakterPage
 from magus_kalkulator.interface_manage import ManagementPage
@@ -73,7 +73,7 @@ class MagusGUI:
         self.master = master
 
         # Initialize characters object
-        self.karakterek = Karakterek()
+        self.characters = Characters()
 
         # Format main GUI window
         master.minsize(WINDOW_WIDTH, WINDOW_HEIGHT)
@@ -104,7 +104,7 @@ class MyTabs(ttk.Notebook):
         the slave pages.
         """
         ttk.Notebook.__init__(self, master, width=TAB_PANEL_WIDTH)
-        self.karakterek = master_gui.karakterek
+        self.characters = master_gui.characters
         self.messages = master_gui.messages
         self.master = master
 

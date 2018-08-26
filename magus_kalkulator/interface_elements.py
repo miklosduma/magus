@@ -6,7 +6,6 @@ import json
 
 from tkinter import Entry, StringVar, W, N, ttk, Label, OptionMenu
 from magus_kalkulator.validate import FieldValidationError, validate_integer
-from magus_kalkulator.karakterek import char_obj_to_dict
 
 FIELD_WIDTH = 10
 FIELD_COLOR = 'white'
@@ -45,9 +44,9 @@ def save_characters(characters, filename='saves/autosave.json'):
     to file.
     """
     master_dict = dict()
+
     for name, char_obj in characters.items():
-        char_dict = char_obj_to_dict(char_obj)
-        master_dict[name] = char_dict
+        master_dict[name] = char_obj.values
 
     with open(filename, 'w') as backup:
         if master_dict:
@@ -229,13 +228,13 @@ class ChooseCharacterFrame(ttk.LabelFrame):
     """
     Frame comprising character-selection drop-down.
     """
-    def __init__(self, master, karakterek):
+    def __init__(self, master, characters):
         """
         Initialise character-selection frame.
         """
         self.master = master
         ttk.LabelFrame.__init__(self, master, text=SELECT_CHARACTER)
-        self.karakterek = karakterek
+        self.characters = characters
         self.variable = StringVar()
         self.variable.set('')
         self.character_menu = OptionMenu(self, self.variable, *[''])
@@ -270,7 +269,7 @@ class ChooseCharacterFrame(ttk.LabelFrame):
         """
         menu = self.character_menu.children['menu']
         menu.delete(0, 'end')
-        new_choices = self.karakterek.get_all_karakters()
+        new_choices = self.characters.get_character_names()
 
         self._width_match_longest(new_choices)
 

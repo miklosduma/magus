@@ -147,7 +147,7 @@ class SebzesPage(ttk.Frame):
 
         # Variable for character selection drop-down
         # SFE and Max_EP of character is used when calculating damage
-        self.karakterek = master_gui.karakterek
+        self.characters = master_gui.characters
         self.main_panel = CharacterPanel(self, width)
         self.sebzes_button = SebzesButton(self, DAMAGE_BUTTON_TEXT)
 
@@ -173,7 +173,7 @@ class CharacterPanel(ttk.PanedWindow):
         ttk.PanedWindow.__init__(self, master, width=width, orient=orient)
         self.master = master
 
-        self.choose_frame = ChooseCharacterFrame(self, self.master.karakterek)
+        self.choose_frame = ChooseCharacterFrame(self, self.master.characters)
         self.weapon_frame = WeaponTypeFrame(self)
         self.damage_frame = DamageFrame(self)
         self.piercing_frame = PiercingFrame(self, ATUTES_VALUES)
@@ -481,7 +481,7 @@ class SebzesButton(Button):
         """
         Button.__init__(self, master, text=text)
         self.master = master
-        self.karakterek = self.master.karakterek
+        self.characters = self.master.characters
         self.messages = self.master.messages
         self.main_panel = self.master.main_panel
         self.bind('<Button-1>', self.write_results)
@@ -505,9 +505,11 @@ class SebzesButton(Button):
             self.messages.write_message(attacked)
             return
 
-        character = self.karakterek.get_karakter(attacked)
+        character = self.characters.get_character(attacked)
 
         success, result = self.main_panel.damage_frame.get_damage()
+
+        print(character.values)
 
         if not success:
             self.messages.write_message(result)
@@ -516,8 +518,8 @@ class SebzesButton(Button):
         tulutes = self.main_panel.damage_frame.is_critical()
         atutes = self.main_panel.piercing_frame.get_piercing()
 
-        result = return_penalty(character.sfe, result, body_parts_list,
-                                character.max_ep, attacking_weapon,
+        result = return_penalty(character.values['sfe'], result, body_parts_list,
+                                character.values['max_ep'], attacking_weapon,
                                 tulutes=tulutes, atutes=atutes)
 
         msg = format_damage_msg(result)

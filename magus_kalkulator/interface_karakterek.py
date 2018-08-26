@@ -114,7 +114,7 @@ class KarakterPage(ttk.Frame):
     """
     def __init__(self, master, master_gui, width):
         self.master = master
-        self.karakterek = master_gui.karakterek
+        self.characters = master_gui.characters
         self.messages = master_gui.messages
         ttk.Frame.__init__(self, master, width=width)
         self.panels = KarakterPanels(self, width)
@@ -133,7 +133,7 @@ class KarakterPanels(ttk.PanedWindow):
     """
     def __init__(self, master, width, orient=VERTICAL):
         ttk.PanedWindow.__init__(self, master, width=width, orient=orient)
-        self.karakterek = self.master.karakterek
+        self.characters = self.master.characters
         self.messages = self.master.messages
         self.name_frame = NameFrame(self)
         self.ep_fp_frame = EpFpFrame(self)
@@ -298,7 +298,7 @@ class ButtonsFrame(ttk.LabelFrame):
         Function executed on clicking Get button.
         Lists all characters already added.
         """
-        all_characters = self.master.karakterek.get_all_karakters()
+        all_characters = self.master.characters.get_character_names()
 
         if not all_characters:
             msg = NO_CHARACTERS
@@ -333,9 +333,15 @@ class ButtonsFrame(ttk.LabelFrame):
                                      mgc.LCOLLARBONE)
         sfe_map = insert_torso_back_armour(sfe_map)
 
+        character_values = {
+            mgc.NAME: name,
+            mgc.MAX_EP: max_ep,
+            mgc.MAX_FP: max_fp,
+            mgc.SFE: sfe_map}
+
         # Add new character. Addition fails if character already exists.
-        success, msg = self.master.karakterek.add_karakter(
-            name, max_ep, sfe_map, max_fp=max_fp)
+        success, msg = self.master.characters.add_character(
+            name, character_values)
 
         if not success:
             msg = ALREADY_ADDED.format(name)
@@ -344,7 +350,7 @@ class ButtonsFrame(ttk.LabelFrame):
             msg = SUCCESS
 
             # Autosave current characters in memory
-            save_characters(self.master.karakterek.karakterek)
+            save_characters(self.master.characters.character_maps)
 
         self.master.messages.write_message(msg)
 
