@@ -43,14 +43,9 @@ def save_characters(characters, filename='saves/autosave.json'):
     Retrieves all stored characters and saves them
     to file.
     """
-    master_dict = dict()
-
-    for name, char_obj in characters.items():
-        master_dict[name] = char_obj.values
-
     with open(filename, 'w') as backup:
-        if master_dict:
-            backup.write(json.dumps(master_dict, indent=4))
+        if characters:
+            backup.write(json.dumps(characters, indent=4))
 
         else:
             backup.write('')
