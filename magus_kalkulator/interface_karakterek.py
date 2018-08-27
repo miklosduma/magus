@@ -331,10 +331,11 @@ class SfeFrame(ttk.LabelFrame):
                                     SFE_SHORTCUT_LABEL, SFE_FEJ_PARTS)
         self.torzs_sfe = SfePartFrame(self, SFE_TORZS_LABEL,
                                       SFE_SHORTCUT_LABEL, SFE_TORZS_PARTS)
-        self.kar_sfe = SfePartFrameLimb(self, SFE_SHORTCUT_LABEL,
-                                        SFE_KAR_LABEL, SFE_KAR_PARTS)
-        self.lab_sfe = SfePartFrameLimb(self, SFE_SHORTCUT_LABEL,
-                                        SFE_LAB_LABEL, SFE_LAB_PARTS)
+
+        self.kar_sfe = SfePartFrameLimb(
+            self, SFE_KAR_LABEL, SFE_SHORTCUT_LABEL, SFE_KAR_PARTS)
+        self.lab_sfe = SfePartFrameLimb(
+            self, SFE_LAB_LABEL, SFE_SHORTCUT_LABEL, SFE_LAB_PARTS)
 
         place_next_in_columns([self.fej_sfe,
                                self.torzs_sfe,
