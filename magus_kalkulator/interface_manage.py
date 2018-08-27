@@ -6,8 +6,6 @@ from __future__ import print_function
 import os
 from tkinter import ttk, VERTICAL, Button, filedialog, messagebox
 
-import magus_kalkulator.magus_constants as mgc
-
 from magus_kalkulator.interface_elements import organize_rows_to_left, \
     ChooseCharacterFrame, on_all_children, save_characters, load_characters, \
     CharacterValueField
@@ -23,25 +21,25 @@ class ManagementPage(ttk.Frame):
         """
         Initialise management page.
         """
-        self.master = master
         self.characters = characters
         self.messages = messages
         ttk.Frame.__init__(self, master, width=width)
-        self.main_panel = CharacterPanel(self, width)
-        self.del_button = Button(self, text='Torles')
-        self.del_button.bind('<Button-1>', self.del_character)
+        self.main_panel = CharacterPanel(self, characters, width)
 
-        self.load_button = Button(self, text='Load')
-        self.load_button.bind('<Button-1>', self.load_char)
+        del_button = Button(self, text='Torles')
+        del_button.bind('<Button-1>', self.del_character)
+
+        load_button = Button(self, text='Load')
+        load_button.bind('<Button-1>', self.load_char)
 
         self.save_text = CharacterValueField(self, validate_string)
-        self.save_button = Button(self, text='Save')
-        self.save_button.bind('<Button-1>', self.save_char)
+        save_button = Button(self, text='Save')
+        save_button.bind('<Button-1>', self.save_char)
 
         # Place elements on grid
-        organize_rows_to_left([self.main_panel, self.del_button,
-                               self.load_button, self.save_text,
-                               self.save_button], 0)
+        organize_rows_to_left([self.main_panel, del_button,
+                               load_button, self.save_text,
+                               save_button], 0)
 
     def save_char(self, *_args):
         """
@@ -117,14 +115,13 @@ class CharacterPanel(ttk.PanedWindow):
     """
     Main panel of damage page.
     """
-    def __init__(self, master, width, orient=VERTICAL):
+    def __init__(self, master, characters, width, orient=VERTICAL):
         """
         Initialise main panel.
         """
         ttk.PanedWindow.__init__(self, master, width=width, orient=orient)
-        self.master = master
 
-        self.choose_frame = ChooseCharacterFrame(self, self.master.characters)
+        self.choose_frame = ChooseCharacterFrame(self, characters)
         organize_rows_to_left([self.choose_frame], 0)
 
     def reset_panel(self):

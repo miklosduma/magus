@@ -138,22 +138,12 @@ class SebzesPage(ttk.Frame):
     """
     Main tab for calculating damage and penalties.
     """
-    def __init__(self, master, characters, messages, width):
+    def __init__(self, master_tabs, characters, messages, width):
         """
         Initializes damage tab.
         """
-        ttk.Frame.__init__(self, master, width=width)
-        self.messages = messages
-
-        # Variable for character selection drop-down
-        # SFE and Max_EP of character is used when calculating damage
-        self.characters = characters
-        self.main_panel = CharacterPanel(self, width)
-        self.sebzes_button = SebzesButton(self, DAMAGE_BUTTON_TEXT)
-
-        # Place elements on grid
-        organize_rows_to_left([self.main_panel,
-                               self.sebzes_button], DAMAGE_PAGE_COLUMN)
+        ttk.Frame.__init__(self, master_tabs, width=width)
+        CharacterPanel(self, characters, messages, width).grid()
 
     def reset_page(self):
         """
@@ -166,14 +156,19 @@ class CharacterPanel(ttk.PanedWindow):
     """
     Main panel of damage page.
     """
-    def __init__(self, master, width, orient=VERTICAL):
+    def __init__(self, page, characters, messages, width, orient=VERTICAL):
         """
         Initialise main panel.
         """
-        ttk.PanedWindow.__init__(self, master, width=width, orient=orient)
-        self.master = master
+        ttk.PanedWindow.__init__(self, page, width=width, orient=orient)
+        self.page = page
+        self.messages = messages
+        self.characters = characters
 
-        self.choose_frame = ChooseCharacterFrame(self, self.master.characters)
+        sebzes_button = Button(self, text=DAMAGE_BUTTON_TEXT)
+        sebzes_button.bind('<Button-1>', self.write_results)
+
+        self.choose_frame = ChooseCharacterFrame(self, characters)
         self.weapon_frame = WeaponTypeFrame(self)
         self.damage_frame = DamageFrame(self)
         self.piercing_frame = PiercingFrame(self, ATUTES_VALUES)
@@ -181,7 +176,7 @@ class CharacterPanel(ttk.PanedWindow):
 
         organize_rows_to_left([self.choose_frame, self.weapon_frame,
                                self.damage_frame, self.piercing_frame,
-                               self.body_parts_frame], 0)
+                               self.body_parts_frame, sebzes_button], 0)
 
     def reset_panel(self):
         """
@@ -189,16 +184,48 @@ class CharacterPanel(ttk.PanedWindow):
         """
         on_all_children('reset_frame', self)
 
+    def write_results(self, _event):
+        """
+        Gets result based on input fields/values and writes
+        result to message panel.
+        """
+        success, attacked = self.choose_frame.get_selected()
+
+        if not success:
+            self.messages.write_message(attacked)
+            return
+
+        character = self.characters.get_character(attacked)
+
+        success, damage = self.damage_frame.get_damage()
+
+        if not success:
+            self.messages.write_message(damage)
+            return
+
+        attacking_weapon = self.weapon_frame.get_weapon()
+        body_parts_list = self.body_parts_frame.get_targeted()
+        is_critical = self.damage_frame.is_critical()
+        armour_piercing = self.piercing_frame.get_piercing()
+
+        result = return_penalty(character['sfe'], damage, body_parts_list,
+                                character['max_ep'], attacking_weapon,
+                                tulutes=is_critical, atutes=armour_piercing)
+
+        msg = format_damage_msg(result)
+        self.messages.write_message(msg)
+        self.page.reset_page()
+
 
 class WeaponTypeFrame(ttk.LabelFrame):
     """
     Frame for weapon-type selection drop-down.
     """
-    def __init__(self, master):
+    def __init__(self, character_panel):
         """
         Initialises weapon-type frame.
         """
-        ttk.LabelFrame.__init__(self, master, text=SELECT_WEAPON)
+        ttk.LabelFrame.__init__(self, character_panel, text=SELECT_WEAPON)
         self.selected_weapon = StringVar()
         self.selected_weapon.set(WEAPON_TYPES[0])
         self.weapon_menu = OptionMenu(self, self.selected_weapon,
@@ -222,11 +249,11 @@ class DamageFrame(ttk.LabelFrame):
     """
     Frame comprising damage entry field.
     """
-    def __init__(self, master):
+    def __init__(self, character_panel):
         """
         Initialises frame.
         """
-        ttk.LabelFrame.__init__(self, master, text=DAMAGE_TEXT)
+        ttk.LabelFrame.__init__(self, character_panel, text=DAMAGE_TEXT)
         self.damage = CharacterValueField(self, validate_integer)
         self.critical_state = IntVar()
         self.critical_state.set(0)
@@ -266,11 +293,11 @@ class PiercingFrame(ttk.LabelFrame):
     """
     Frame comprising the armour-piercing value drop-down.
     """
-    def __init__(self, master, piercing_values):
+    def __init__(self, character_panel, piercing_values):
         """
         Initialises frame.
         """
-        ttk.LabelFrame.__init__(self, master, text=ATUTES_TEXT)
+        ttk.LabelFrame.__init__(self, character_panel, text=ATUTES_TEXT)
         self.piercing = IntVar()
         self.piercing_values = piercing_values
         self.piercing.set(self.piercing_values[0])
@@ -294,11 +321,11 @@ class ChooseBodyPartFrame(ttk.LabelFrame):
     """
     Master frame for body selection drop-downs.
     """
-    def __init__(self, master):
+    def __init__(self, character_panel):
         """
         Initialises frame.
         """
-        ttk.LabelFrame.__init__(self, master, text=HIT_LABEL)
+        ttk.LabelFrame.__init__(self, character_panel, text=HIT_LABEL)
 
         self.main_body_frame = ChooseMainBodyPartFrame(self)
         self.behind_state = IntVar()
@@ -314,7 +341,7 @@ class ChooseBodyPartFrame(ttk.LabelFrame):
                                                      self.main_body_frame)
         self.sub_body_frame.grid(row=1, column=1)
 
-    def get_targeted(self):
+    def get_parts(self):
         """
         Retrieves the selected main and sub-body parts, if any.
         """
@@ -345,6 +372,21 @@ class ChooseBodyPartFrame(ttk.LabelFrame):
         """
         return self.behind_state.get()
 
+    def get_targeted(self):
+        """
+        Either returns the selected body parts - if any -
+        or selects a random set of body parts.
+
+        Also takes into account whether the attack happens
+        from behind.
+        """
+        is_from_behind = self.is_from_behind()
+        main_part, sub_part = self.get_parts()
+
+        return pick_sub_parts(from_behind=is_from_behind,
+                              main_part=main_part,
+                              sub_part=sub_part)
+
     def reset_frame(self):
         """
         Resets the child widgets of the element and
@@ -358,11 +400,11 @@ class ChooseMainBodyPartFrame(ttk.LabelFrame):
     """
     Main body-part drop-down frame.
     """
-    def __init__(self, master):
+    def __init__(self, body_frame):
         """
         Initialises frame.
         """
-        ttk.LabelFrame.__init__(self, master, text=MAIN_PART_LABEL)
+        ttk.LabelFrame.__init__(self, body_frame, text=MAIN_PART_LABEL)
         self.main_body_part = StringVar()
         self.main_body_part.set(ANYWHERE)
         self.main_body_parts = OptionMenu(self,
@@ -384,12 +426,12 @@ class ChooseSubBodyPartFrame(ttk.LabelFrame):
     """
     Sub body-part frame.
     """
-    def __init__(self, master, main_body_frame):
+    def __init__(self, body_frame, main_body_frame):
         """
         Initialise sub body part frame.
         """
-        ttk.LabelFrame.__init__(self, master, text=SUB_PART_LABEL)
-        self.master = master
+        ttk.LabelFrame.__init__(self, body_frame, text=SUB_PART_LABEL)
+        self.body_frame = body_frame
         self.selected_sub_parts = None
         self.selected_sub_part = None
         self.main_body_frame = main_body_frame
@@ -430,7 +472,7 @@ class ChooseSubBodyPartFrame(ttk.LabelFrame):
         selected_main_body_part = self.main_body_part.get()
 
         # See if from behind box is ticked
-        is_from_behind = self.master.is_from_behind()
+        is_from_behind = self.body_frame.is_from_behind()
 
         if is_from_behind:
             body_list_map = BODY_LISTS_DICT_BEHIND
@@ -469,57 +511,3 @@ class ChooseSubBodyPartFrame(ttk.LabelFrame):
 
         # Set dropdown to first element in list. (ANYWHERE)
         self.sub_body_part.set(list_of_choices[0])
-
-
-class SebzesButton(Button):
-    """
-    Damage button.
-    """
-    def __init__(self, master, text):
-        """
-        Initialise button.
-        """
-        Button.__init__(self, master, text=text)
-        self.master = master
-        self.characters = self.master.characters
-        self.messages = self.master.messages
-        self.main_panel = self.master.main_panel
-        self.bind('<Button-1>', self.write_results)
-
-    def write_results(self, _event):
-        """
-        Gets result based on input fields/values and writes
-        result to message panel.
-        """
-        is_from_behind = self.main_panel.body_parts_frame.is_from_behind()
-        main_part, sub_parts = self.main_panel.body_parts_frame.get_targeted()
-
-        body_parts_list = pick_sub_parts(from_behind=is_from_behind,
-                                         main_part=main_part,
-                                         sub_part=sub_parts)
-
-        attacking_weapon = self.main_panel.weapon_frame.get_weapon()
-        success, attacked = self.main_panel.choose_frame.get_selected()
-
-        if not success:
-            self.messages.write_message(attacked)
-            return
-
-        character = self.characters.get_character(attacked)
-
-        success, result = self.main_panel.damage_frame.get_damage()
-
-        if not success:
-            self.messages.write_message(result)
-            return
-
-        tulutes = self.main_panel.damage_frame.is_critical()
-        atutes = self.main_panel.piercing_frame.get_piercing()
-
-        result = return_penalty(character['sfe'], result, body_parts_list,
-                                character['max_ep'], attacking_weapon,
-                                tulutes=tulutes, atutes=atutes)
-
-        msg = format_damage_msg(result)
-        self.messages.write_message(msg)
-        self.master.reset_page()
