@@ -138,16 +138,16 @@ class SebzesPage(ttk.Frame):
     """
     Main tab for calculating damage and penalties.
     """
-    def __init__(self, master, master_gui, width):
+    def __init__(self, master, characters, messages, width):
         """
         Initializes damage tab.
         """
         ttk.Frame.__init__(self, master, width=width)
-        self.messages = master_gui.messages
+        self.messages = messages
 
         # Variable for character selection drop-down
         # SFE and Max_EP of character is used when calculating damage
-        self.characters = master_gui.characters
+        self.characters = characters
         self.main_panel = CharacterPanel(self, width)
         self.sebzes_button = SebzesButton(self, DAMAGE_BUTTON_TEXT)
 

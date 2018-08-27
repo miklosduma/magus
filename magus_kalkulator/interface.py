@@ -65,31 +65,30 @@ class MagusGUI:
     object which it will make available for all
     elements of the GUI.
     """
-    def __init__(self, master):
+    def __init__(self, root):
         """
         Initialize magus GUI. It's master is
         the TK root element.
         """
-        self.master = master
-
         # Initialize characters object
         self.characters = Characters()
 
         # Format main GUI window
-        master.minsize(WINDOW_WIDTH, WINDOW_HEIGHT)
-        master.maxsize(WINDOW_WIDTH, WINDOW_HEIGHT)
-        master.geometry(WINDOW_DIMENSIONS)
-        master.title(WINDOW_TEXT)
+        root.minsize(WINDOW_WIDTH, WINDOW_HEIGHT)
+        root.maxsize(WINDOW_WIDTH, WINDOW_HEIGHT)
+        root.geometry(WINDOW_DIMENSIONS)
+        root.title(WINDOW_TEXT)
+
+        messages = GuiMessage(root)
+        messages.grid(column=MESSAGES_COLUMN,
+                           columnspan=MESSAGES_COLUMNSPAN, sticky=N,
+                           row=MESSAGES_ROW, rowspan=MESSAGES_ROWSPAN)
 
         # Create multiple tabs on main page, making characters
         # accessible to each
-        self.messages = GuiMessage(self.master)
-        self.tabs = MyTabs(self.master, self)
-        self.tabs.grid(column=TABS_COLUMN, columnspan=TABS_COLUMN_SPAN,
-                       row=TABS_ROW, rowspan=TABS_ROW_SPAN, sticky=N)
-        self.messages.grid(column=MESSAGES_COLUMN,
-                           columnspan=MESSAGES_COLUMNSPAN, sticky=N,
-                           row=MESSAGES_ROW, rowspan=MESSAGES_ROWSPAN)
+        tabs = MyTabs(root, self.characters, messages)
+        tabs.grid(column=TABS_COLUMN, columnspan=TABS_COLUMN_SPAN,
+                  row=TABS_ROW, rowspan=TABS_ROW_SPAN, sticky=N)
 
 
 class MyTabs(ttk.Notebook):
@@ -97,24 +96,22 @@ class MyTabs(ttk.Notebook):
     Base class for tabs frame. It can support
     one or more tabs added to it as separate pages.
     """
-    def __init__(self, master, master_gui):
+    def __init__(self, magus_gui, characters, messages):
         """
         Initialise tabs frame. It gets the characters
         object from the top level and hands them down to
         the slave pages.
         """
-        ttk.Notebook.__init__(self, master, width=TAB_PANEL_WIDTH)
-        self.characters = master_gui.characters
-        self.messages = master_gui.messages
-        self.master = master
+        ttk.Notebook.__init__(self, magus_gui, width=TAB_PANEL_WIDTH)
 
         # Initialize tabs
-        self.karakter_page = KarakterPage(self, master_gui, TAB_PANEL_WIDTH)
-        self.sebzes_page = SebzesPage(self, master_gui, TAB_PANEL_WIDTH)
-        self.manage_page = ManagementPage(self, master_gui, TAB_PANEL_WIDTH)
-        self.add(self.karakter_page, text=KARAKTER_PAGE_TITLE)
-        self.add(self.sebzes_page, text=SEBZES_PAGE_TITLE)
-        self.add(self.manage_page, text="Kezeles")
+        karakter_page = KarakterPage(self, characters, messages, TAB_PANEL_WIDTH)
+        sebzes_page = SebzesPage(self, characters, messages, TAB_PANEL_WIDTH)
+        manage_page = ManagementPage(self, characters, messages, TAB_PANEL_WIDTH)
+
+        self.add(karakter_page, text=KARAKTER_PAGE_TITLE)
+        self.add(sebzes_page, text=SEBZES_PAGE_TITLE)
+        self.add(manage_page, text="Kezeles")
         self.bind("<<NotebookTabChanged>>", self.on_change)
 
     def on_change(self, _event):
@@ -128,13 +125,13 @@ class GuiMessage(Text):
     """
     Class for the main message panel.
     """
-    def __init__(self, master):
+    def __init__(self, magus_gui):
         """
         Initialise main message panel.
 
         Its master must be the root element.
         """
-        Text.__init__(self, master, bg=MESSAGE_BOX_COLOUR,
+        Text.__init__(self, magus_gui, bg=MESSAGE_BOX_COLOUR,
                       width=TAB_PANEL_WIDTH)
         self.insert(END, TEXT_START)
         self._set_state(DISABLED)

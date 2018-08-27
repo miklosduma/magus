@@ -19,13 +19,13 @@ class ManagementPage(ttk.Frame):
     """
     Adding characters main page.
     """
-    def __init__(self, master, master_gui, width):
+    def __init__(self, master, characters, messages, width):
         """
         Initialise management page.
         """
         self.master = master
-        self.characters = master_gui.characters
-        self.messages = master_gui.messages
+        self.characters = characters
+        self.messages = messages
         ttk.Frame.__init__(self, master, width=width)
         self.main_panel = CharacterPanel(self, width)
         self.del_button = Button(self, text='Torles')

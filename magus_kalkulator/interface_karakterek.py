@@ -108,23 +108,42 @@ def insert_torso_back_armour(sfe_map):
     return sfe_map
 
 
+def place_max_act_fields(frame, max_field, act_field,
+                         label_text=None, start_row=0, start_column=0):
+
+    if label_text:
+        Label(frame, text=label_text).grid(column=start_column, row=start_row)
+        start_column += 1
+
+    max_field.grid(column=start_column, row=start_row)
+    start_column += 1
+
+    Label(frame, text='/').grid(column=start_column, row=start_row)
+    start_column += 1
+
+    act_field.grid(column=start_column, row=start_row)
+
+
 class KarakterPage(ttk.Frame):
     """
     Adding characters main page.
     """
-    def __init__(self, master, master_gui, width):
-        self.master = master
-        self.characters = master_gui.characters
-        self.messages = master_gui.messages
-        ttk.Frame.__init__(self, master, width=width)
+    def __init__(self, tabs_master, characters, messages, width):
+
+        self.characters = characters
+        self.messages = messages
+
+        ttk.Frame.__init__(self, tabs_master, width=width)
         self.panels = KarakterPanels(self, width)
         self.panels.grid(column=0, row=1, columnspan=8)
-        self.add_button = Button(self, text=ADD_BUTTON)
-        self.add_button.bind('<Button-1>', self.panels.add_character)
-        self.get_button = Button(self, text=GET_BUTTON)
-        self.get_button.bind('<Button-1>', self.panels.get_characters)
-        self.add_button.grid(column=0, row=2, sticky=W)
-        self.get_button.grid(column=0, row=2, sticky=E)
+
+        add_button = Button(self, text=ADD_BUTTON)
+        add_button.bind('<Button-1>', self.panels.add_character)
+        add_button.grid(column=0, row=2, sticky=W)
+
+        get_button = Button(self, text=GET_BUTTON)
+        get_button.bind('<Button-1>', self.panels.get_characters)
+        get_button.grid(column=0, row=2, sticky=E)
 
     def reset_page(self):
         """
@@ -137,15 +156,18 @@ class KarakterPanels(ttk.PanedWindow):
     """
     Main panel of characters main page.
     """
-    def __init__(self, master, width, orient=VERTICAL):
-        ttk.PanedWindow.__init__(self, master, width=width, orient=orient)
-        self.characters = self.master.characters
-        self.messages = self.master.messages
+    def __init__(self, character_page, width, orient=VERTICAL):
+        ttk.PanedWindow.__init__(self, character_page,
+                                 width=width, orient=orient)
+        self.character_page = character_page
+
         self.name_frame = NameFrame(self)
-        self.ep_fp_frame = EpFpFrame(self)
-        self.sfe_frame = SfeFrame(self)
         self.add(self.name_frame)
+
+        self.ep_fp_frame = EpFpFrame(self)
         self.add(self.ep_fp_frame)
+
+        self.sfe_frame = SfeFrame(self)
         self.add(self.sfe_frame)
 
     def reset_panel(self):
@@ -159,7 +181,8 @@ class KarakterPanels(ttk.PanedWindow):
         Function executed on clicking Get button.
         Lists all characters already added.
         """
-        all_characters = self.characters.get_character_names()
+        all_characters = \
+            self.character_page.characters.get_character_names()
 
         if not all_characters:
             msg = NO_CHARACTERS
@@ -168,7 +191,7 @@ class KarakterPanels(ttk.PanedWindow):
             msg = CHARACTERS_ADDED.format(
                 '\n'.join(all_characters))
 
-        self.messages.write_message(msg)
+        self.character_page.messages.write_message(msg)
 
     def add_character(self, *_args):
         """
@@ -193,7 +216,7 @@ class KarakterPanels(ttk.PanedWindow):
             sfe_map = self.sfe_frame.retrieve_sfe_map()
 
         except FieldValidationError as error:
-            self.messages.write_message(error.message)
+            self.character_page.messages.write_message(error.message)
             return
 
         # Add exceptional sfe values to map using specified key
@@ -212,7 +235,7 @@ class KarakterPanels(ttk.PanedWindow):
             mgc.SFE: sfe_map}
 
         # Add new character. Addition fails if character already exists.
-        success, msg = self.characters.add_character(
+        success, msg = self.character_page.characters.add_character(
             name, character_values)
 
         if not success:
@@ -222,9 +245,9 @@ class KarakterPanels(ttk.PanedWindow):
             msg = SUCCESS
 
             # Autosave current characters in memory
-            save_characters(self.characters.character_maps)
+            save_characters(self.character_page.characters.character_maps)
 
-        self.messages.write_message(msg)
+        self.character_page.messages.write_message(msg)
 
 
 class NameFrame(ttk.LabelFrame):
@@ -232,9 +255,8 @@ class NameFrame(ttk.LabelFrame):
     Part of characters panel. Contains
     name field with label.
     """
-    def __init__(self, master):
-        self.master = master
-        ttk.LabelFrame.__init__(self, master, text=NEV_LABEL)
+    def __init__(self, character_panel):
+        ttk.LabelFrame.__init__(self, character_panel, text=NEV_LABEL)
 
         self.name_field = CharacterValueField(self, validate_string)
         organize_rows_to_left([self.name_field], NAME_COLUMN)
@@ -251,9 +273,8 @@ class EpFpFrame(ttk.LabelFrame):
     Part of characters panel. Contains
     ep and fp fields with labels.
     """
-    def __init__(self, master):
-        self.master = master
-        ttk.LabelFrame.__init__(self, master, text=EP_FRAME_TITLE)
+    def __init__(self, character_panel):
+        ttk.LabelFrame.__init__(self, character_panel, text=EP_FRAME_TITLE)
 
         self.ep_field = CharacterValueField(self, validate_integer,
                                             width=3, name='max_ep')
@@ -267,15 +288,11 @@ class EpFpFrame(ttk.LabelFrame):
                                                 width=3)
         self.fp_field.value.trace('w', self._set_actual)
 
-        Label(self, text=EP_LABEL).grid(column=0, row=0)
-        self.ep_field.grid(column=1, row=0)
-        Label(self, text='/').grid(column=2, row=0)
-        self.akt_ep_field.grid(column=3, row=0)
+        place_max_act_fields(
+            self, self.ep_field, self.akt_ep_field, label_text=EP_LABEL)
 
-        Label(self, text=FP_LABEL).grid(row=1, column=0)
-        self.fp_field.grid(row=1, column=1)
-        Label(self, text='/').grid(column=2, row=1)
-        self.akt_fp_field.grid(column=3, row=1)
+        place_max_act_fields(
+            self, self.fp_field, self.akt_fp_field, label_text=FP_LABEL, start_row=1)
 
     def reset_frame(self):
         """
@@ -301,9 +318,8 @@ class SfeFrame(ttk.LabelFrame):
     Part of characters panel. Contains the
     main sfe box and all body-part sfe boxes.
     """
-    def __init__(self, master):
-        ttk.LabelFrame.__init__(self, master, text=SFE_FRAME_TITLE)
-        self.master = master
+    def __init__(self, character_panel):
+        ttk.LabelFrame.__init__(self, character_panel, text=SFE_FRAME_TITLE)
         self.sfe = {}
 
         Label(self, text=SFE_SHORTCUT_LABEL).grid(row=0,
@@ -359,8 +375,8 @@ class SfePartFrameLimb(SfePartFrame):
     """
     Frame child type of main sfe frame. E.g. Fej or Lab frame.
     """
-    def __init__(self, master, text, shortcut_text, body_parts):
-        SfePartFrame.__init__(self, master, text, shortcut_text, body_parts)
+    def __init__(self, sfe_main_frame, text, shortcut_text, body_parts):
+        SfePartFrame.__init__(self, sfe_main_frame, text, shortcut_text, body_parts)
         self._sort_body_parts(body_parts)
 
     def _sort_body_parts(self, body_parts):
