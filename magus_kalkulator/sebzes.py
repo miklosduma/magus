@@ -10,32 +10,43 @@ from magus_kalkulator.choose import calculate_penalty
 import magus_kalkulator.magus_constants as mgc
 
 
-def calculate_damage(sfe, damage, atutes, tulutes=False):
+def calculate_damage(sfe, damage, atutes,
+                     tulutes=False, is_zero_zero=False):
     """
     Calculates the actual ep and fp damage based on:
         - The SFE of the character
         - The actual damage
         - The armour piercing of the attacking weapon
         - Whether it was a critical hit (tulutes=True) or not
+        - Whether the attacker rolled 00 or not
 
     Returns the total ep and fp damage (if any)
     """
-    sfe -= atutes
-
-    if sfe < 0:
+    if is_zero_zero:
         sfe = 0
+
+    else:
+        sfe -= atutes
+
+        if sfe < 0:
+            sfe = 0
 
     damage -= sfe
 
-    if damage <= 0:
+    if damage <= 0 and not is_zero_zero:
         return 0, 0
 
     if tulutes:
         ep_damage = damage
         fp_damage = damage * 2
+
     else:
         ep_damage = int(math.floor(damage/5))
         fp_damage = damage
+
+    if is_zero_zero:
+        ep_damage += 3
+        fp_damage += 6
 
     return ep_damage, fp_damage
 
@@ -87,9 +98,12 @@ def return_penalty(sfe, damage, body_parts_list, max_ep, wtype, **kwargs):
     """
     tulutes = kwargs.get('tulutes', False)
     atutes = kwargs.get('atutes', 0)
+    is_zero_zero = kwargs.get('is_zero_zero', False)
+
     sfe = get_sfe_per_part(sfe, body_parts_list)
     main_part, penalty_part, sfe_part = body_parts_list
-    ep_loss, fp_loss = calculate_damage(sfe, damage, atutes, tulutes=tulutes)
+    ep_loss, fp_loss = calculate_damage(sfe, damage, atutes,
+                                        tulutes=tulutes, is_zero_zero=is_zero_zero)
     rank, penalties, sfe_part = calculate_penalty(ep_loss,
                                                   max_ep,
                                                   wtype,

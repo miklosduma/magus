@@ -207,10 +207,12 @@ class CharacterPanel(ttk.PanedWindow):
         body_parts_list = self.body_parts_frame.get_targeted()
         is_critical = self.damage_frame.is_critical()
         armour_piercing = self.piercing_frame.get_piercing()
+        is_zero_zero = self.damage_frame.is_zero_zero()
 
         result = return_penalty(character['sfe'], damage, body_parts_list,
                                 character['max_ep'], attacking_weapon,
-                                tulutes=is_critical, atutes=armour_piercing)
+                                tulutes=is_critical, atutes=armour_piercing,
+                                is_zero_zero=is_zero_zero)
 
         msg = format_damage_msg(result)
         self.messages.write_message(msg)
@@ -255,12 +257,20 @@ class DamageFrame(ttk.LabelFrame):
         """
         ttk.LabelFrame.__init__(self, character_panel, text=DAMAGE_TEXT)
         self.damage = CharacterValueField(self, validate_integer)
+
         self.critical_state = IntVar()
         self.critical_state.set(0)
         self.tulutes = Checkbutton(self, text=TULUTES_TEXT,
                                    variable=self.critical_state)
+
+        self.zero_zero_state = IntVar()
+        self.zero_zero_state.set(0)
+        self.zero_zero = Checkbutton(self, text='00',
+                                     variable=self.zero_zero_state)
+
         self.damage.grid(row=0, column=0)
         self.tulutes.grid(row=0, column=1)
+        self.zero_zero.grid(row=0, column=2)
 
     def reset_frame(self):
         """
@@ -268,6 +278,7 @@ class DamageFrame(ttk.LabelFrame):
         """
         self.damage.reset_fld()
         self.critical_state.set(0)
+        self.zero_zero_state.set(0)
 
     def get_damage(self):
         """
@@ -287,6 +298,12 @@ class DamageFrame(ttk.LabelFrame):
         Checks whether the critical tick-box is checked.
         """
         return self.critical_state.get()
+
+    def is_zero_zero(self):
+        """
+        Checks whether the 00 tickbox is checked.
+        """
+        return self.zero_zero_state.get()
 
 
 class PiercingFrame(ttk.LabelFrame):
