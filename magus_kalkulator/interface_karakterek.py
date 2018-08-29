@@ -2,7 +2,7 @@
 GUI page for adding new characters.
 """
 
-from tkinter import Button, Label, W, E, VERTICAL, ttk
+from tkinter import Button, Label, W, E, VERTICAL, ttk, IntVar, Checkbutton
 
 from magus_kalkulator.validate import (validate_integer, validate_string,
                                        FieldValidationError)
@@ -11,7 +11,8 @@ from magus_kalkulator.interface_elements import (CharacterValueField,
                                                  organize_rows_to_left,
                                                  place_next_in_columns,
                                                  on_all_children,
-                                                 save_characters)
+                                                 save_characters,
+                                                 collect_children_type_of)
 import magus_kalkulator.magus_constants as mgc
 
 KARAKTER_PANEL_COLUMN = 0
@@ -122,6 +123,9 @@ def place_max_act_fields(frame, max_field, act_field,
     start_column += 1
 
     act_field.grid(column=start_column, row=start_row)
+    start_column += 1
+
+    return start_column
 
 
 class KarakterPage(ttk.Frame):
@@ -204,16 +208,8 @@ class KarakterPanels(ttk.PanedWindow):
         # Get name, ep and fp fields
         try:
             name = self.name_frame.name_field.get_validated()
-            max_ep = self.ep_fp_frame.ep_field.get_validated(
-                min_val=1)
-            max_fp = self.ep_fp_frame.fp_field.get_validated(
-                min_val=1)
-            act_ep = self.ep_fp_frame.akt_ep_field.get_validated(
-                min_val=1)
-            act_fp = self.ep_fp_frame.akt_fp_field.get_validated(
-                min_val=1)
-
             sfe_map = self.sfe_frame.retrieve_sfe_map()
+            ep_fp_result = self.ep_fp_frame.get_ep_fp()
 
         except FieldValidationError as error:
             self.character_page.messages.write_message(error.message)
@@ -224,19 +220,12 @@ class KarakterPanels(ttk.PanedWindow):
                                      mgc.LCOLLARBONE)
         sfe_map = insert_torso_back_armour(sfe_map)
 
-        character_values = {
-            mgc.NAME: name,
-            mgc.MAX_EP: max_ep,
-            mgc.ACT_EP: act_ep,
-
-            mgc.MAX_FP: max_fp,
-            mgc.ACT_FP: act_fp,
-
-            mgc.SFE: sfe_map}
+        ep_fp_result[mgc.NAME] = name
+        ep_fp_result[mgc.SFE] = sfe_map
 
         # Add new character. Addition fails if character already exists.
         success, msg = self.character_page.characters.add_character(
-            name, character_values)
+            name, ep_fp_result)
 
         if not success:
             msg = ALREADY_ADDED.format(name)
@@ -277,28 +266,63 @@ class EpFpFrame(ttk.LabelFrame):
         ttk.LabelFrame.__init__(self, character_panel, text=EP_FRAME_TITLE)
 
         self.ep_field = CharacterValueField(self, validate_integer,
-                                            width=3, name='max_ep')
+                                            width=3, name=mgc.MAX_EP)
         self.akt_ep_field = CharacterValueField(self, validate_integer,
-                                                width=3)
+                                                width=3, name=mgc.ACT_EP)
         self.ep_field.value.trace('w', self._set_actual)
 
         self.fp_field = CharacterValueField(self, validate_integer,
-                                            width=3, name='max_fp')
+                                            width=3, name=mgc.MAX_FP)
         self.akt_fp_field = CharacterValueField(self, validate_integer,
-                                                width=3)
+                                                width=3, name=mgc.ACT_FP)
         self.fp_field.value.trace('w', self._set_actual)
 
-        place_max_act_fields(
+        self.is_not_living_state = IntVar()
+        self.is_not_living_state.set(0)
+        self.is_not_living = Checkbutton(self, text='Elettelen',
+                                         variable=self.is_not_living_state)
+
+        self.is_not_living_state.trace('w', self._set_living_state)
+
+        ep_last_column = place_max_act_fields(
             self, self.ep_field, self.akt_ep_field, label_text=EP_LABEL)
 
         place_max_act_fields(
             self, self.fp_field, self.akt_fp_field, label_text=FP_LABEL, start_row=1)
+
+        self.is_not_living.grid(column=ep_last_column, row=0)
+
+    def get_ep_fp(self):
+        ep_fp_dict = {}
+        fields = collect_children_type_of(self, 'Entry')
+
+        for field in fields:
+            if field.cget('state') == 'normal' and hasattr(field, 'name'):
+                key = field.name
+
+                try:
+                    value = field.get_validated()
+                    ep_fp_dict[key] = value
+
+                except FieldValidationError:
+                    raise
+
+        return ep_fp_dict
 
     def reset_frame(self):
         """
         Resets all the child widgets of the frame.
         """
         on_all_children('reset_fld', self)
+
+    def _set_living_state(self, *_args):
+        if self.is_not_living_state.get():
+            self.fp_field.disable()
+            self.akt_fp_field.disable()
+
+        else:
+            self.fp_field.enable()
+            self.akt_fp_field.enable()
 
     def _set_actual(self, name, _i, _mode):
         """

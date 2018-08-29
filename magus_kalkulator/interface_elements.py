@@ -4,7 +4,7 @@ Generic, reusable interface elements and constants.
 
 import json
 
-from tkinter import Entry, StringVar, W, N, ttk, Label, OptionMenu
+from tkinter import Entry, StringVar, W, N, ttk, Label, OptionMenu, DISABLED, NORMAL
 from magus_kalkulator.validate import FieldValidationError, validate_integer
 
 FIELD_WIDTH = 10
@@ -59,6 +59,16 @@ def load_characters(path_to_backup):
             pass
 
 
+def collect_children_type_of(parent, type):
+    collected = []
+
+    for child in parent.winfo_children():
+        if child.winfo_class() == type:
+            collected.append(child)
+
+    return collected
+
+
 def place_next_in_columns(frames, row, column, columnspan):
     """
     Places the specified frame elements.
@@ -95,6 +105,7 @@ class CharacterValueField(Entry):
         """
         # Variable for entered value
         if name:
+            self.name = name
             self.value = StringVar(master, name=name)
         else:
             self.value = StringVar(master)
@@ -120,6 +131,14 @@ class CharacterValueField(Entry):
         # to the default color.
         if color == FIELD_COLOR_ERROR:
             self.config(bg=FIELD_COLOR)
+
+    def enable(self):
+        self.config(state=NORMAL)
+        self.value.set('')
+
+    def disable(self):
+        self.value.set('n/a')
+        self.config(state=DISABLED)
 
     def get_validated(self, **kwargs):
         """
