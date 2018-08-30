@@ -4,13 +4,29 @@ Character management. E.g deleting characters or saving/loading.
 from __future__ import print_function
 
 import os
-from tkinter import ttk, VERTICAL, Button, filedialog, messagebox
+from tkinter import ttk, VERTICAL, Button, filedialog, messagebox, Label
+
+import webbrowser
 
 from magus_kalkulator.interface_elements import organize_rows_to_left, \
     ChooseCharacterFrame, on_all_children, save_characters, load_characters, \
     CharacterValueField
 
 from magus_kalkulator.validate import validate_string, FieldValidationError
+
+from magus_kalkulator import head_table, limbs_table, torso_table
+from magus_kalkulator.table_to_html import tables_to_html
+
+
+def get_tables(*_args):
+    tables = [
+        (head_table.FEJ_TABLA, 'Fej'),
+        (limbs_table.VEGTAG_TABLA, 'Vegtagok'),
+        (torso_table.TORZS_TABLA, 'Torzs')
+    ]
+
+    path = tables_to_html(tables)
+    webbrowser.open(path)
 
 
 class ManagementPage(ttk.Frame):
@@ -36,10 +52,14 @@ class ManagementPage(ttk.Frame):
         save_button = Button(self, text='Save')
         save_button.bind('<Button-1>', self.save_char)
 
+        label = Label(self, text='Sebzes tablazat!')
+        table_button = Button(self, text='Megnezem')
+        table_button.bind('<Button-1>', get_tables)
+
         # Place elements on grid
         organize_rows_to_left([self.main_panel, del_button,
                                load_button, self.save_text,
-                               save_button], 0)
+                               save_button, label, table_button], 0)
 
     def save_char(self, *_args):
         """
