@@ -1,0 +1,56 @@
+table {
+	border-collapse: collapse;
+	padding: 10px;
+	margin: 10px;
+	font-size: 12px;
+}
+
+caption {
+	font-weight: bold;
+	font-size: 16px;
+}
+
+tr:nth-of-type(odd) {
+	background: #F5F5F5;
+}
+
+tr td:empty {
+	background: white;
+}
+
+td, th {
+	border: 1px solid black;
+	text-align: left;
+	padding: 8px;}
+
+td.wtype, td.bodypart {
+	text-align: center;
+	font-weight: bold;
+	font-size: 14px;
+	background: #dddddd;
+}
+
+td:empty {
+	border: 0px;
+}
+
+button.reset {
+	background: lightgray;
+	border-radius: 5px;
+	color: white;
+	font-weight: bold;
+	font-size: 14px;
+	width: 10%;
+	height: 10%;
+}
+
+button.reset:hover{
+	width: 11%;
+	height: 11%;
+	border-radius: 10px;
+	background: gray;
+}
+
+button.reset:focus{
+	outline: 0;
+}

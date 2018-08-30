@@ -4,9 +4,8 @@ Generic, reusable interface elements and constants.
 
 import json
 
-from tkinter import Entry, StringVar, W, N, ttk, Label, OptionMenu
+from tkinter import Entry, StringVar, W, N, ttk, Label, OptionMenu, DISABLED, NORMAL
 from magus_kalkulator.validate import FieldValidationError, validate_integer
-from magus_kalkulator.karakterek import char_obj_to_dict
 
 FIELD_WIDTH = 10
 FIELD_COLOR = 'white'
@@ -44,14 +43,9 @@ def save_characters(characters, filename='saves/autosave.json'):
     Retrieves all stored characters and saves them
     to file.
     """
-    master_dict = dict()
-    for name, char_obj in characters.items():
-        char_dict = char_obj_to_dict(char_obj)
-        master_dict[name] = char_dict
-
     with open(filename, 'w') as backup:
-        if master_dict:
-            backup.write(json.dumps(master_dict, indent=4))
+        if characters:
+            backup.write(json.dumps(characters, indent=4))
 
         else:
             backup.write('')
@@ -63,6 +57,16 @@ def load_characters(path_to_backup):
             return json.loads(content.read())
         except:
             pass
+
+
+def collect_children_type_of(parent, type):
+    collected = []
+
+    for child in parent.winfo_children():
+        if child.winfo_class() == type:
+            collected.append(child)
+
+    return collected
 
 
 def place_next_in_columns(frames, row, column, columnspan):
@@ -101,6 +105,7 @@ class CharacterValueField(Entry):
         """
         # Variable for entered value
         if name:
+            self.name = name
             self.value = StringVar(master, name=name)
         else:
             self.value = StringVar(master)
@@ -126,6 +131,14 @@ class CharacterValueField(Entry):
         # to the default color.
         if color == FIELD_COLOR_ERROR:
             self.config(bg=FIELD_COLOR)
+
+    def enable(self):
+        self.config(state=NORMAL)
+        self.value.set('')
+
+    def disable(self):
+        self.value.set('n/a')
+        self.config(state=DISABLED)
 
     def get_validated(self, **kwargs):
         """
@@ -229,13 +242,13 @@ class ChooseCharacterFrame(ttk.LabelFrame):
     """
     Frame comprising character-selection drop-down.
     """
-    def __init__(self, master, karakterek):
+    def __init__(self, master, characters):
         """
         Initialise character-selection frame.
         """
         self.master = master
         ttk.LabelFrame.__init__(self, master, text=SELECT_CHARACTER)
-        self.karakterek = karakterek
+        self.characters = characters
         self.variable = StringVar()
         self.variable.set('')
         self.character_menu = OptionMenu(self, self.variable, *[''])
@@ -270,7 +283,7 @@ class ChooseCharacterFrame(ttk.LabelFrame):
         """
         menu = self.character_menu.children['menu']
         menu.delete(0, 'end')
-        new_choices = self.karakterek.get_all_karakters()
+        new_choices = self.characters.get_character_names()
 
         self._width_match_longest(new_choices)
 
