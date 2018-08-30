@@ -7,7 +7,6 @@ from tkinter import Button, Label, W, E, VERTICAL, ttk, IntVar, Checkbutton
 from magus_kalkulator.validate import (validate_integer, validate_string,
                                        FieldValidationError)
 from magus_kalkulator.interface_elements import (CharacterValueField,
-                                                 SfePartFrame,
                                                  organize_rows_to_left,
                                                  place_next_in_columns,
                                                  on_all_children,
@@ -351,15 +350,21 @@ class SfeFrame(ttk.LabelFrame):
         self.sfe_field = CharacterValueField(self, validate_integer, width=2)
         self.sfe_field.grid(row=0, column=SFE_FIELDS_COLUMN + 1)
 
-        self.fej_sfe = SfePartFrame(self, SFE_FEJ_LABEL,
-                                    SFE_SHORTCUT_LABEL, SFE_FEJ_PARTS)
-        self.torzs_sfe = SfePartFrame(self, SFE_TORZS_LABEL,
-                                      SFE_SHORTCUT_LABEL, SFE_TORZS_PARTS)
+        self.fej_sfe = SfePartFrame(self, SFE_FEJ_PARTS, self.sfe_field.value,
+                                    self.sfe,
+                                    main_text=SFE_FEJ_LABEL)
+        self.torzs_sfe = SfePartFrame(self, SFE_TORZS_PARTS, self.sfe_field.value,
+                                      self.sfe,
+                                      main_text=SFE_TORZS_LABEL)
 
-        self.kar_sfe = SfePartFrameLimb(
-            self, SFE_KAR_LABEL, SFE_SHORTCUT_LABEL, SFE_KAR_PARTS)
-        self.lab_sfe = SfePartFrameLimb(
-            self, SFE_LAB_LABEL, SFE_SHORTCUT_LABEL, SFE_LAB_PARTS)
+        self.kar_sfe = SfePartFrame(self, SFE_KAR_PARTS, self.sfe_field.value,
+                                    self.sfe,
+                                    main_text=SFE_KAR_LABEL,
+                                    is_limb=True)
+        self.lab_sfe = SfePartFrame(self, SFE_LAB_PARTS, self.sfe_field.value,
+                                    self.sfe,
+                                    main_text=SFE_LAB_LABEL,
+                                    is_limb=True)
 
         place_next_in_columns([self.fej_sfe,
                                self.torzs_sfe,
@@ -396,13 +401,38 @@ class SfeFrame(ttk.LabelFrame):
             raise
 
 
-class SfePartFrameLimb(SfePartFrame):
+class SfePartFrame(ttk.LabelFrame):
     """
-    Frame child type of main sfe frame. E.g. Fej or Lab frame.
+    Frame child type of main sfe frame. E.g. Torso or Head frame.
     """
-    def __init__(self, sfe_main_frame, text, shortcut_text, body_parts):
-        SfePartFrame.__init__(self, sfe_main_frame, text, shortcut_text, body_parts)
-        self._sort_body_parts(body_parts)
+    def __init__(self, sfe_main_frame, body_parts, shortcut_value, sfe_dict,
+                 main_text=None, shortcut_text=SFE_SHORTCUT_LABEL, is_limb=False):
+        ttk.LabelFrame.__init__(self, sfe_main_frame, text=main_text)
+
+        self.body_parts = body_parts
+
+        if is_limb:
+            self._sort_body_parts(body_parts)
+
+        # Sfe value shortcut that sets all other sfe values
+        self.master_sfe = shortcut_value
+        self.master_sfe.trace('w', self._follow_master)
+
+        Label(self, text=shortcut_text).grid(row=0, column=0, sticky=W)
+
+        # Sfe shortcut that sets all sfe values listed in body_parts
+        self.sfe_field = CharacterValueField(self, validate_integer, width=2)
+        self.sfe_field.grid(row=0, column=1, sticky=W)
+        self.sfe_field.value.trace('w', self._follow_total)
+
+        # Dict attribute holding validated sfe values
+        self.sfe_map = sfe_dict
+
+        if is_limb:
+            self._place_sfe_fields_limbs(body_parts)
+
+        else:
+            self._place_sfe_fields(body_parts)
 
     def _sort_body_parts(self, body_parts):
         """
@@ -417,6 +447,30 @@ class SfePartFrameLimb(SfePartFrame):
         self.body_parts = result
 
     def _place_sfe_fields(self, fields):
+        """
+        Function to place multiple connected fields assigning
+        each a label.
+        """
+        column = 0
+        row = 1
+
+        for field in fields:
+            # Place label, it takes its name from the field
+            label = Label(self, text=field)
+            label.grid(row=row, column=column, sticky=W)
+
+            # Place field next to label
+            sfe_field = CharacterValueField(self, validate_integer, width=2)
+            sfe_field.grid(row=row, column=column + 1, sticky=W)
+
+            # Add sfe field to sfe map. Sfe field stores the value
+            # of the entry field
+            self.sfe_map[field] = sfe_field
+
+            # Next label/field will go into next row
+            row += 1
+
+    def _place_sfe_fields_limbs(self, fields):
         """
         Overrides the same method of SfePartFrame. Since we
         have both right and left limbs.
@@ -459,3 +513,28 @@ class SfePartFrameLimb(SfePartFrame):
 
             # Next label/field will go into next row
             row += 1
+
+    def _follow_master(self, *_args):
+        """
+        Each child frame has a shortcut value that all
+        sub parts follow. E.g. setting Mindenhol in Lab frame
+        will change both JLabszar and BBoka to the same value.
+
+        The frame shortcut values however follow a master shortcut value.
+        Thus, setting the master value at the top level changes all
+        sub-level master values, which in turn change individual sfe values.
+        """
+        master_value = self.master_sfe.get()
+        self.sfe_field.value.set(master_value)
+
+    def _follow_total(self, *_args):
+        """
+        There is a master shortcut value per body part frame
+        that all body parts belonging to that frame follow.
+        """
+        for key, value in self.sfe_map.items():
+
+            # Only body parts that belong to this frame should follow
+            if key in self.body_parts:
+                total = self.sfe_field.value.get()
+                value.value.set(total)
