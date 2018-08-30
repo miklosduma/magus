@@ -434,22 +434,18 @@ class SfePartFrameLimb(SfePartFrame):
         for field in fields:
             label_text, right_part, left_part = field
 
-            # Each limb sfe (e.g. Labszar or Boka) is added twice
-            # e.g. both as Jlabszar and Blabszar
-            sfe_fields = [right_part, left_part]
-
             # Add only one label though
             label = Label(self, text=label_text)
             label.grid(row=row, column=column, sticky=W)
 
             # Place right and left limb field
-            for sfe_field in sfe_fields:
+            for sfe_field in [right_part, left_part]:
                 sfe_field_value = CharacterValueField(
                     self, validate_integer, width=2)
 
                 # Right (jobb) limbs are left aligned,
                 # left (bal) limbs are right aligned
-                if sfe_fields.index(sfe_field) == 0:
+                if sfe_field == right_part:
                     direction = W
                 else:
                     direction = E
