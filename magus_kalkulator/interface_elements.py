@@ -97,7 +97,8 @@ class CharacterValueField(Entry):
     """
     Basic field type used to store character values.
     """
-    def __init__(self, master, validate_fun, width=FIELD_WIDTH, name=None):
+    def __init__(self, master, validate_fun,
+                 width=FIELD_WIDTH, name=None, to_trace=None):
         """
         Initialise input field.
          - validate_fun:
@@ -114,9 +115,21 @@ class CharacterValueField(Entry):
         self.value.trace('w', self._follow_changes)
         self.validator = validate_fun
 
+        if to_trace:
+            self.reference = to_trace
+            self.reference.trace('w', self._follow_ref_val)
+
         # Entry field
         Entry.__init__(self, master, textvariable=self.value,
                        width=width)
+
+    def _follow_ref_val(self, *_args):
+        """
+        If a master - or reference - value is specified
+        for the field, it will update its value on changes
+        to the master field.
+        """
+        self.value.set(self.reference.get())
 
     def _follow_changes(self, *_args):
         """

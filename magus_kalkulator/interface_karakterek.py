@@ -267,14 +267,14 @@ class EpFpFrame(ttk.LabelFrame):
         self.ep_field = CharacterValueField(self, validate_integer,
                                             width=3, name=mgc.MAX_EP)
         self.akt_ep_field = CharacterValueField(self, validate_integer,
-                                                width=3, name=mgc.ACT_EP)
-        self.ep_field.value.trace('w', self._set_actual)
+                                                width=3, name=mgc.ACT_EP,
+                                                to_trace=self.ep_field.value)
 
         self.fp_field = CharacterValueField(self, validate_integer,
                                             width=3, name=mgc.MAX_FP)
         self.akt_fp_field = CharacterValueField(self, validate_integer,
-                                                width=3, name=mgc.ACT_FP)
-        self.fp_field.value.trace('w', self._set_actual)
+                                                width=3, name=mgc.ACT_FP,
+                                                to_trace=self.fp_field.value)
 
         self.is_not_living_state = IntVar()
         self.is_not_living_state.set(0)
@@ -322,18 +322,6 @@ class EpFpFrame(ttk.LabelFrame):
         else:
             self.fp_field.enable()
             self.akt_fp_field.enable()
-
-    def _set_actual(self, name, _i, _mode):
-        """
-        Sets the actual FP and EP values based on the maximum.
-        """
-        if name == 'max_ep':
-            if self.ep_field.value:
-                self.akt_ep_field.value.set(self.ep_field.value.get())
-
-        elif name == 'max_fp':
-            if self.fp_field.value:
-                self.akt_fp_field.value.set(self.fp_field.value.get())
 
 
 class SfeFrame(ttk.LabelFrame):
@@ -409,21 +397,15 @@ class SfePartFrame(ttk.LabelFrame):
                  main_text=None, shortcut_text=SFE_SHORTCUT_LABEL, is_limb=False):
         ttk.LabelFrame.__init__(self, sfe_main_frame, text=main_text)
 
-        self.body_parts = body_parts
-
-        if is_limb:
-            self._sort_body_parts(body_parts)
-
         # Sfe value shortcut that sets all other sfe values
         self.master_sfe = shortcut_value
-        self.master_sfe.trace('w', self._follow_master)
 
         Label(self, text=shortcut_text).grid(row=0, column=0, sticky=W)
 
         # Sfe shortcut that sets all sfe values listed in body_parts
-        self.sfe_field = CharacterValueField(self, validate_integer, width=2)
+        self.sfe_field = CharacterValueField(self, validate_integer, width=2,
+                                             to_trace=self.master_sfe)
         self.sfe_field.grid(row=0, column=1, sticky=W)
-        self.sfe_field.value.trace('w', self._follow_total)
 
         # Dict attribute holding validated sfe values
         self.sfe_map = sfe_dict
@@ -433,18 +415,6 @@ class SfePartFrame(ttk.LabelFrame):
 
         else:
             self._place_sfe_fields(body_parts)
-
-    def _sort_body_parts(self, body_parts):
-        """
-        In the case of limbs, body_parts are a list of tuples,
-        each comprising: a label text, a right and a left limb.
-        """
-        result = []
-        for bp_tuple in body_parts:
-            _text, right_part, left_part = bp_tuple
-            result.append(right_part)
-            result.append(left_part)
-        self.body_parts = result
 
     def _place_sfe_fields(self, fields):
         """
@@ -460,7 +430,8 @@ class SfePartFrame(ttk.LabelFrame):
             label.grid(row=row, column=column, sticky=W)
 
             # Place field next to label
-            sfe_field = CharacterValueField(self, validate_integer, width=2)
+            sfe_field = CharacterValueField(self, validate_integer, width=2,
+                                            to_trace=self.sfe_field.value)
             sfe_field.grid(row=row, column=column + 1, sticky=W)
 
             # Add sfe field to sfe map. Sfe field stores the value
@@ -495,7 +466,8 @@ class SfePartFrame(ttk.LabelFrame):
             # Place right and left limb field
             for sfe_field in [right_part, left_part]:
                 sfe_field_value = CharacterValueField(
-                    self, validate_integer, width=2)
+                    self, validate_integer,
+                    width=2, to_trace=self.sfe_field.value)
 
                 # Right (jobb) limbs are left aligned,
                 # left (bal) limbs are right aligned
@@ -513,28 +485,3 @@ class SfePartFrame(ttk.LabelFrame):
 
             # Next label/field will go into next row
             row += 1
-
-    def _follow_master(self, *_args):
-        """
-        Each child frame has a shortcut value that all
-        sub parts follow. E.g. setting Mindenhol in Lab frame
-        will change both JLabszar and BBoka to the same value.
-
-        The frame shortcut values however follow a master shortcut value.
-        Thus, setting the master value at the top level changes all
-        sub-level master values, which in turn change individual sfe values.
-        """
-        master_value = self.master_sfe.get()
-        self.sfe_field.value.set(master_value)
-
-    def _follow_total(self, *_args):
-        """
-        There is a master shortcut value per body part frame
-        that all body parts belonging to that frame follow.
-        """
-        for key, value in self.sfe_map.items():
-
-            # Only body parts that belong to this frame should follow
-            if key in self.body_parts:
-                total = self.sfe_field.value.get()
-                value.value.set(total)
