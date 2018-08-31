@@ -2,16 +2,26 @@
 Generic, reusable interface elements and constants.
 """
 
+import os
 import json
 
-from tkinter import Entry, StringVar, W, N, ttk, Label, OptionMenu, DISABLED, NORMAL
-from magus_kalkulator.validate import FieldValidationError, validate_integer
+from tkinter import Entry, StringVar, W, N, ttk, OptionMenu, DISABLED, NORMAL
+from magus_kalkulator.validate import FieldValidationError
 
 FIELD_WIDTH = 10
 FIELD_COLOR = 'white'
 FIELD_COLOR_ERROR = 'red'
 SELECT_CHARACTER = 'Valaszz karaktert'
 NO_CHARACTER = 'Valassz karaktert!'
+
+
+def get_relative_dir(target_path):
+    """
+    Returns the full - relative - path to
+    'target_path'.
+    """
+    full_path, _rest = os.path.dirname(__file__).rsplit('/', 1)
+    return os.path.join(full_path, target_path)
 
 
 def organize_rows_to_left(list_of_elements, column, start_row=0):
@@ -52,18 +62,33 @@ def save_characters(characters, filename='saves/autosave.json'):
 
 
 def load_characters(path_to_backup):
+    """
+    Characters are saved in a json file.
+    Read and return the saved content
+    as a Python dict.
+    """
     with open(path_to_backup, 'r') as content:
         try:
             return json.loads(content.read())
-        except:
+        except json.JSONDecodeError:
             pass
 
 
-def collect_children_type_of(parent, type):
+def collect_children_type_of(parent, ch_type):
+    """
+    Collect specific children of the tkinter
+    parent element.
+        - parent:
+            The tkinter parent element.
+            (E.g. a Frame).
+        - ch_type:
+            The type of children to be collected.
+            (E.g. Entry).
+    """
     collected = []
 
     for child in parent.winfo_children():
-        if child.winfo_class() == type:
+        if child.winfo_class() == ch_type:
             collected.append(child)
 
     return collected
@@ -97,7 +122,7 @@ class CharacterValueField(Entry):
     """
     Basic field type used to store character values.
     """
-    def __init__(self, master, validate_fun,
+    def __init__(self, parent, validate_fun,
                  width=FIELD_WIDTH, name=None, to_trace=None):
         """
         Initialise input field.
@@ -107,9 +132,9 @@ class CharacterValueField(Entry):
         # Variable for entered value
         if name:
             self.name = name
-            self.value = StringVar(master, name=name)
+            self.value = StringVar(parent, name=name)
         else:
-            self.value = StringVar(master)
+            self.value = StringVar(parent)
 
         self.value.set('')
         self.value.trace('w', self._follow_changes)
@@ -120,7 +145,7 @@ class CharacterValueField(Entry):
             self.reference.trace('w', self._follow_ref_val)
 
         # Entry field
-        Entry.__init__(self, master, textvariable=self.value,
+        Entry.__init__(self, parent, textvariable=self.value,
                        width=width)
 
     def _follow_ref_val(self, *_args):
@@ -146,10 +171,18 @@ class CharacterValueField(Entry):
             self.config(bg=FIELD_COLOR)
 
     def enable(self):
+        """
+        Enables the field. I.e. it's value
+        can be set.
+        """
         self.config(state=NORMAL)
         self.value.set('')
 
     def disable(self):
+        """
+        Disables the field. It's value cannot
+        be set or edited.
+        """
         self.value.set('n/a')
         self.config(state=DISABLED)
 

@@ -57,4 +57,7 @@ class Characters:
         return self.character_maps.keys()
 
     def delete_all_characters(self):
+        """
+        Wipes all characters from memory.
+        """
         self.character_maps = {}

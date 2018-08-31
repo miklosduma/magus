@@ -61,10 +61,7 @@ def is_empty(value):
     """
     Checks if a value is an empty string or None.
     """
-    if value is None:
-        return True
-
-    elif value == '':
+    if value is None or value == '':
         return True
 
     return False

@@ -83,19 +83,21 @@ def calculate_seriousness(damage, max_ep, thresholds):
     thresholds = [get_threshold(max_ep, x) for x in thresholds]
     [vegzetes, kritikus, veszelyes, sulyos] = thresholds
 
+    damage_rank = 4
+
     if damage < sulyos:
-        return 0
+        damage_rank = 0
 
     elif damage < veszelyes:
-        return 1
+        damage_rank = 1
 
     elif damage < kritikus:
-        return 2
+        damage_rank = 2
 
     elif damage < vegzetes:
-        return 3
+        damage_rank = 3
 
-    return 4
+    return damage_rank
 
 
 def is_part_valid(wtype, bodypart, rank):

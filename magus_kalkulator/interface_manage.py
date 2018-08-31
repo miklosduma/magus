@@ -15,17 +15,20 @@ from magus_kalkulator.interface_elements import organize_rows_to_left, \
 from magus_kalkulator.validate import validate_string, FieldValidationError
 
 from magus_kalkulator import head_table, limbs_table, torso_table
-from magus_kalkulator.table_to_html import tables_to_html
+from magus_kalkulator.table_to_html import target_dicts_to_html
+
+TARGET_DICTS = [
+    (head_table.FEJ_TABLA, 'Fej'),
+    (limbs_table.VEGTAG_TABLA, 'Vegtagok'),
+    (torso_table.TORZS_TABLA, 'Torzs')]
 
 
-def get_tables(*_args):
-    tables = [
-        (head_table.FEJ_TABLA, 'Fej'),
-        (limbs_table.VEGTAG_TABLA, 'Vegtagok'),
-        (torso_table.TORZS_TABLA, 'Torzs')
-    ]
-
-    path = tables_to_html(tables)
+def show_tables(*_args):
+    """
+    Generates an HTML output from the penalty
+    tables and open the HTML file in the browser.
+    """
+    path = target_dicts_to_html(TARGET_DICTS)
     webbrowser.open(path)
 
 
@@ -54,7 +57,7 @@ class ManagementPage(ttk.Frame):
 
         label = Label(self, text='Sebzes tablazat!')
         table_button = Button(self, text='Megnezem')
-        table_button.bind('<Button-1>', get_tables)
+        table_button.bind('<Button-1>', show_tables)
 
         # Place elements on grid
         organize_rows_to_left([self.main_panel, del_button,

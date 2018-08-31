@@ -96,14 +96,17 @@ def return_penalty(sfe, damage, body_parts_list, max_ep, wtype, **kwargs):
     """
     Gets the penalty associated with a damage.
     """
-    tulutes = kwargs.get('tulutes', False)
-    atutes = kwargs.get('atutes', 0)
-    is_zero_zero = kwargs.get('is_zero_zero', False)
-
     sfe = get_sfe_per_part(sfe, body_parts_list)
     main_part, penalty_part, sfe_part = body_parts_list
-    ep_loss, fp_loss = calculate_damage(sfe, damage, atutes,
-                                        tulutes=tulutes, is_zero_zero=is_zero_zero)
+
+    ep_loss, fp_loss = calculate_damage(sfe, damage,
+                                        kwargs.get(
+                                            'atutes', 0),
+                                        tulutes=kwargs.get(
+                                            'tulutes', False),
+                                        is_zero_zero=kwargs.get(
+                                            'is_zero_zero', False))
+
     rank, penalties, sfe_part = calculate_penalty(ep_loss,
                                                   max_ep,
                                                   wtype,

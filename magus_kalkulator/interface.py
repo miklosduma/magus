@@ -81,8 +81,8 @@ class MagusGUI:
 
         messages = GuiMessage(root)
         messages.grid(column=MESSAGES_COLUMN,
-                           columnspan=MESSAGES_COLUMNSPAN, sticky=N,
-                           row=MESSAGES_ROW, rowspan=MESSAGES_ROWSPAN)
+                      columnspan=MESSAGES_COLUMNSPAN, sticky=N,
+                      row=MESSAGES_ROW, rowspan=MESSAGES_ROWSPAN)
 
         # Create multiple tabs on main page, making characters
         # accessible to each
@@ -105,9 +105,12 @@ class MyTabs(ttk.Notebook):
         ttk.Notebook.__init__(self, magus_gui, width=TAB_PANEL_WIDTH)
 
         # Initialize tabs
-        karakter_page = KarakterPage(self, characters, messages, TAB_PANEL_WIDTH)
-        sebzes_page = SebzesPage(self, characters, messages, TAB_PANEL_WIDTH)
-        manage_page = ManagementPage(self, characters, messages, TAB_PANEL_WIDTH)
+        karakter_page = KarakterPage(self, characters, messages,
+                                     TAB_PANEL_WIDTH)
+        sebzes_page = SebzesPage(self, characters, messages,
+                                 TAB_PANEL_WIDTH)
+        manage_page = ManagementPage(self, characters, messages,
+                                     TAB_PANEL_WIDTH)
 
         self.add(karakter_page, text=KARAKTER_PAGE_TITLE)
         self.add(sebzes_page, text=SEBZES_PAGE_TITLE)

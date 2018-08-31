@@ -1,8 +1,48 @@
-import os
+"""
+Utility function that creates an HTML page from the penalty dicts
+(e.g. head_table.py).
+
+Each penalty dict becomes an HTML table. The dicts look like:
+
+Weapon type:
+    body part:
+        level1_penalties
+        level2_penalties
+
+    body part2:
+        level1_penalties
+        level2_penalties
+
+Weapon type2:
+    body_part:
+        level1_penalties
+        level2_penalties
+
+    body_part2:
+        level1_penalties
+        level2_penalties
+
+The output HTML tables look like:
+           |Weapon type  |Weapon type2 |
+|body part |l1_pen|l2_pen|l1_pen|l2_pen|
+|body part2|l1_pen|l2_pen|l1_pen|l2_pen|
+"""
+
 from yattag import Doc
 
+from magus_kalkulator.interface_elements import get_relative_dir
 
-def create_table(table, weapon_types, body_parts):
+
+HTML_PATH = get_relative_dir('resources/index.html')
+
+
+def create_rows(target_dict, weapon_types, body_parts):
+    """
+    Generator that yields row content for an HTML table.
+        - target_dict:
+            One of the penalty tables.
+
+    """
 
     while body_parts:
         body = body_parts[0]
@@ -13,14 +53,21 @@ def create_table(table, weapon_types, body_parts):
 
             penalties = [', '.join(penalty)
                          if isinstance(penalty, list)
-                         else penalty for penalty in table[wtype][body][1:-1]]
+                         else penalty for penalty
+                         in target_dict[wtype][body][1:-1]]
 
             cells.append((cell_header, penalties))
         yield body, cells
         del body_parts[0]
 
 
-def process_tables(tables):
+def process_target_dicts(target_dicts):
+    """
+    Builds an HTML page from the supplied penalty
+    dictionaries.
+
+    Returns the constructed HTML string.
+    """
     doc, tag, text, line = Doc().ttl()
     doc.asis('<!DOCTYPE html>')
 
@@ -32,17 +79,18 @@ def process_tables(tables):
             line('script', '', type='text/javascript', src='collapse.js')
 
             table_no = 1
-            for table, caption in tables:
+            for table, caption in target_dicts:
 
                 weapon_types = list(table.keys())
                 body_parts = list(table[weapon_types[0]].keys())
-                table_handler = create_table(table, weapon_types, body_parts)
+                row_creater = create_rows(table, weapon_types, body_parts)
 
                 with tag('table'):
-                    line('caption', 'Tablazat {}: {}'.format(table_no, caption))
+                    line('caption', 'Tablazat {}: {}'.format(
+                        table_no, caption))
 
                     header_added = False
-                    for body_part, cells in table_handler:
+                    for body_part, cells in row_creater:
 
                         if not header_added:
                             with tag('tr'):
@@ -50,9 +98,10 @@ def process_tables(tables):
 
                                 for cell_header, penalties in cells:
                                     with tag('td', cell_header,
-                                         colspan=len(penalties), klass='wtype'):
+                                             colspan=len(penalties)):
                                         text(cell_header)
-                                        line('button', '<', onclick='collapse(this)')
+                                        line('button', '<',
+                                             onclick='collapse(this)')
                             header_added = True
 
                         with tag('tr'):
@@ -61,18 +110,21 @@ def process_tables(tables):
                             for cell_header, penalties in cells:
                                 penalty_no = 1
                                 for penalty in penalties:
-                                    line('td', penalty, id='{}_{}'.format(cell_header, penalty_no))
+                                    line('td', penalty, id='{}_{}'.format(
+                                        cell_header, penalty_no))
                                     penalty_no += 1
                 table_no += 1
 
         return doc.getvalue()
 
 
-def tables_to_html(tables):
-    full_path, _rest = os.path.dirname(__file__).split('magus_kalkulator')
-    html_file = os.path.join(full_path,
-                             'resources/index.html')
-    html_content = process_tables(tables)
-    with open(html_file, 'w') as index:
+def target_dicts_to_html(target_dicts):
+    """
+    Transforms 'target_dicts' to HTML, writes
+    the result into file, and returns the
+    path to the file appended with the 'file://' protocol.
+    """
+    html_content = process_target_dicts(target_dicts)
+    with open(HTML_PATH, 'w') as index:
         index.write(html_content)
-    return 'file://{}'.format(html_file)
+    return 'file://{}'.format(HTML_PATH)

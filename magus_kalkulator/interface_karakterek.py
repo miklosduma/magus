@@ -108,23 +108,76 @@ def insert_torso_back_armour(sfe_map):
     return sfe_map
 
 
-def place_max_act_fields(frame, max_field, act_field,
-                         label_text=None, start_row=0, start_column=0):
+def place_fields_separator(frame, *fields, **kwargs):
+    """
+    Appends frame element with new fields. The fields
+    are placed next to each other, with a separator
+    placed between them.
 
-    if label_text:
-        Label(frame, text=label_text).grid(column=start_column, row=start_row)
+    If no other separator is specified, the symbol
+    '/' is used.
+    """
+    start_column = kwargs.get('start_column', 0)
+    start_row = kwargs.get('start_row', 0)
+    separator = kwargs.get('separator', '/')
+
+    if 'label_text' in kwargs:
+        Label(frame, text=kwargs.get('label_text')).grid(
+            column=start_column, row=start_row)
         start_column += 1
 
-    max_field.grid(column=start_column, row=start_row)
-    start_column += 1
+    for field in fields:
+        field.grid(column=start_column, row=start_row)
+        start_column += 1
 
-    Label(frame, text='/').grid(column=start_column, row=start_row)
-    start_column += 1
-
-    act_field.grid(column=start_column, row=start_row)
-    start_column += 1
+        if field != fields[-1]:
+            Label(frame, text=separator).grid(
+                column=start_column, row=start_row)
+            start_column += 1
 
     return start_column
+
+
+def get_child_values(parent, ch_type,
+                     val_dict=None,
+                     get_method='get'):
+    """
+    Collects the values of all children of 'parent'
+    who are of the specified type.
+
+    For example, all Entry children of a frame.
+
+    The function either builds, or updates a dictionary,
+    where the child element's name attribute is used as
+    a key, and its value as the value.
+
+    The function only collects values from elements that
+    are in active state (not disabled) and have the 'name'
+    attribute.
+        - parent:
+            The parent tkinter element.
+        - ch_type:
+            The type of children to be collected.
+        - val_dict (optional):
+            The function may be called to extend/update
+            an existing dictionary.
+        - get_method (optional):
+            The method called on the element to retrieve
+            it's value. By default, it's 'get'.
+    """
+    if not val_dict:
+        val_dict = dict()
+
+    children = collect_children_type_of(parent, ch_type)
+
+    for child in children:
+        if child.cget('state') == 'normal' and hasattr(child, 'name'):
+            key = child.name
+
+            value = getattr(child, get_method)()
+            val_dict[key] = value
+
+    return val_dict
 
 
 class KarakterPage(ttk.Frame):
@@ -208,7 +261,8 @@ class KarakterPanels(ttk.PanedWindow):
         try:
             name = self.name_frame.name_field.get_validated()
             sfe_map = self.sfe_frame.retrieve_sfe_map()
-            ep_fp_result = self.ep_fp_frame.get_ep_fp()
+            ep_fp_result = get_child_values(self.ep_fp_frame, 'Entry',
+                                            get_method='get_validated')
 
         except FieldValidationError as error:
             self.character_page.messages.write_message(error.message)
@@ -283,30 +337,14 @@ class EpFpFrame(ttk.LabelFrame):
 
         self.is_not_living_state.trace('w', self._set_living_state)
 
-        ep_last_column = place_max_act_fields(
+        ep_last_column = place_fields_separator(
             self, self.ep_field, self.akt_ep_field, label_text=EP_LABEL)
 
-        place_max_act_fields(
-            self, self.fp_field, self.akt_fp_field, label_text=FP_LABEL, start_row=1)
+        place_fields_separator(
+            self, self.fp_field, self.akt_fp_field,
+            label_text=FP_LABEL, start_row=1)
 
         self.is_not_living.grid(column=ep_last_column, row=0)
-
-    def get_ep_fp(self):
-        ep_fp_dict = {}
-        fields = collect_children_type_of(self, 'Entry')
-
-        for field in fields:
-            if field.cget('state') == 'normal' and hasattr(field, 'name'):
-                key = field.name
-
-                try:
-                    value = field.get_validated()
-                    ep_fp_dict[key] = value
-
-                except FieldValidationError:
-                    raise
-
-        return ep_fp_dict
 
     def reset_frame(self):
         """
@@ -338,18 +376,22 @@ class SfeFrame(ttk.LabelFrame):
         self.sfe_field = CharacterValueField(self, validate_integer, width=2)
         self.sfe_field.grid(row=0, column=SFE_FIELDS_COLUMN + 1)
 
-        self.fej_sfe = SfePartFrame(self, SFE_FEJ_PARTS, self.sfe_field.value,
+        self.fej_sfe = SfePartFrame(self, SFE_FEJ_PARTS,
+                                    self.sfe_field.value,
                                     self.sfe,
                                     main_text=SFE_FEJ_LABEL)
-        self.torzs_sfe = SfePartFrame(self, SFE_TORZS_PARTS, self.sfe_field.value,
+        self.torzs_sfe = SfePartFrame(self, SFE_TORZS_PARTS,
+                                      self.sfe_field.value,
                                       self.sfe,
                                       main_text=SFE_TORZS_LABEL)
 
-        self.kar_sfe = SfePartFrame(self, SFE_KAR_PARTS, self.sfe_field.value,
+        self.kar_sfe = SfePartFrame(self, SFE_KAR_PARTS,
+                                    self.sfe_field.value,
                                     self.sfe,
                                     main_text=SFE_KAR_LABEL,
                                     is_limb=True)
-        self.lab_sfe = SfePartFrame(self, SFE_LAB_PARTS, self.sfe_field.value,
+        self.lab_sfe = SfePartFrame(self, SFE_LAB_PARTS,
+                                    self.sfe_field.value,
                                     self.sfe,
                                     main_text=SFE_LAB_LABEL,
                                     is_limb=True)
@@ -379,22 +421,21 @@ class SfeFrame(ttk.LabelFrame):
         On success, a map with integer values is returned.
         """
         return_map = {}
-        try:
-            for key, value in self.sfe.items():
-                value = value.get_validated()
-                return_map[key] = value
-            return return_map
 
-        except FieldValidationError:
-            raise
+        for key, value in self.sfe.items():
+            value = value.get_validated()
+            return_map[key] = value
+        return return_map
 
 
 class SfePartFrame(ttk.LabelFrame):
     """
     Frame child type of main sfe frame. E.g. Torso or Head frame.
     """
-    def __init__(self, sfe_main_frame, body_parts, shortcut_value, sfe_dict,
-                 main_text=None, shortcut_text=SFE_SHORTCUT_LABEL, is_limb=False):
+    def __init__(self, sfe_main_frame, body_parts,
+                 shortcut_value, sfe_dict,
+                 main_text=None, shortcut_text=SFE_SHORTCUT_LABEL,
+                 is_limb=False):
         ttk.LabelFrame.__init__(self, sfe_main_frame, text=main_text)
 
         # Sfe value shortcut that sets all other sfe values

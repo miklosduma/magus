@@ -145,12 +145,6 @@ class SebzesPage(ttk.Frame):
         ttk.Frame.__init__(self, master_tabs, width=width)
         CharacterPanel(self, characters, messages, width).grid()
 
-    def reset_page(self):
-        """
-        Resets all child widgets of the page.
-        """
-        on_all_children('reset_panel', self)
-
 
 class CharacterPanel(ttk.PanedWindow):
     """
@@ -161,7 +155,6 @@ class CharacterPanel(ttk.PanedWindow):
         Initialise main panel.
         """
         ttk.PanedWindow.__init__(self, page, width=width, orient=orient)
-        self.page = page
         self.messages = messages
         self.characters = characters
 
@@ -216,7 +209,7 @@ class CharacterPanel(ttk.PanedWindow):
 
         msg = format_damage_msg(result)
         self.messages.write_message(msg)
-        self.page.reset_page()
+        self.reset_panel()
 
 
 class WeaponTypeFrame(ttk.LabelFrame):
