@@ -23,7 +23,14 @@ td, th {
 	text-align: left;
 	padding: 8px;}
 
-td.wtype, td.bodypart {
+td.bodypart {
+	text-align: center;
+	font-weight: bold;
+	font-size: 14px;
+	background: #dddddd;
+}
+
+td[colspan] {
 	text-align: center;
 	font-weight: bold;
 	font-size: 14px;
@@ -39,14 +46,10 @@ button.reset {
 	border-radius: 5px;
 	color: white;
 	font-weight: bold;
-	font-size: 14px;
-	width: 10%;
-	height: 10%;
+	font-size: 8px;
 }
 
 button.reset:hover{
-	width: 11%;
-	height: 11%;
 	border-radius: 10px;
 	background: gray;
 }
