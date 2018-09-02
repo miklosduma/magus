@@ -10,38 +10,33 @@ caption {
 	font-size: 16px;
 }
 
-tr:nth-of-type(odd) {
-	background: #F5F5F5;
-}
-
-tr td:empty {
-	background: white;
-}
-
 td, th {
 	border: 1px solid black;
 	text-align: left;
 	padding: 8px;}
 
-td.bodypart {
-	text-align: center;
-	font-weight: bold;
-	font-size: 14px;
-	background: #dddddd;
-}
-
-td[colspan] {
-	text-align: center;
-	font-weight: bold;
-	font-size: 14px;
-	background: #dddddd;
-}
-
-td:empty {
+tr:nth-of-type(1) td:nth-of-type(1) {
+	background: white;
 	border: 0px;
 }
 
+tr:nth-of-type(odd) {
+	background: #F5F5F5;
+}
+
+td:nth-of-type(1), td[colspan] {
+	text-align: center;
+	font-weight: bold;
+	font-size: 14px;
+	background: #dddddd;
+}
+
+button {
+	margin: 3px;
+}
+
 button.reset {
+	margin: 0;
 	background: lightgray;
 	border-radius: 5px;
 	color: white;

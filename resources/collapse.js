@@ -1,65 +1,56 @@
-var hidden_dict = {}
-
 
 function collapse(button) {
-	var hidden = []
-
 	var header_cell = button.parentNode
+	var from_to = calculate_indexes(header_cell)
+	var header_text = header_cell.childNodes[0].nodeValue
 
-	var id = header_cell + Math.random().toString()
-
-	var text = document.createTextNode('Reset' + ' ' + header_text)
-	
 	header_cell.style.display = 'none'
+
+	var hidden = []
 	hidden.push(header_cell)
 
-	var header_text = header_cell.childNodes[0].nodeValue
 	var row = header_cell.parentNode
-	
-	var first_cell = row.childNodes[0]
-
-	insert_reset_button(first_cell, 'reset', id, text)
-
 	var all_rows = row.parentNode.childNodes
 
-	for (row_index=0; row_index < all_rows.length; row_index++) {
-		var cells = all_rows[row_index].childNodes
+	for (ri=row.rowIndex + 1; ri < all_rows.length; ri++) {
+		var cells = all_rows[ri].childNodes
 
-		for (cell_index=0; cell_index < cells.length; cell_index++) {
-			var current_cell = cells[cell_index]
-
-			if (current_cell.hasAttribute('id')){
-				var cell_id = current_cell.getAttribute('id')
-			
-
-				if (cell_id.includes(header_text)){
-
-					current_cell.style.display = 'none'
-					hidden.push(current_cell)
-				}
-			}
+		for (ci=from_to[0]; ci <= from_to[1]; ci++){
+			var cell = cells[ci]
+			cell.style.display = 'none'
+			hidden.push(cell)
 		}
 	}
-
-	hidden_dict[id] = hidden
+	insert_reset_button(row.childNodes[0], 'reset', header_text, hidden)
 }
 
 
-function insert_reset_button(parent, klass, id, text_node) {
+function calculate_indexes(header_cell){
+	var index = header_cell.cellIndex
+	var colspan = header_cell.getAttribute('colspan')
+
+	var to = index * colspan
+	var from = to - (colspan -1)
+	return [from, to]
+}
+
+
+function insert_reset_button(parent, klass, header_text, hidden_list) {
 	var button = document.createElement('button')
+	var text = document.createTextNode('Reset' + ' ' + header_text)
+	
+	button.to_reset = hidden_list
 	button.setAttribute('onclick', 'revert(this)')
 	button.setAttribute('class', klass)
-	button.setAttribute('id', id)
 	
-	button.append(text_node)
+	button.append(text)
 	parent.appendChild(button)
 }
 
 
 function revert(button) {
-	var hidden = hidden_dict[button.getAttribute('id')]
-	for (hidden_index=0; hidden_index < hidden.length; hidden_index++) {
-		hidden[hidden_index].style.display = 'table-cell'
+	for (i=0; i < button.to_reset.length; i++) {
+		button.to_reset[i].style.display = 'table-cell'
 	}
 	button.parentNode.removeChild(button)
 }
