@@ -49,14 +49,13 @@ TARGET_DICTS = [
     (torso_table.TORZS_TABLA, 'Torzs')]
 
 
-def create_rows(target_dict, weapon_types, body_parts):
+def row_content_generator(target_dict, weapon_types, body_parts):
     """
     Generator that yields row content for an HTML table.
         - target_dict:
             One of the penalty tables.
 
     """
-
     while body_parts:
         body = body_parts[0]
         cells = []
@@ -72,6 +71,45 @@ def create_rows(target_dict, weapon_types, body_parts):
             cells.append((cell_header, penalties))
         yield body, cells
         del body_parts[0]
+
+
+def create_table(table, caption, tag, line, text):
+    """
+    Creates an HTML table using a generator that yields
+    the cell content and the headers.
+    """
+    weapon_types = list(table.keys())
+    body_parts = list(table[weapon_types[0]].keys())
+    row_content = row_content_generator(table, weapon_types, body_parts)
+
+    with tag('table'):
+        line('caption', caption)
+
+        header_added = False
+        for body_part, cells in row_content:
+
+            # First row contains an empty cell and the weapon types,
+            # each with a colspan matching the number of penalties.
+            if not header_added:
+                with tag('tr'):
+                    line('td', '')
+
+                    for cell_header, penalties in cells:
+                        with tag('td', cell_header,
+                                 colspan=len(penalties)):
+                            text(cell_header)
+                            line('button', '<',
+                                 onclick='collapse(this)')
+                header_added = True
+
+            # Add rest of the rows, where first cell is the
+            # body part, the rest the penalties.
+            with tag('tr'):
+                line('td', body_part)
+
+                for _cell_header, penalties in cells:
+                    for penalty in penalties:
+                        line('td', penalty)
 
 
 def process_target_dicts(target_dicts):
@@ -93,39 +131,10 @@ def process_target_dicts(target_dicts):
 
             table_no = 1
             for table, caption in target_dicts:
+                caption = 'Tablazat {}: {}'.format(
+                    table_no, caption)
 
-                weapon_types = list(table.keys())
-                body_parts = list(table[weapon_types[0]].keys())
-                row_creater = create_rows(table, weapon_types, body_parts)
-
-                with tag('table'):
-                    line('caption', 'Tablazat {}: {}'.format(
-                        table_no, caption))
-
-                    header_added = False
-                    for body_part, cells in row_creater:
-
-                        if not header_added:
-                            with tag('tr'):
-                                line('td', '')
-
-                                for cell_header, penalties in cells:
-                                    with tag('td', cell_header,
-                                             colspan=len(penalties)):
-                                        text(cell_header)
-                                        line('button', '<',
-                                             onclick='collapse(this)')
-                            header_added = True
-
-                        with tag('tr'):
-                            line('td', body_part, klass='bodypart')
-
-                            for cell_header, penalties in cells:
-                                penalty_no = 1
-                                for penalty in penalties:
-                                    line('td', penalty, id='{}_{}'.format(
-                                        cell_header, penalty_no))
-                                    penalty_no += 1
+                create_table(table, caption, tag, line, text)
                 table_no += 1
 
         return doc.getvalue()
@@ -168,8 +177,10 @@ def any_change_to_target_dicts():
                             for target_module in TARGET_DICT_PATHS]
 
     # Check if any target dict file was modified after the page.
-    return any(target_ch_date > html_ch_date
-               for target_ch_date in target_dict_ch_dates)
+    true_or_false = any(target_ch_date > html_ch_date
+                        for target_ch_date in target_dict_ch_dates)
+
+    return true_or_false
 
 
 def target_dicts_to_html():
@@ -183,8 +194,9 @@ def target_dicts_to_html():
     returns the path to the HTML file.
     """
     if any_change_to_target_dicts():
-        print('Generating {}'.format(HTML_PATH))
         html_content = process_target_dicts(TARGET_DICTS)
+
         with open(HTML_PATH, 'w') as index:
             index.write(html_content)
+
     return 'file://{}'.format(HTML_PATH)
