@@ -103,4 +103,8 @@ ENV/
 # Misc
 .DS_Store
 .idea
-autosave.json
+
+# Magus resources
+saves/*.json
+!saves/sample.json
+resources/*.html
