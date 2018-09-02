@@ -27,13 +27,26 @@ The output HTML tables look like:
 |body part |l1_pen|l2_pen|l1_pen|l2_pen|
 |body part2|l1_pen|l2_pen|l1_pen|l2_pen|
 """
+import os
 
 from yattag import Doc
 
 from magus_kalkulator.interface_elements import get_relative_dir
+from magus_kalkulator import head_table
+from magus_kalkulator import torso_table
+from magus_kalkulator import limbs_table
 
 
 HTML_PATH = get_relative_dir('resources/index.html')
+
+TARGET_DICT_PATHS = [os.path.abspath(head_table.__file__),
+                     os.path.abspath(torso_table.__file__),
+                     os.path.abspath(limbs_table.__file__)]
+
+TARGET_DICTS = [
+    (head_table.FEJ_TABLA, 'Fej'),
+    (limbs_table.VEGTAG_TABLA, 'Vegtagok'),
+    (torso_table.TORZS_TABLA, 'Torzs')]
 
 
 def create_rows(target_dict, weapon_types, body_parts):
@@ -118,13 +131,60 @@ def process_target_dicts(target_dicts):
         return doc.getvalue()
 
 
-def target_dicts_to_html(target_dicts):
+def get_latest_mod(src_file):
     """
-    Transforms 'target_dicts' to HTML, writes
+    Gets the last modification date of
+    the specified file.
+    """
+    # Get date of latest modification
+    stats = os.stat(src_file)
+    latest_mod = stats[8]
+    return latest_mod
+
+
+def any_change_to_target_dicts():
+    """
+    Checks whether any of the target dict files
+    (e.g. head_table.py) was changed after the
+    creation of the HTML page.
+
+    Returns either:
+        - True:
+            One of the target dicts was modified
+            after the creation of the page or
+            the page has not been created.
+        - False:
+            The page is created and up-to-date with
+            the target dict files.
+    """
+    try:
+        html_ch_date = get_latest_mod(HTML_PATH)
+
+    # Return True if the HTML page has not been created.
+    except FileNotFoundError:
+        return True
+
+    target_dict_ch_dates = [get_latest_mod(target_module)
+                            for target_module in TARGET_DICT_PATHS]
+
+    # Check if any target dict file was modified after the page.
+    return any(target_ch_date > html_ch_date
+               for target_ch_date in target_dict_ch_dates)
+
+
+def target_dicts_to_html():
+    """
+    Transforms all target_dict files to HTML, writes
     the result into file, and returns the
     path to the file appended with the 'file://' protocol.
+
+    If the HTML page has already been created, and none of the
+    target dict files changed after it, the function simply
+    returns the path to the HTML file.
     """
-    html_content = process_target_dicts(target_dicts)
-    with open(HTML_PATH, 'w') as index:
-        index.write(html_content)
+    if any_change_to_target_dicts():
+        print('Generating {}'.format(HTML_PATH))
+        html_content = process_target_dicts(TARGET_DICTS)
+        with open(HTML_PATH, 'w') as index:
+            index.write(html_content)
     return 'file://{}'.format(HTML_PATH)

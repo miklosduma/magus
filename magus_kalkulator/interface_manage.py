@@ -14,13 +14,7 @@ from magus_kalkulator.interface_elements import organize_rows_to_left, \
 
 from magus_kalkulator.validate import validate_string, FieldValidationError
 
-from magus_kalkulator import head_table, limbs_table, torso_table
 from magus_kalkulator.table_to_html import target_dicts_to_html
-
-TARGET_DICTS = [
-    (head_table.FEJ_TABLA, 'Fej'),
-    (limbs_table.VEGTAG_TABLA, 'Vegtagok'),
-    (torso_table.TORZS_TABLA, 'Torzs')]
 
 
 def show_tables(*_args):
@@ -28,7 +22,7 @@ def show_tables(*_args):
     Generates an HTML output from the penalty
     tables and open the HTML file in the browser.
     """
-    path = target_dicts_to_html(TARGET_DICTS)
+    path = target_dicts_to_html()
     webbrowser.open(path)
 
 
