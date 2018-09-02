@@ -378,21 +378,17 @@ class SfeFrame(ttk.LabelFrame):
 
         self.fej_sfe = SfePartFrame(self, SFE_FEJ_PARTS,
                                     self.sfe_field.value,
-                                    self.sfe,
                                     main_text=SFE_FEJ_LABEL)
         self.torzs_sfe = SfePartFrame(self, SFE_TORZS_PARTS,
                                       self.sfe_field.value,
-                                      self.sfe,
                                       main_text=SFE_TORZS_LABEL)
 
         self.kar_sfe = SfePartFrame(self, SFE_KAR_PARTS,
                                     self.sfe_field.value,
-                                    self.sfe,
                                     main_text=SFE_KAR_LABEL,
                                     is_limb=True)
         self.lab_sfe = SfePartFrame(self, SFE_LAB_PARTS,
                                     self.sfe_field.value,
-                                    self.sfe,
                                     main_text=SFE_LAB_LABEL,
                                     is_limb=True)
 
@@ -432,26 +428,27 @@ class SfePartFrame(ttk.LabelFrame):
     """
     Frame child type of main sfe frame. E.g. Torso or Head frame.
     """
-    def __init__(self, sfe_main_frame, body_parts,
-                 shortcut_value, sfe_dict,
-                 main_text=None, shortcut_text=SFE_SHORTCUT_LABEL,
-                 is_limb=False):
-        ttk.LabelFrame.__init__(self, sfe_main_frame, text=main_text)
+    def __init__(self, sfe_main_frame, body_parts, shortcut_value, **kwargs):
+        """
+        Create SFE part frame instance.
+        """
+        ttk.LabelFrame.__init__(self, sfe_main_frame,
+                                text=kwargs.get('main_text',
+                                                None))
 
         # Sfe value shortcut that sets all other sfe values
         self.master_sfe = shortcut_value
+        self.sfe_main_frame = sfe_main_frame
 
-        Label(self, text=shortcut_text).grid(row=0, column=0, sticky=W)
+        Label(self, text=kwargs.get('shortcut_text', SFE_SHORTCUT_LABEL)).grid(
+            row=0, column=0, sticky=W)
 
         # Sfe shortcut that sets all sfe values listed in body_parts
         self.sfe_field = CharacterValueField(self, validate_integer, width=2,
                                              to_trace=self.master_sfe)
         self.sfe_field.grid(row=0, column=1, sticky=W)
 
-        # Dict attribute holding validated sfe values
-        self.sfe_map = sfe_dict
-
-        if is_limb:
+        if 'is_limb' in kwargs:
             self._place_sfe_fields_limbs(body_parts)
 
         else:
@@ -477,7 +474,7 @@ class SfePartFrame(ttk.LabelFrame):
 
             # Add sfe field to sfe map. Sfe field stores the value
             # of the entry field
-            self.sfe_map[field] = sfe_field
+            self.sfe_main_frame.sfe[field] = sfe_field
 
             # Next label/field will go into next row
             row += 1
@@ -522,7 +519,7 @@ class SfePartFrame(ttk.LabelFrame):
 
                 # Add sfe field to sfe map. Sfe field stores the value
                 # of the entry field
-                self.sfe_map[sfe_field] = sfe_field_value
+                self.sfe_main_frame.sfe[sfe_field] = sfe_field_value
 
             # Next label/field will go into next row
             row += 1

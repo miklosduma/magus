@@ -143,18 +143,19 @@ class SebzesPage(ttk.Frame):
         Initializes damage tab.
         """
         ttk.Frame.__init__(self, master_tabs, width=width)
-        CharacterPanel(self, characters, messages, width).grid()
+        CharacterPanel(self, characters, messages,
+                       width=width, orient=VERTICAL).grid()
 
 
 class CharacterPanel(ttk.PanedWindow):
     """
     Main panel of damage page.
     """
-    def __init__(self, page, characters, messages, width, orient=VERTICAL):
+    def __init__(self, page, characters, messages, **kwargs):
         """
         Initialise main panel.
         """
-        ttk.PanedWindow.__init__(self, page, width=width, orient=orient)
+        ttk.PanedWindow.__init__(self, page, **kwargs)
         self.messages = messages
         self.characters = characters
 

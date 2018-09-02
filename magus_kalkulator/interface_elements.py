@@ -122,17 +122,16 @@ class CharacterValueField(Entry):
     """
     Basic field type used to store character values.
     """
-    def __init__(self, parent, validate_fun,
-                 width=FIELD_WIDTH, name=None, to_trace=None):
+    def __init__(self, parent, validate_fun, **kwargs):
         """
         Initialise input field.
          - validate_fun:
             A function used to validate the field's input value.
         """
         # Variable for entered value
-        if name:
-            self.name = name
-            self.value = StringVar(parent, name=name)
+        if 'name' in kwargs:
+            self.name = kwargs.get('name')
+            self.value = StringVar(parent, name=self.name)
         else:
             self.value = StringVar(parent)
 
@@ -140,13 +139,13 @@ class CharacterValueField(Entry):
         self.value.trace('w', self._follow_changes)
         self.validator = validate_fun
 
-        if to_trace:
-            self.reference = to_trace
+        if 'to_trace' in kwargs:
+            self.reference = kwargs.get('to_trace')
             self.reference.trace('w', self._follow_ref_val)
 
         # Entry field
         Entry.__init__(self, parent, textvariable=self.value,
-                       width=width)
+                       width=kwargs.get('width', FIELD_WIDTH))
 
     def _follow_ref_val(self, *_args):
         """
