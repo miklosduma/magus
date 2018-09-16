@@ -61,16 +61,45 @@ def row_content_generator(target_dict, weapon_types, body_parts):
         cells = []
 
         for wtype in weapon_types:
-            cell_header = wtype
 
             penalties = [', '.join(penalty)
                          if isinstance(penalty, list)
                          else penalty for penalty
                          in target_dict[wtype][body][1:-1]]
 
-            cells.append((cell_header, penalties))
+            cells.append((wtype, penalties))
         yield body, cells
         del body_parts[0]
+
+
+def create_header_row(tag, line, text, first_cells):
+    """
+    Creates the first row of a penalty table.
+    The row comprises an empty cell, and the weapon types,
+    each having a colspan of 3 (one per penalty rank).
+    """
+    with tag('tr'):
+        line('td', '')
+
+        for cell_header, penalties in first_cells:
+            with tag('td', cell_header,
+                     colspan=len(penalties)):
+                text(cell_header)
+                line('button', '<',
+                     onclick='collapse(this)')
+
+
+def create_penalty_row(tag, line, body_part, cells):
+    """
+    Writes a table row, where the first cell is the
+    body part, the remaining cells contain the penalties.
+    """
+    with tag('tr'):
+        line('td', body_part)
+
+        for _cell_header, penalties in cells:
+            for penalty in penalties:
+                line('td', penalty)
 
 
 def create_table(table, caption, tag, line, text):
@@ -80,36 +109,24 @@ def create_table(table, caption, tag, line, text):
     """
     weapon_types = list(table.keys())
     body_parts = list(table[weapon_types[0]].keys())
+
+    # Start generator.
     row_content = row_content_generator(table, weapon_types, body_parts)
 
+    # Start HTML table, give it a title.
     with tag('table'):
         line('caption', caption)
 
-        header_added = False
+        # Use first yield from generator to fill header row besides writing
+        # a penalty row.
+        first_body_part, first_cells = next(row_content)
+
+        create_header_row(tag, line, text, first_cells)
+        create_penalty_row(tag, line, first_body_part, first_cells)
+
+        # Iterate through rest of the penalty cells and bodyparts.
         for body_part, cells in row_content:
-
-            # First row contains an empty cell and the weapon types,
-            # each with a colspan matching the number of penalties.
-            if not header_added:
-                with tag('tr'):
-                    line('td', '')
-
-                    for cell_header, penalties in cells:
-                        with tag('td', cell_header,
-                                 colspan=len(penalties)):
-                            text(cell_header)
-                            line('button', '<',
-                                 onclick='collapse(this)')
-                header_added = True
-
-            # Add rest of the rows, where first cell is the
-            # body part, the rest the penalties.
-            with tag('tr'):
-                line('td', body_part)
-
-                for _cell_header, penalties in cells:
-                    for penalty in penalties:
-                        line('td', penalty)
+            create_penalty_row(tag, line, body_part, cells)
 
 
 def process_target_dicts(target_dicts):
@@ -119,16 +136,23 @@ def process_target_dicts(target_dicts):
 
     Returns the constructed HTML string.
     """
+
+    # Create yattag HTML instances.
     doc, tag, text, line = Doc().ttl()
+
+    # Create doc type declaration.
     doc.asis('<!DOCTYPE html>')
 
     with tag('html', 'magus tables'):
+
+        # Reference CSS and JavaScript.
         with tag('head', 'styles'):
             line('link', '', rel='stylesheet', href='tables.css')
 
         with tag('body', 'magus body'):
             line('script', '', type='text/javascript', src='collapse.js')
 
+            # Create HTML Tables.
             table_no = 1
             for table, caption in target_dicts:
                 caption = 'Tablazat {}: {}'.format(
@@ -151,7 +175,7 @@ def get_latest_mod(src_file):
     return latest_mod
 
 
-def any_change_to_target_dicts():
+def any_change_to_target_dicts(html_file, target_modules):
     """
     Checks whether any of the target dict files
     (e.g. head_table.py) was changed after the
@@ -167,14 +191,14 @@ def any_change_to_target_dicts():
             the target dict files.
     """
     try:
-        html_ch_date = get_latest_mod(HTML_PATH)
+        html_ch_date = get_latest_mod(html_file)
 
     # Return True if the HTML page has not been created.
     except FileNotFoundError:
         return True
 
     target_dict_ch_dates = [get_latest_mod(target_module)
-                            for target_module in TARGET_DICT_PATHS]
+                            for target_module in target_modules]
 
     # Check if any target dict file was modified after the page.
     true_or_false = any(target_ch_date > html_ch_date
@@ -193,7 +217,7 @@ def target_dicts_to_html():
     target dict files changed after it, the function simply
     returns the path to the HTML file.
     """
-    if any_change_to_target_dicts():
+    if any_change_to_target_dicts(HTML_PATH, TARGET_DICT_PATHS):
         html_content = process_target_dicts(TARGET_DICTS)
 
         with open(HTML_PATH, 'w') as index:
