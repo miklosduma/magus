@@ -29,8 +29,6 @@ The output HTML tables look like:
 """
 import os
 
-from yattag import Doc
-
 from magus_kalkulator.interface_elements import get_relative_dir
 from magus_kalkulator import head_table
 from magus_kalkulator import torso_table
@@ -47,6 +45,95 @@ TARGET_DICTS = [
     (head_table.FEJ_TABLA, 'Fej'),
     (limbs_table.VEGTAG_TABLA, 'Vegtagok'),
     (torso_table.TORZS_TABLA, 'Torzs')]
+
+CSS_LINK = '<link rel=\"stylesheet\" type=\"text/css\" href=\"tables.css\">'
+JS_LINK = '<script src=\"collapse.js\" type=\"text/javascript\"></script>'
+
+
+def add_attributes(**attr):
+    """
+    Generator that iterates through all attributes
+    and yields them formatted as HTML attributes.
+        - attr:
+            A Python dict. The function formats
+            them as HTML attributes.
+    """
+    while attr:
+        key = list(attr.keys())[0]
+        value = attr[key]
+        yield '{}=\"{}\"'.format(key, value)
+        del attr[key]
+
+
+def tag_builder(tag, **attr):
+    """
+    Creates the start tag for an element.
+        - tag:
+            The name of the HTML element. E.g. 'div' or 'table'.
+        - attr:
+            A Python dict with the attributes of the HTML element.
+            E.g. {'style': 'color:red;', 'colspan:3}
+    """
+
+    # Since 'class' is a Python key word, use 'klass' instead.
+    if 'klass' in attr.keys():
+        class_value = attr.pop('klass')
+        attr['class'] = class_value
+
+    attr_generator = add_attributes(**attr)
+
+    return '<{} {}>'.format(tag, ' '.join(attr_generator))
+
+
+def html_wrapper(tag, **attr):
+    """
+    HTML wrapper. Wraps the content in start and
+    end tags. The tags are built using the 'tag' and 'attr' arguments.
+
+        - tag:
+            The tag of the HTML element. E.g. 'div' or 'td'.
+        - attr:
+            A Python dict with the attributes of the HTML element.
+            E.g. {'style': 'color:red;', 'colspan:3}
+    """
+    def real_decorator(fun):
+        """
+        Inner wrapper. It modifies the decorated function.
+            - fun:
+                The function being wrapped.
+        """
+
+        def wrapper(html_writer, *args, **kwargs):
+            """
+            Calls the actual function.
+                - html_writer:
+                    A co-routine all funs use to write the HTML file.
+                - args:
+                    Other positional arguments of the decorated function.
+                - kwargs:
+                    Other keyword arguments of the decorated function.
+                    They can be used to override or extend the HTML attributes
+                    defined on the wrapper.
+            """
+            # Calculate all attributes for HTML tag
+            for key, value in kwargs.items():
+                attr[key] = value
+
+            start_tag = tag_builder(tag, **attr)
+
+            # Write HTML start tag.
+            html_writer.send(start_tag)
+
+            # Invoke actual function to write content of HTML element.
+            try:
+                fun(html_writer, *args, **kwargs)
+
+            # Close element with HTML end tag.
+            finally:
+                html_writer.send('</{}>'.format(tag))
+        return wrapper
+
+    return real_decorator
 
 
 def row_content_generator(target_dict, weapon_types, body_parts):
@@ -72,37 +159,80 @@ def row_content_generator(target_dict, weapon_types, body_parts):
         del body_parts[0]
 
 
-def create_header_row(tag, line, text, first_cells):
+@html_wrapper('button', onclick='collapse(this)')
+def create_button(html_writer, button_text, **_attr):
+    """
+    Creates a button element.
+        - html_writer:
+            A co-routine all funs use to write the HTML file.
+        - button_text:
+            The label of the button.
+        - _attr:
+            Any additional attributes for the button.
+
+    The decorator writes the start and end tags of the button,
+    and adds the onclick attribute to the start tag.
+    """
+    html_writer.send(button_text)
+
+
+@html_wrapper('td')
+def create_header_cell(html_writer, header_text, **_attr):
+    """
+    Creates a cell in the first row of the table.
+     - html_writer:
+            A co-routine all funs use to write the HTML file.
+    - header_text:
+        The text content of the cell.
+    - _attr:
+        Optional HTML arguments.
+    """
+    html_writer.send(header_text)
+    create_button(html_writer, '<')
+
+
+@html_wrapper('tr')
+def create_header_row(html_writer, first_cells, **_attr):
     """
     Creates the first row of a penalty table.
     The row comprises an empty cell, and the weapon types,
     each having a colspan of 3 (one per penalty rank).
     """
-    with tag('tr'):
-        line('td', '')
+    create_cell(html_writer, '')
 
-        for cell_header, penalties in first_cells:
-            with tag('td', cell_header,
-                     colspan=len(penalties)):
-                text(cell_header)
-                line('button', '<',
-                     onclick='collapse(this)')
+    for cell_header, penalties in first_cells:
+        create_header_cell(html_writer, cell_header, colspan=len(penalties))
 
 
-def create_penalty_row(tag, line, body_part, cells):
+@html_wrapper('td')
+def create_cell(html_writer, cell_text, **_attr):
+    """
+    Creates a simple penalty cell in the table.
+    - html_writer:
+        A co-routine all funs use to write the HTML file.
+    - cell_text:
+        The penalty content of the cell.
+    - _attr:
+        Optional HTML arguments.
+    """
+    html_writer.send(cell_text)
+
+
+@html_wrapper('tr')
+def create_penalty_row(html_writer, body_part, cells, **_attr):
     """
     Writes a table row, where the first cell is the
     body part, the remaining cells contain the penalties.
     """
-    with tag('tr'):
-        line('td', body_part)
+    create_cell(html_writer, body_part)
 
-        for _cell_header, penalties in cells:
-            for penalty in penalties:
-                line('td', penalty)
+    for _cell_header, penalties in cells:
+        for penalty in penalties:
+            create_cell(html_writer, penalty)
 
 
-def create_table(table, caption, tag, line, text):
+@html_wrapper('table')
+def create_table(html_writer, table, caption, **_attr):
     """
     Creates an HTML table using a generator that yields
     the cell content and the headers.
@@ -114,54 +244,60 @@ def create_table(table, caption, tag, line, text):
     row_content = row_content_generator(table, weapon_types, body_parts)
 
     # Start HTML table, give it a title.
-    with tag('table'):
-        line('caption', caption)
+    html_writer.send('<caption>{}</caption>'.format(caption))
 
-        # Use first yield from generator to fill header row besides writing
-        # a penalty row.
-        first_body_part, first_cells = next(row_content)
+    first_body_part, first_cells = next(row_content)
 
-        create_header_row(tag, line, text, first_cells)
-        create_penalty_row(tag, line, first_body_part, first_cells)
+    create_header_row(html_writer, first_cells)
+    create_penalty_row(html_writer, first_body_part, first_cells)
 
-        # Iterate through rest of the penalty cells and bodyparts.
-        for body_part, cells in row_content:
-            create_penalty_row(tag, line, body_part, cells)
+    # Iterate through rest of the penalty cells and bodyparts.
+    for body_part, cells in row_content:
+        create_penalty_row(html_writer, body_part, cells)
 
 
-def process_target_dicts(target_dicts):
+@html_wrapper('head')
+def write_head(html_writer, **_attr):
+    """
+    Creates the header of the HTML file.
+    """
+    # Link CSS file and JavaScript.
+    html_writer.send(CSS_LINK)
+    html_writer.send(JS_LINK)
+
+
+@html_wrapper('body')
+def write_body(html_writer, target_dicts, **_attr):
+    """
+    Writes the HTML tables into the HTML file.
+    - html_writer:
+        A co-routine all funs use to write the HTML file.
+    - target_dicts:
+        A list of tuples, where each tuple comprises:
+            - A penalty dictionary
+            - A caption for the table
+    - _attr:
+        Optional HTML arguments.
+    """
+    table_no = 1
+    for table, caption in target_dicts:
+        caption = 'Tablazat {}: {}'.format(
+            table_no, caption)
+
+        create_table(html_writer, table, caption)
+        table_no += 1
+
+
+@html_wrapper('html')
+def process_target_dicts(html_writer, target_dicts, **_attr):
     """
     Builds an HTML page from the supplied penalty
     dictionaries.
 
     Returns the constructed HTML string.
     """
-
-    # Create yattag HTML instances.
-    doc, tag, text, line = Doc().ttl()
-
-    # Create doc type declaration.
-    doc.asis('<!DOCTYPE html>')
-
-    with tag('html', 'magus tables'):
-
-        # Reference CSS and JavaScript.
-        with tag('head', 'styles'):
-            line('link', '', rel='stylesheet', href='tables.css')
-
-        with tag('body', 'magus body'):
-            line('script', '', type='text/javascript', src='collapse.js')
-
-            # Create HTML Tables.
-            table_no = 1
-            for table, caption in target_dicts:
-                caption = 'Tablazat {}: {}'.format(
-                    table_no, caption)
-
-                create_table(table, caption, tag, line, text)
-                table_no += 1
-
-        return doc.getvalue()
+    write_head(html_writer)
+    write_body(html_writer, target_dicts)
 
 
 def get_latest_mod(src_file):
@@ -207,6 +343,55 @@ def any_change_to_target_dicts(html_file, target_modules):
     return true_or_false
 
 
+def writer(log_file_handle):
+    """
+    A co-routine that writes what it receives to a file.
+        - log_file_handle:
+            A handle to the file the co-routine writes to.
+            The file must be opened in append mode.
+    """
+    while True:
+        to_write = (yield)
+        log_file_handle.write(to_write)
+
+
+def start_html_page(path_to_html):
+    """
+    Creates the specified file or wipes its content if
+    it already exists.
+    Starts a co-routine that writes to this file, and sends the
+    co-routine the current time.
+    Returns the co-routine instance and a handle to
+    the opened file.
+    """
+    # Create/wipe content of file.
+    open(path_to_html, 'w').close()
+
+    # Open file in append mode.
+    html_handle = open(path_to_html, 'a')
+
+    # Create and start co-routine.
+    html_writer = writer(html_handle)
+    html_writer.send(None)
+    html_writer.send('<!DOCTYPE html>')
+
+    # Return the co-routine and the file handle.
+    return html_writer, html_handle
+
+
+def transform_html(path_to_html):
+    """
+    Create the HTML file and write its content.
+    """
+    html_writer, html_handle = start_html_page(path_to_html)
+    try:
+        process_target_dicts(html_writer, TARGET_DICTS)
+
+    finally:
+        html_writer.close()
+        html_handle.close()
+
+
 def target_dicts_to_html():
     """
     Transforms all target_dict files to HTML, writes
@@ -218,9 +403,6 @@ def target_dicts_to_html():
     returns the path to the HTML file.
     """
     if any_change_to_target_dicts(HTML_PATH, TARGET_DICT_PATHS):
-        html_content = process_target_dicts(TARGET_DICTS)
-
-        with open(HTML_PATH, 'w') as index:
-            index.write(html_content)
+        transform_html(HTML_PATH)
 
     return 'file://{}'.format(HTML_PATH)

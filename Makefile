@@ -4,7 +4,7 @@ help:
 
 .PHONY: start
 start:
-	@python -m magus_kalkulator
+	@python3 magus_kalkulator
 
 .PHONY: test
 test: test2 test3
