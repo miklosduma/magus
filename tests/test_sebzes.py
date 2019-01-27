@@ -24,6 +24,17 @@ TEST_SFE_MAP = {
     'Blabfej': 4, 'Arc': 4, 'Bkezfej': 4, 'Koponya': 4
 }
 
+TEST_CHARACTER_FP = {
+    'sfe': TEST_SFE_MAP,
+    'max_ep': 14,
+    'max_fp': 44
+}
+
+TEST_CHARACTER_NO_FP = {
+    'sfe': TEST_SFE_MAP,
+    'max_ep': 14
+}
+
 
 @pytest.mark.parametrize('sfe,damage,atutes,tulutes,expected',
                          TEST_DATA_CALCULATE)
@@ -36,14 +47,14 @@ def test_calculate_damage(sfe, damage, atutes, tulutes, expected):
     assert result == expected
 
 
-def test_return_penalty():
+def test_return_penalty_fp():
     """
     Tests the penalty returned on hitting a specific body part
     with pre-specified damage.
     """
-    result = return_penalty(TEST_SFE_MAP, 21,
+    result = return_penalty(TEST_CHARACTER_FP, 21,
                             ('Fej', 'Koponya', 'Koponya'),
-                            14, mgc.THRUST, atutes=3)
+                            mgc.THRUST, atutes=3)
     expected_keys = ['ep_loss', 'fp_loss', 'hit_target', 'penalty']
     actual_keys = result.keys()
     assert all(x in actual_keys for x in expected_keys)
@@ -61,3 +72,24 @@ def test_return_penalty():
                        mgc.SLIGHT_HANDICAP,
                        mgc.SLIGHT_PAIN,
                        mgc.EXTRA_K6]
+
+
+def test_return_penalty_no_fp():
+    """
+    Tests the penalty returned on hitting a specific body part
+    with pre-specified damage.
+    """
+    result = return_penalty(TEST_CHARACTER_NO_FP, 21,
+                            ('Fej', 'Koponya', 'Koponya'),
+                            mgc.THRUST, atutes=3)
+    expected_keys = ['ep_loss', 'hit_target']
+    actual_keys = result.keys()
+    assert all(x in actual_keys for x in expected_keys)
+
+    assert result['ep_loss'] == 4
+
+    target_parts = len(result['hit_target'])
+    assert target_parts == 3
+
+    assert 'penalty' not in result
+    assert 'fp_loss' not in result

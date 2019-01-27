@@ -92,11 +92,11 @@ def add_disease(penalties, sub_body_part, rank):
         return penalties
 
 
-def return_penalty(sfe, damage, body_parts_list, max_ep, wtype, **kwargs):
+def return_penalty(character, damage, body_parts_list, wtype, **kwargs):
     """
     Gets the penalty associated with a damage.
     """
-    sfe = get_sfe_per_part(sfe, body_parts_list)
+    sfe = get_sfe_per_part(character['sfe'], body_parts_list)
     main_part, penalty_part, sfe_part = body_parts_list
 
     ep_loss, fp_loss = calculate_damage(sfe, damage,
@@ -107,16 +107,20 @@ def return_penalty(sfe, damage, body_parts_list, max_ep, wtype, **kwargs):
                                         is_zero_zero=kwargs.get(
                                             'is_zero_zero', False))
 
-    rank, penalties, sfe_part = calculate_penalty(ep_loss,
-                                                  max_ep,
-                                                  wtype,
-                                                  body_parts_list)
-
-    if mgc.DISEASE in penalties:
-        penalties = add_disease(penalties, sfe_part, rank)
-
-    return {
+    return_dict = {
         'ep_loss': ep_loss,
-        'fp_loss': fp_loss,
-        'hit_target': [main_part, penalty_part, sfe_part],
-        'penalty': penalties}
+        'hit_target': [main_part, penalty_part, sfe_part]}
+
+    if 'max_fp' in character:
+        return_dict['fp_loss'] = fp_loss
+        rank, penalties, sfe_part = calculate_penalty(ep_loss,
+                                                      character['max_ep'],
+                                                      wtype,
+                                                      body_parts_list)
+
+        if mgc.DISEASE in penalties:
+            penalties = add_disease(penalties, sfe_part, rank)
+
+        return_dict['penalty'] = penalties
+
+    return return_dict

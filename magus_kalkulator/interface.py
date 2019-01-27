@@ -11,29 +11,26 @@ style.theme_create("yummy", parent="alt", settings={
 
 style.theme_use("yummy")
 """
+import json
 
-from tkinter import ttk, Text, END, DISABLED, NORMAL, N, mainloop, Tk
+from tkinter import ttk, Text, END, DISABLED, NORMAL, N, mainloop, Tk,\
+    HORIZONTAL, Scrollbar, VERTICAL, Frame, RIGHT, Y, LEFT, BOTH, BOTTOM, X
 
 from magus_kalkulator.karakterek import Characters
 from magus_kalkulator.interface_sebzes import SebzesPage
 from magus_kalkulator.interface_karakterek import KarakterPage
 from magus_kalkulator.interface_manage import ManagementPage
 from magus_kalkulator.interface_elements import on_all_children
+from magus_kalkulator.gui_styles import apply_style
+from magus_kalkulator.messages import MagusCanvas, MESSAGE_BOX_COLOUR
 
 
-WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 800
-WINDOW_DIMENSIONS = '800x800'
 WINDOW_TEXT = 'Magus kalkulator'
-
-TAB_PANEL_WIDTH = int(WINDOW_WIDTH/2)
 
 TEXT_START = 'Udv kockak!'
 
 KARAKTER_PAGE_TITLE = 'Karakterek'
 SEBZES_PAGE_TITLE = 'Sebzes'
-
-MESSAGE_BOX_COLOUR = 'azure'
 
 TABS_COLUMN = 0
 TABS_COLUMN_SPAN = 9
@@ -55,6 +52,7 @@ def fire_up_interface():
     """
     root = Tk()
     MagusGUI(root)
+    apply_style(root)
     mainloop()
 
 
@@ -74,21 +72,23 @@ class MagusGUI:
         self.characters = Characters()
 
         # Format main GUI window
-        root.minsize(WINDOW_WIDTH, WINDOW_HEIGHT)
-        root.maxsize(WINDOW_WIDTH, WINDOW_HEIGHT)
-        root.geometry(WINDOW_DIMENSIONS)
         root.title(WINDOW_TEXT)
-
-        messages = GuiMessage(root)
-        messages.grid(column=MESSAGES_COLUMN,
-                      columnspan=MESSAGES_COLUMNSPAN, sticky=N,
-                      row=MESSAGES_ROW, rowspan=MESSAGES_ROWSPAN)
+        message_frame = Frame(root, width=300, height=600, bg=MESSAGE_BOX_COLOUR)
+        messages = MagusCanvas(message_frame)
 
         # Create multiple tabs on main page, making characters
         # accessible to each
+
         tabs = MyTabs(root, self.characters, messages)
-        tabs.grid(column=TABS_COLUMN, columnspan=TABS_COLUMN_SPAN,
-                  row=TABS_ROW, rowspan=TABS_ROW_SPAN, sticky=N)
+        tabs.grid(column=0, row=0)
+        message_frame.grid(column=1, row=0, sticky=N)
+
+        ybar = Scrollbar(message_frame, orient=VERTICAL, command=messages.yview)
+        ybar.pack(side=RIGHT, fill=Y)
+
+        messages.config(yscrollcommand=ybar.set, width=300, height=600)
+        messages.pack(side=LEFT, expand=True, fill=BOTH)
+        messages.write_message(TEXT_START)
 
 
 class MyTabs(ttk.Notebook):
@@ -102,15 +102,12 @@ class MyTabs(ttk.Notebook):
         object from the top level and hands them down to
         the slave pages.
         """
-        ttk.Notebook.__init__(self, magus_gui, width=TAB_PANEL_WIDTH)
+        ttk.Notebook.__init__(self, magus_gui)
 
         # Initialize tabs
-        karakter_page = KarakterPage(self, characters, messages,
-                                     TAB_PANEL_WIDTH)
-        sebzes_page = SebzesPage(self, characters, messages,
-                                 TAB_PANEL_WIDTH)
-        manage_page = ManagementPage(self, characters, messages,
-                                     TAB_PANEL_WIDTH)
+        karakter_page = KarakterPage(self, characters, messages)
+        sebzes_page = SebzesPage(self, characters, messages)
+        manage_page = ManagementPage(self, characters, messages)
 
         self.add(karakter_page, text=KARAKTER_PAGE_TITLE)
         self.add(sebzes_page, text=SEBZES_PAGE_TITLE)
@@ -134,8 +131,10 @@ class GuiMessage(Text):
 
         Its master must be the root element.
         """
-        Text.__init__(self, magus_gui, bg=MESSAGE_BOX_COLOUR,
-                      width=TAB_PANEL_WIDTH)
+        Text.__init__(self, magus_gui, bg=MESSAGE_BOX_COLOUR, padx=5, pady=5,
+                      highlightbackground=MESSAGE_BOX_COLOUR,
+                      font=('Helvetica', 14))
+
         self.insert(END, TEXT_START)
         self._set_state(DISABLED)
 
@@ -160,11 +159,16 @@ class GuiMessage(Text):
 
         self.delete(START_INDEX, END)
 
-    def write_message(self, text):
+    def write_message(self, text, delete=True):
         """
         Overrides the content of the text box
         with the provided text.
         """
-        self.delete_message()
+        if delete:
+            self.delete_message()
+
+        else:
+            self._set_state(NORMAL)
+
         self.insert(END, text)
         self._set_state(DISABLED)

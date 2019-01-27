@@ -2,8 +2,7 @@
 Classes used by Damage page.
 """
 
-from tkinter import (StringVar, IntVar, OptionMenu, Button, ttk,
-                     Checkbutton, VERTICAL, N, W)
+from tkinter import StringVar, IntVar, ttk, VERTICAL, N, W
 
 from magus_kalkulator.sebzes import return_penalty
 from magus_kalkulator.random_body import pick_sub_parts
@@ -11,10 +10,11 @@ from magus_kalkulator.validate import validate_integer, FieldValidationError
 from magus_kalkulator.interface_elements import (CharacterValueField,
                                                  organize_rows_to_left,
                                                  ChooseCharacterFrame,
-                                                 on_all_children)
+                                                 on_all_children,
+                                                 CharacterDropDown,
+                                                 format_list_msg, Spinbox)
 
 from magus_kalkulator import magus_constants as mgc
-
 
 DAMAGE_PAGE_COLUMN = 0
 
@@ -30,10 +30,8 @@ ANYWHERE = 'Barhol'
 MAIN_PART_LABEL = 'Fo testresz'
 SUB_PART_LABEL = 'Al testresz'
 
-MSG_TAB = 4
-
 # Types of attacking weapons. Used when calculating the damage
-WEAPON_TYPES = [mgc.THRUST, mgc.SLASH, mgc.BLUDGEON, mgc.BITE, mgc.CLAW]
+WEAPON_TYPES = (mgc.THRUST, mgc.SLASH, mgc.BLUDGEON, mgc.BITE, mgc.CLAW)
 
 ATUTES_VALUES = [0, 1, 2, 3, 4, 5]
 
@@ -99,21 +97,6 @@ BODY_LISTS_DICT_BEHIND = {
 }
 
 
-def format_list_msg(list_value):
-    """
-    Formats a key/value pair where the value
-    is a list.
-
-    Each list element is placed on a new line, they are
-    all indented by a specified tab.
-    """
-    separator = '\n'
-    for _i in range(0, MSG_TAB):
-        separator += ' '
-
-    return '{}{}'.format(separator, separator.join(list_value))
-
-
 def format_damage_msg(penalty_dict):
     """
     Formats message returned on
@@ -138,13 +121,17 @@ class SebzesPage(ttk.Frame):
     """
     Main tab for calculating damage and penalties.
     """
-    def __init__(self, master_tabs, characters, messages, width):
+    def __init__(self, master_tabs, characters, messages):
         """
         Initializes damage tab.
         """
-        ttk.Frame.__init__(self, master_tabs, width=width)
-        CharacterPanel(self, characters, messages,
-                       width=width, orient=VERTICAL).grid()
+        ttk.Frame.__init__(self, master_tabs)
+        self.panel = CharacterPanel(self, characters, messages,
+                                    orient=VERTICAL)
+        self.panel.grid()
+
+    def reset_page(self):
+        self.panel.reset_panel()
 
 
 class CharacterPanel(ttk.PanedWindow):
@@ -159,18 +146,28 @@ class CharacterPanel(ttk.PanedWindow):
         self.messages = messages
         self.characters = characters
 
-        sebzes_button = Button(self, text=DAMAGE_BUTTON_TEXT)
+        sebzes_button = ttk.Button(self, text=DAMAGE_BUTTON_TEXT)
         sebzes_button.bind('<Button-1>', self.write_results)
+        self.zero_zero_state = IntVar()
+        self.zero_zero_state.trace('w', self.set_piercing_state)
 
         self.choose_frame = ChooseCharacterFrame(self, characters)
         self.weapon_frame = WeaponTypeFrame(self)
-        self.damage_frame = DamageFrame(self)
         self.piercing_frame = PiercingFrame(self, ATUTES_VALUES)
+        self.damage_frame = DamageFrame(self, self.zero_zero_state)
         self.body_parts_frame = ChooseBodyPartFrame(self)
 
-        organize_rows_to_left([self.choose_frame, self.weapon_frame,
-                               self.damage_frame, self.piercing_frame,
-                               self.body_parts_frame, sebzes_button], 0)
+        last_row = organize_rows_to_left([self.choose_frame, self.weapon_frame,
+                                          self.damage_frame, self.piercing_frame,
+                                          self.body_parts_frame], 0)
+        sebzes_button.grid(row=last_row, padx=8, pady=4, sticky=W)
+
+    def set_piercing_state(self, *_event):
+        if self.zero_zero_state.get():
+            self.piercing_frame.piercing_menu.disable()
+
+        else:
+            self.piercing_frame.piercing_menu.enable()
 
     def reset_panel(self):
         """
@@ -199,17 +196,24 @@ class CharacterPanel(ttk.PanedWindow):
 
         attacking_weapon = self.weapon_frame.get_weapon()
         body_parts_list = self.body_parts_frame.get_targeted()
-        is_critical = self.damage_frame.is_critical()
-        armour_piercing = self.piercing_frame.get_piercing()
+
+        kwargs = dict()
+
+        kwargs['tulutes'] = self.damage_frame.is_critical()
+
         is_zero_zero = self.damage_frame.is_zero_zero()
 
-        result = return_penalty(character['sfe'], damage, body_parts_list,
-                                character['max_ep'], attacking_weapon,
-                                tulutes=is_critical, atutes=armour_piercing,
-                                is_zero_zero=is_zero_zero)
+        if is_zero_zero:
+            kwargs['is_zero_zero'] = is_zero_zero
 
-        msg = format_damage_msg(result)
-        self.messages.write_message(msg)
+        else:
+            kwargs['atutes'] = self.piercing_frame.get_piercing()
+
+        result = return_penalty(character, damage, body_parts_list,
+                                attacking_weapon, **kwargs)
+
+        self.messages.delete_message()
+        self.messages.write_damage(result)
         self.reset_panel()
 
 
@@ -222,30 +226,28 @@ class WeaponTypeFrame(ttk.LabelFrame):
         Initialises weapon-type frame.
         """
         ttk.LabelFrame.__init__(self, character_panel, text=SELECT_WEAPON)
-        self.selected_weapon = StringVar()
-        self.selected_weapon.set(WEAPON_TYPES[0])
-        self.weapon_menu = OptionMenu(self, self.selected_weapon,
-                                      *WEAPON_TYPES)
+        self.weapon_menu = CharacterDropDown(self, values=WEAPON_TYPES)
+        self.reset_frame()
         self.weapon_menu.grid()
 
     def get_weapon(self):
         """
         Returns selected weapon.
         """
-        return self.selected_weapon.get()
+        return self.weapon_menu.get()
 
     def reset_frame(self):
         """
         Resets all child widgets of the frame.
         """
-        self.selected_weapon.set(WEAPON_TYPES[0])
+        self.weapon_menu.reset_drop_down()
 
 
 class DamageFrame(ttk.LabelFrame):
     """
     Frame comprising damage entry field.
     """
-    def __init__(self, character_panel):
+    def __init__(self, character_panel, zero_zero_var):
         """
         Initialises frame.
         """
@@ -254,13 +256,13 @@ class DamageFrame(ttk.LabelFrame):
 
         self.critical_state = IntVar()
         self.critical_state.set(0)
-        self.tulutes = Checkbutton(self, text=TULUTES_TEXT,
-                                   variable=self.critical_state)
+        self.tulutes = ttk.Checkbutton(self, text=TULUTES_TEXT,
+                                       variable=self.critical_state)
 
-        self.zero_zero_state = IntVar()
+        self.zero_zero_state = zero_zero_var
         self.zero_zero_state.set(0)
-        self.zero_zero = Checkbutton(self, text='00',
-                                     variable=self.zero_zero_state)
+        self.zero_zero = ttk.Checkbutton(self, text='00',
+                                         variable=self.zero_zero_state)
 
         self.damage.grid(row=0, column=0)
         self.tulutes.grid(row=0, column=1)
@@ -309,23 +311,22 @@ class PiercingFrame(ttk.LabelFrame):
         Initialises frame.
         """
         ttk.LabelFrame.__init__(self, character_panel, text=ATUTES_TEXT)
-        self.piercing = IntVar()
-        self.piercing_values = piercing_values
-        self.piercing.set(self.piercing_values[0])
-        self.piercing_menu = OptionMenu(self, self.piercing, *piercing_values)
+
+        self.piercing_menu = Spinbox(self, from_=0, to=5)
+        self.reset_frame()
         self.piercing_menu.grid()
 
     def get_piercing(self):
         """
         Retrieves value of AP drop-down.
         """
-        return self.piercing.get()
+        return int(self.piercing_menu.get())
 
     def reset_frame(self):
         """
         Resets the piercing value to 0.
         """
-        self.piercing.set(self.piercing_values[0])
+        self.piercing_menu.set(0)
 
 
 class ChooseBodyPartFrame(ttk.LabelFrame):
@@ -341,9 +342,9 @@ class ChooseBodyPartFrame(ttk.LabelFrame):
         self.main_body_frame = ChooseMainBodyPartFrame(self)
         self.behind_state = IntVar()
         self.behind_state.set(0)
-        self.from_behind_box = Checkbutton(self, text=FROM_BACK_LABEL,
-                                           variable=self.behind_state,
-                                           command=self.set_state)
+        self.from_behind_box = ttk.Checkbutton(self, text=FROM_BACK_LABEL,
+                                               variable=self.behind_state,
+                                               command=self.set_state)
 
         self.from_behind_box.grid(row=0, column=0, sticky=(N, W))
 
@@ -417,20 +418,21 @@ class ChooseMainBodyPartFrame(ttk.LabelFrame):
         """
         ttk.LabelFrame.__init__(self, body_frame, text=MAIN_PART_LABEL)
         self.main_body_part = StringVar()
-        self.main_body_part.set(ANYWHERE)
-        self.main_body_parts = OptionMenu(self,
-                                          self.main_body_part,
-                                          *[ANYWHERE, mgc.HEAD, mgc.TORSO,
-                                            mgc.RARM, mgc.LARM, mgc.RLEG,
-                                            mgc.LLEG])
+        self.main_body_parts = CharacterDropDown(self, textvariable=self.main_body_part,
+                                                 values=[ANYWHERE, mgc.HEAD, mgc.TORSO,
+                                                         mgc.RARM, mgc.LARM, mgc.RLEG,
+                                                         mgc.LLEG])
+        self.main_body_parts.bind()
+
         self.main_body_parts.grid()
+        self.reset_frame()
 
     def reset_frame(self):
         """
         Sets the main body part selection drop-down to
         anywhere, triggering the same change in the sub drop-down too.
         """
-        self.main_body_part.set(ANYWHERE)
+        self.main_body_parts.set(ANYWHERE)
 
 
 class ChooseSubBodyPartFrame(ttk.LabelFrame):
@@ -451,9 +453,9 @@ class ChooseSubBodyPartFrame(ttk.LabelFrame):
         self.sub_body_part = StringVar()
         self.sub_body_part.set(ANYWHERE)
         self.sub_body_part.trace('w', self._follow_sub_part)
-        self.sub_body_parts = OptionMenu(self,
-                                         self.sub_body_part,
-                                         *[ANYWHERE])
+        self.sub_body_parts = CharacterDropDown(self,
+                                                textvariable=self.sub_body_part,
+                                                values=[ANYWHERE])
         self.sub_body_parts.grid()
 
     def _follow_sub_part(self, *_args):
@@ -492,14 +494,13 @@ class ChooseSubBodyPartFrame(ttk.LabelFrame):
 
         # Calculate options for sub part dropdown if a main part is selected.
         if selected_main_body_part != ANYWHERE:
-            [_main_part, sub_parts] = body_list_map[selected_main_body_part]
 
             # Sub parts are a list of lists with two elements
             # E.g. [['Mellkas', 'sziv'],..]. Save choices to state
-            self.selected_sub_parts = sub_parts
+            self.selected_sub_parts = body_list_map[selected_main_body_part][1]
 
             # Only use the second element of sub body part for options
-            choices = [ANYWHERE] + [x[1] for x in sub_parts]
+            choices = [ANYWHERE] + [x[1] for x in self.selected_sub_parts]
 
         # If no main body part is selected, sub parts can only be ANYWHERE.
         else:
@@ -513,12 +514,11 @@ class ChooseSubBodyPartFrame(ttk.LabelFrame):
         """
         Update dropdown with supported choices.
         """
-        menu = self.sub_body_parts.children['menu']
-        menu.delete(0, 'end')
+        if list_of_choices:
+            self.sub_body_parts['values'] = list_of_choices
 
-        for value in list_of_choices:
-            menu.add_command(label=value,
-                             command=lambda v=value: self.sub_body_part.set(v))
+            # Set dropdown to first element in list. (ANYWHERE)
+            self.sub_body_part.set(list_of_choices[0])
 
-        # Set dropdown to first element in list. (ANYWHERE)
-        self.sub_body_part.set(list_of_choices[0])
+            # Calculate width based on longest list element.
+            self.sub_body_parts.width_match_longest(list_of_choices)

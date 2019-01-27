@@ -15,7 +15,7 @@ class Characters:
         """
         self.character_maps = {}
 
-    def add_character(self, name, values):
+    def add_character(self, name, values, is_modify=False):
         """
         Adds a new character to the characters map.
         The param 'name' is also used as the key of the new
@@ -25,7 +25,7 @@ class Characters:
         """
         # Check whether name already exists. If yes, do not overwrite.
         if any(existing_name == name for
-               existing_name in self.get_character_names()):
+               existing_name in self.get_character_names()) and not is_modify:
             return False, 'Karakter mar letezik!'
 
         # Create new character and add to characters map using name as key

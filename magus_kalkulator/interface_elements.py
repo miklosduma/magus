@@ -5,14 +5,29 @@ Generic, reusable interface elements and constants.
 import os
 import json
 
-from tkinter import Entry, StringVar, W, N, ttk, OptionMenu, DISABLED, NORMAL
+from tkinter import StringVar, W, N, ttk
 from magus_kalkulator.validate import FieldValidationError
 
 FIELD_WIDTH = 10
 FIELD_COLOR = 'white'
-FIELD_COLOR_ERROR = 'red'
 SELECT_CHARACTER = 'Valaszz karaktert'
 NO_CHARACTER = 'Valassz karaktert!'
+MSG_TAB = 4
+
+
+def format_list_msg(list_value):
+    """
+    Formats a key/value pair where the value
+    is a list.
+
+    Each list element is placed on a new line, they are
+    all indented by a specified tab.
+    """
+    separator = '\n'
+    for _i in range(0, MSG_TAB):
+        separator += ' '
+
+    return '{}{}'.format(separator, separator.join(list_value))
 
 
 def get_relative_dir(target_path):
@@ -74,7 +89,7 @@ def load_characters(path_to_backup):
             pass
 
 
-def collect_children_type_of(parent, ch_type):
+def collect_children_type_of(parent, ch_type, recursive=False, collected=None):
     """
     Collect specific children of the tkinter
     parent element.
@@ -85,16 +100,23 @@ def collect_children_type_of(parent, ch_type):
             The type of children to be collected.
             (E.g. Entry).
     """
-    collected = []
+    if not collected:
+        collected = list()
 
     for child in parent.winfo_children():
+
         if child.winfo_class() == ch_type:
             collected.append(child)
+
+        if recursive:
+            collected = collect_children_type_of(child, ch_type, recursive=True,
+                                                 collected=collected)
 
     return collected
 
 
-def place_next_in_columns(frames, row, column, columnspan):
+def place_next_in_columns(frames, row, column, columnspan,
+                          padx=0, pady=0):
     """
     Places the specified frame elements.
     """
@@ -118,7 +140,7 @@ def place_next_in_columns(frames, row, column, columnspan):
             column += columnspan
 
 
-class CharacterValueField(Entry):
+class CharacterValueField(ttk.Entry):
     """
     Basic field type used to store character values.
     """
@@ -134,7 +156,6 @@ class CharacterValueField(Entry):
             self.value = StringVar(parent, name=self.name)
         else:
             self.value = StringVar(parent)
-
         self.value.set('')
         self.value.trace('w', self._follow_changes)
         self.validator = validate_fun
@@ -144,8 +165,9 @@ class CharacterValueField(Entry):
             self.reference.trace('w', self._follow_ref_val)
 
         # Entry field
-        Entry.__init__(self, parent, textvariable=self.value,
-                       width=kwargs.get('width', FIELD_WIDTH))
+        ttk.Entry.__init__(self, parent,
+                           textvariable=self.value,
+                           width=kwargs.get('width', FIELD_WIDTH))
 
     def _follow_ref_val(self, *_args):
         """
@@ -160,30 +182,22 @@ class CharacterValueField(Entry):
         Traces changes to the input value
         of the field.
         """
-        # Get current background color of field.
-        color = self.cget('bg')
-
-        # It turns red on validation failures.
-        # Any subsequent change must turn the color back
-        # to the default color.
-        if color == FIELD_COLOR_ERROR:
-            self.config(bg=FIELD_COLOR)
+        if 'invalid' in self.state():
+            self.state(['!invalid'])
 
     def enable(self):
         """
         Enables the field. I.e. it's value
         can be set.
         """
-        self.config(state=NORMAL)
-        self.value.set('')
+        self.state(['!disabled'])
 
     def disable(self):
         """
         Disables the field. It's value cannot
         be set or edited.
         """
-        self.value.set('n/a')
-        self.config(state=DISABLED)
+        self.state(['disabled'])
 
     def get_validated(self, **kwargs):
         """
@@ -197,7 +211,7 @@ class CharacterValueField(Entry):
             return value
 
         except FieldValidationError:
-            self.config(bg=FIELD_COLOR_ERROR)
+            self.state(['invalid'])
             raise
 
     def reset_fld(self):
@@ -206,6 +220,76 @@ class CharacterValueField(Entry):
         it to an empty string.
         """
         self.value.set('')
+
+
+class Spinbox(ttk.Entry):
+    """
+    ttk.Spinbox missing from pre-Python 3.7 versions.
+    """
+
+    def __init__(self, master=None, **kw):
+        kw['state'] = 'readonly'
+        ttk.Entry.__init__(self, master, 'ttk::spinbox', **kw)
+        self.config(width=2)
+
+    def set(self, value):
+        self.tk.call(self._w, "set", value)
+
+    def enable(self):
+        """
+        Enables the field. I.e. it's value
+        can be set.
+        """
+        self.state(['!disabled'])
+
+
+class CharacterDropDown(ttk.Combobox):
+    """
+    Read-only drop-down menu instance that calculates its width
+    based on values.
+    """
+    def __init__(self, master, **kwargs):
+        """
+        Initialise ttk Combobox with read-only state.
+        """
+        kwargs['state'] = 'readonly'
+        ttk.Combobox.__init__(self, master, **kwargs)
+        if 'values' in kwargs:
+            self.width_match_longest(kwargs['values'])
+
+    def width_match_longest(self, values):
+        """
+        Width of menu list must match longest menu item.
+        """
+        lengths = [len(str(x)) for x in values if x]
+
+        if lengths:
+            self.config(width=max(lengths) + 2)
+
+    def reset_drop_down(self):
+        """
+        Sets the drop-down to either the first element of values
+        or to an empty string.
+        """
+        if self['values']:
+            self.set(self['values'][0])
+
+        else:
+            self.set('')
+
+    def enable(self):
+        """
+        Enables the field. I.e. it's value
+        can be set.
+        """
+        self.state(['!disabled'])
+
+    def disable(self):
+        """
+        Disables the field. It's value cannot
+        be set or edited.
+        """
+        self.state(['disabled'])
 
 
 class ChooseCharacterFrame(ttk.LabelFrame):
@@ -219,51 +303,37 @@ class ChooseCharacterFrame(ttk.LabelFrame):
         self.master = master
         ttk.LabelFrame.__init__(self, master, text=SELECT_CHARACTER)
         self.characters = characters
-        self.variable = StringVar()
-        self.variable.set('')
-        self.character_menu = OptionMenu(self, self.variable, *[''])
+        self.character_menu = CharacterDropDown(self, values=[''])
         self.character_menu.bind('<Button-1>', self._update)
-        self.character_menu.config(width=10)
         self.character_menu.grid()
 
     def get_selected(self):
         """
         Return latest value.
         """
-        character = self.variable.get()
+        character = self.character_menu.get()
 
         if character:
             return True, character
 
         return False, NO_CHARACTER
 
-    def _width_match_longest(self, opt_list):
-        """
-        Width of menu list must match longest menu item.
-        """
-
-        if opt_list:
-            lengths = [len(x) for x in opt_list]
-            self.character_menu.config(width=max(lengths) + 2)
-
     def _update(self, _event):
         """
         When clicking the drop-down, get the name of
         all characters currently in memory.
         """
-        menu = self.character_menu.children['menu']
-        menu.delete(0, 'end')
         new_choices = self.characters.get_character_names()
+        if new_choices:
+            self.character_menu['values'] = list(new_choices)
+            self.character_menu.width_match_longest(new_choices)
 
-        self._width_match_longest(new_choices)
-
-        for value in new_choices:
-            menu.add_command(label=value,
-                             command=lambda v=value: self.variable.set(v))
+        else:
+            self.character_menu['values'] = ['']
 
     def reset_frame(self):
         """
         Cleans the field's value by setting
         it to an empty string.
         """
-        self.variable.set('')
+        self.character_menu.set('')

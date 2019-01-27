@@ -4,7 +4,7 @@ Character management. E.g deleting characters or saving/loading.
 from __future__ import print_function
 
 import os
-from tkinter import ttk, VERTICAL, Button, filedialog, messagebox, Label
+from tkinter import ttk, VERTICAL, filedialog, messagebox, E, W
 
 import webbrowser
 
@@ -30,33 +30,82 @@ class ManagementPage(ttk.Frame):
     """
     Adding characters main page.
     """
-    def __init__(self, master, characters, messages, width):
+    def __init__(self, master, characters, messages):
         """
         Initialise management page.
         """
+        ttk.Frame.__init__(self, master)
+        self.main_panel = CharacterPanel(self, characters, messages)
+        self.main_panel.grid()
+
+    def reset_page(self):
+        """
+        Resets all child widgets of the frame.
+        """
+        on_all_children('reset_panel', self)
+
+
+class CharacterPanel(ttk.PanedWindow):
+    """
+    Main panel of damage page.
+    """
+    def __init__(self, manage_page, characters, messages, orient=VERTICAL):
+        """
+        Initialise main panel.
+        """
+        ttk.PanedWindow.__init__(self, manage_page, orient=orient)
         self.characters = characters
         self.messages = messages
-        ttk.Frame.__init__(self, master, width=width)
-        self.main_panel = CharacterPanel(self, characters, width)
+        self.choose_frame = ChooseCharacterFrame(self, self.characters)
 
-        del_button = Button(self, text='Torles')
+        del_button = ttk.Button(self, text='Torles')
         del_button.bind('<Button-1>', self.del_character)
 
-        load_button = Button(self, text='Load')
+        save_load_frame = SaveLoadFrame(self, characters, messages)
+        tables_frame = TablesFrame(self)
+        # Place elements on grid
+        final_row = organize_rows_to_left([save_load_frame,
+                                           tables_frame,
+                                           self.choose_frame], 0)
+        del_button.grid(row=final_row, column=0, padx=2, pady=2, sticky=W)
+
+    def reset_panel(self):
+        """
+        Resets all child widgets of this panel.
+        """
+        on_all_children('reset_frame', self)
+
+    def del_character(self, *_args):
+        """
+        Deletes the selected character.
+        """
+        success, selected = self.choose_frame.get_selected()
+
+        if success:
+            self.characters.delete_character(selected)
+            self.choose_frame.reset_frame()
+
+            # Update characters kept in memory
+            save_characters(self.characters.character_maps)
+
+        else:
+            self.messages.write_message(selected)
+
+
+class SaveLoadFrame(ttk.LabelFrame):
+    def __init__(self, panel, characters, messages):
+        self.messages = messages
+        self.characters = characters
+        ttk.LabelFrame.__init__(self, panel, text='Save/Load')
+        load_button = ttk.Button(self, text='Load')
         load_button.bind('<Button-1>', self.load_char)
 
         self.save_text = CharacterValueField(self, validate_string)
-        save_button = Button(self, text='Save')
+        save_button = ttk.Button(self, text='Save')
         save_button.bind('<Button-1>', self.save_char)
-
-        label = Label(self, text='Sebzes tablazat!')
-        table_button = Button(self, text='Megnezem')
-        table_button.bind('<Button-1>', show_tables)
-
-        # Place elements on grid
-        organize_rows_to_left([self.main_panel, del_button,
-                               load_button, self.save_text,
-                               save_button, label, table_button], 0)
+        self.save_text.grid(row=0)
+        save_button.grid(row=1, sticky=W, pady=6)
+        load_button.grid(row=1, sticky=E, pady=6)
 
     def save_char(self, *_args):
         """
@@ -105,44 +154,10 @@ class ManagementPage(ttk.Frame):
         for char_name, char_values in saved_chars.items():
             self.characters.add_character(char_name, char_values)
 
-    def del_character(self, *_args):
-        """
-        Deletes the selected character.
-        """
-        success, selected = self.main_panel.choose_frame.get_selected()
 
-        if success:
-            self.characters.delete_character(selected)
-            self.main_panel.choose_frame.variable.set('')
-
-            # Update characters kept in memory
-            save_characters(self.characters.character_maps)
-
-        else:
-            self.messages.write_message(selected)
-
-    def reset_page(self):
-        """
-        Resets all child widgets of the frame.
-        """
-        on_all_children('reset_panel', self)
-
-
-class CharacterPanel(ttk.PanedWindow):
-    """
-    Main panel of damage page.
-    """
-    def __init__(self, master, characters, width, orient=VERTICAL):
-        """
-        Initialise main panel.
-        """
-        ttk.PanedWindow.__init__(self, master, width=width, orient=orient)
-
-        self.choose_frame = ChooseCharacterFrame(self, characters)
-        organize_rows_to_left([self.choose_frame], 0)
-
-    def reset_panel(self):
-        """
-        Resets all child widgets of this panel.
-        """
-        on_all_children('reset_frame', self)
+class TablesFrame(ttk.LabelFrame):
+    def __init__(self, panel):
+        ttk.LabelFrame.__init__(self, panel, text='Sebzes tablazat')
+        table_button = ttk.Button(self, text='Megnezem')
+        table_button.bind('<Button-1>', show_tables)
+        table_button.grid()
